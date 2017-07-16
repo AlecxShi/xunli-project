@@ -1,0 +1,5 @@
+logging:
+  level:
+    com.gildaas: debug
+    org.springframework: info
+    org.hibernate: WARN

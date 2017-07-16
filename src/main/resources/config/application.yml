@@ -1,0 +1,35 @@
+server:
+  port: 8888
+spring:
+  profiles:
+    active: @spring.profiles.active@
+  mvc:
+    locale: zh_CN
+    date-format: yyyy-MM-dd
+  jackson:
+    serialization:
+      indent-output: true
+info:
+  build:
+    artifact: @project.artifactId@
+    name: @project.name@
+    description: @project.description@
+    version: @project.version@
+    
+management:
+  context-path: /manage
+
+security:
+  basic:
+    enabled: false
+
+logging:
+  file: /var/log/xunli-manager.log
+  level:
+    org.hibernate: WARN
+    io.swagger: WARN
+app:
+  work:
+    directory: target/work
+  security:
+    key: 7a70f2e95f2f5184495a979a4e624a9e6e9ea821

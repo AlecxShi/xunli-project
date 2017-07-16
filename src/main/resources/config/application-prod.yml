@@ -1,0 +1,39 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://rdsw46k48c465jzyyih9.mysql.rds.aliyuncs.com:3306/APIManager?characterEncoding=utf8&autoReconnect=true&rewriteBatchedStatements=true
+    username: gildaas
+    password: 83Mc73OvWT
+    max-active: 10
+    max-idle: 8
+    min-idle: 8
+    initial-size: 2
+    max-wait: 1000
+    validation-query: SELECT now()
+    test-on-borrow: true
+    test-on-return: false
+    test-while-idle: true
+    time-between-eviction-runs-millis: 5000
+    min-evictable-idle-time-millis: 30000
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLInnoDBDialect
+    database: MYSQL
+    open-in-view: false
+    show-sql: false
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate.cache.use_second_level_cache: true
+      hibernate.cache.use_query_cache: false
+      hibernate.generate_statistics: false
+      hibernate.cache.region.factory_class: org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory
+      hibernate.jdbc.batch_size: 500
+    thymeleaf:
+      mode: XHTML
+      cache: false
+logging:
+  level:
+    com.gildaas: debug
+    org.springframework: info
+    org.hibernate: WARN
