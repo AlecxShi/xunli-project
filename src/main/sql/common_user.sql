@@ -1,13 +1,13 @@
 CREATE TABLE COMMON_USER_INFO(
-    id ,                //注册用户编号，唯一
-    userType,           //注册用户类型,分为系统、机器、普通用户
-    phone,              //注册手机号
-    passWord,           //登录密码
-    location,           //当前所在地,获取地理信息而得
-    userName,           //用户名称
-    excit,              //激励标记
-    createDate,         //创建日期
-    lastModified        //最后修改时间
+    id INT AUTO_INCREMENT PRIMARY KEY  ,    --注册用户编号，唯一
+    userType INT,           --注册用户类型,分为系统、机器、普通用户
+    phone CHAR(11),              --注册手机号
+    passWord VARCHAR(32),           --登录密码
+    location    VARCHAR(255),           --当前所在地,获取地理信息而得
+    userName    VARCHAR(255),           --用户名称
+    excit   INT,              --激励标记
+    createDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,         --创建日期
+    lastModified    TIMESTAMP DEFAULT CURRENT_TIMESTAMP   --最后修改时间
 )
 
 CREATE TABLE CHILDREN_BASE_INFO(

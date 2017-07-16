@@ -1,6 +1,6 @@
-CREATE TABLE DICT(
-    id,
-    dictType,
-    dictValue,
-    dictDesc
+CREATE TABLE DICT_INFO(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    dictType VARCHAR(50),
+    dictValue VARCHAR(10),
+    dictDesc   VARCHAR(255)
 )

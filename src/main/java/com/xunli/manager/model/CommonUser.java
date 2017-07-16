@@ -1,0 +1,105 @@
+package com.xunli.manager.model;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.springframework.data.annotation.*;
+
+import javax.persistence.*;
+import javax.persistence.Id;
+import java.util.Date;
+
+/**
+ * Created by Betty on 2017/7/16.
+ */
+@JsonIgnoreProperties(ignoreUnknown = true)
+@Entity
+@Table(name = "COMMON_USER_INFO")
+public class CommonUser {
+
+    @Id
+    @Column(name="id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="userType", referencedColumnName="id")
+    private DictInfo usertype;
+
+    @Column(name = "userName")
+    private String username;
+
+    @Column(name = "passWord")
+    private String password;
+
+    @Column(name = "excit")
+    private Integer excit;
+
+    @Column(name = "createDate")
+    @CreatedDate
+    private Date createdate = new Date();
+
+    @Column(name = "lastModified")
+    @LastModifiedDate
+    private Date lastmodified = new Date();
+
+    public String toString()
+    {
+        return String.format("{id = %s,userName = %s,passWord = %s,userType = %s,excit = %s,createDate = %s,lastModified = %s}",
+                id,username,usertype.getDictDesc(),excit,createdate,lastmodified);
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public DictInfo getUsertype() {
+        return usertype;
+    }
+
+    public void setUsertype(DictInfo usertype) {
+        this.usertype = usertype;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public Integer getExcit() {
+        return excit;
+    }
+
+    public void setExcit(Integer excit) {
+        this.excit = excit;
+    }
+
+    public Date getCreatedate() {
+        return createdate;
+    }
+
+    public void setCreatedate(Date createdate) {
+        this.createdate = createdate;
+    }
+
+    public Date getLastmodified() {
+        return lastmodified;
+    }
+
+    public void setLastmodified(Date lastmodified) {
+        this.lastmodified = lastmodified;
+    }
+}
