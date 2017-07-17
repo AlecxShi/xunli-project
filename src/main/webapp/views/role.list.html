@@ -1,0 +1,61 @@
+<md-card>
+  <md-toolbar class="md-table-toolbar md-default" ng-hide="selected.length || filter.show">
+    <div class="md-toolbar-tools">
+      <span class="md-title">角色管理</span>
+      <div flex></div>
+      <md-button class="md-icon-button" ng-click="refresh($event)">
+        <md-icon>refresh</md-icon>
+      </md-button>
+      <md-button class="md-icon-button" ng-click="filter.show = true">
+        <md-icon>filter_list</md-icon>
+      </md-button>
+      <md-button class="md-icon-button" ng-click="add($event)">
+        <md-icon>add</md-icon>
+      </md-button>
+    </div>
+  </md-toolbar>
+  <md-toolbar class="md-table-toolbar md-default" ng-show="filter.show && !selected.length">
+    <div class="md-toolbar-tools">
+      <md-icon>search</md-icon>
+      <form flex name="filter.form">
+        <input type="text" ng-model="query.filter" ng-model-options="filter.options" placeholder="搜索">
+      </form>
+      <md-button class="md-icon-button" ng-click="removeFilter()">
+        <md-icon>close</md-icon>
+      </md-button>
+    </div>
+  </md-toolbar>
+  <md-toolbar class="md-table-toolbar md-default" ng-show="selected.length">
+    <div class="md-toolbar-tools" layout-align="space-between">
+      <div>选中 {{selected.length}} 行</div>
+      <md-button class="md-icon-button md-warn" ng-click="delete($event)">
+        <md-icon>delete</md-icon>
+      </md-button>
+    </div>
+  </md-toolbar>
+  <md-table-container>
+    <table md-table md-row-select ng-model="selected" md-progress="promise">
+      <thead md-head md-order="query.order" md-on-reorder="refresh">
+        <tr md-row>
+          <th md-column md-order-by="roleName">角色名称</th>
+          <th md-column md-order-by="roleCode">角色代码</th>
+          <th md-column md-order-by="roleDesc">角色描述</th>
+          <th md-column>操作</th>
+        </tr>
+      </thead>
+      <tbody md-body>
+        <tr md-row md-select="item" md-select-id="{{item.id}}" ng-repeat="item in data.content">
+          <td md-cell>{{item.roleName}}</td>
+          <td md-cell>{{item.roleCode}}</td>
+          <td md-cell>{{item.roleDesc}}</td>
+          <td md-cell>
+            <md-button class="md-icon-button" ng-click="edit(item)" aria-label="编辑">
+              <md-icon>edit</md-icon>
+            </md-button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </md-table-container>
+  <md-table-pagination  md-Options="[5, 10, 15,50 , 100]"  md-label="{page: '页:', rowsPerPage: '每页行数:', of: '共'}" md-limit="query.size" md-page="query.page" md-total="{{data.totalElements}}" md-on-paginate="refresh" md-page-select></md-table-pagination>
+</md-card>

@@ -1,0 +1,63 @@
+<form class="md-inline-form" name="form" novalidate ng-submit="save($event)">
+  <md-card class="md-whiteframe-z1">
+    <md-card-title>
+      <md-card-title-text>
+        <span class="md-title">权限编辑</span>
+      </md-card-title-text>
+    </md-card-title>
+    <md-card-content>
+      <p class="error" ng-show="error">
+        保存失败，请稍候再试。
+      </p>
+      <div layout="column" layout-gt-xs="row">
+        <md-input-container flex>
+          <label>权限名称</label>
+          <input type="text" name="authorityName" autocomplete="off" ng-model="authority.authorityName" required>
+          <div class="hint" ng-if="form.authorityName.$untouched">必输项，权限名称</div>
+          <div ng-messages="form.authorityName.$error">
+            <div ng-message="required">请输入名称</div>
+          </div>
+        </md-input-container>
+        <md-input-container flex>
+          <label>权限代码</label>
+          <input type="text" name="authorityCode" autocomplete="off" ng-model="authority.authorityCode" required>
+          <div class="hint" ng-if="form.authorityCode.$untouched">必输项，权限代码</div>
+          <div ng-messages="form.authorityCode.$error">
+            <div ng-message="required">请输入权限代码</div>
+          </div>
+        </md-input-container>
+        <md-input-container flex>
+          <label>权限路径</label>
+          <input type="text" name="authorityPath" autocomplete="off" ng-model="authority.authorityPath">
+        </md-input-container>
+      </div>
+      <div layout="column" layout-gt-xs="row">
+        <md-input-container flex>
+          <label>父级权限</label>
+          <input type="text" name="parent" autocomplete="off" ng-model="authority.parent.authorityName" required>
+        </md-input-container>
+        <md-input-container flex>
+          <label>权限类型</label>
+          <md-select ng-model="authority.authorityType" name="authorityType" required>
+            <md-option ng-repeat="at in authorityTypes" value="{{at.value}}">
+              {{at.label}}
+            </md-option>
+          </md-select>
+        </md-input-container>
+        <md-input-container flex>
+          <label>优先级</label>
+          <input type="text" name="dataLevel" autocomplete="off" ng-model="authority.dataLevel" required>
+        </md-input-container>
+      </div>
+    </md-card-content>
+    <md-card-actions layout="row" layout-padding layout-align="center center">
+      <span flex></span>
+      <md-button ng-click="cancel()" class="md-warn md-raised">
+        取消
+      </md-button>
+      <md-button type="submit" class="md-primary md-raised">
+        保存
+      </md-button>
+    </md-card-actions>
+  </md-card>
+</form>

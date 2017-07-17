@@ -1,0 +1,59 @@
+<md-content>
+  <form name="form" novalidate ng-submit="save($event)">
+    <div layout="row" layout-align="center center">
+      <md-card flex-xs="100" flex-sm="90" flex-md="80" flex-gt-md="70">
+        <md-card-title>
+          <md-card-title-text>
+            <span class="md-title">用户信息</span>
+          </md-card-title-text>
+        </md-card-title>
+        <md-card-content>
+          <p class="error">{{userError}} </p>
+          <md-input-container class="md-block">
+            <label>用户名</label>
+            <input type="text" name="username" ng-model="user.username" disabled>
+          </md-input-container>
+          <md-input-container class="md-block">
+            <label>昵称</label>
+            <input type="text" name="nickname" ng-model="user.nickname">
+            <div ng-messages="form.nickname.$error">
+              <div ng-message="md-maxlength">昵称最多20个字符</div>
+            </div>
+          </md-input-container>
+          <md-input-container class="md-block">
+            <label>姓名</label>
+            <input type="text" name="name"  ng-model="user.name">
+            <div ng-messages="form.name.$error">
+              <div ng-message="md-maxlength">姓名最多20个字符</div>
+            </div>
+          </md-input-container>
+          <md-input-container class="md-block">
+            <label>邮箱</label>
+            <input type="email" name="email" ng-model="user.email" required ng-pattern="/^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/" minlength="5" ui-validate-async="{alreadyExists: 'emailNotExist($value)'}">
+            <div ng-messages="form.email.$error">
+              <div ng-message="required">请输入邮箱地址</div>
+              <div ng-message="pattern">邮箱地址格式不合法</div>
+              <div ng-message="minlength">邮箱地址必须为5到100个字符</div>
+              <div ng-message="md-maxlength">邮箱地址必须为5到100个字符</div>
+              <div ng-message="alreadyExists">邮箱地址已被注册</div>
+            </div>
+          </md-input-container>
+          <md-input-container class="md-block">
+            <label>电话</label>
+            <input type="text" id="phone" name="phone" ng-model="user.phone" ng-pattern="/^\d{11}$/" ui-validate-async="{alreadyExists: 'phoneNotExist($value)'}">
+            <div ng-messages="form.phone.$error">
+              <div ng-message="pattern">电话必须11位数字</div>
+              <div ng-message="minlength">电话必须11位数字</div>
+              <div ng-message="md-maxlength">电话必须11位数字</div>
+              <div ng-message="alreadyExists">电话号码已被注册</div>
+            </div>
+          </md-input-container>
+        </md-card-content>
+        <md-card-actions layout="row" layout-align="end center">
+          <md-button ng-click="reset($event)" class="md-raised">重置</md-button>
+          <md-button type="submit" class="md-primary md-raised">保存</md-button>
+        </md-card-actions>
+      </md-card>
+    </div>
+  </form>
+</md-content>

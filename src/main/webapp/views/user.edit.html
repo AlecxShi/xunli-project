@@ -1,0 +1,94 @@
+<form  class="md-inline-form" name="form" novalidate ng-submit="save($event)">
+  <md-card class="md-whiteframe-z1">
+    <md-card-title>
+      <md-card-title-text>
+        <span class="md-title">{{title}}</span>
+      </md-card-title-text>
+    </md-card-title>
+    <md-card-content>
+	    <p class="error">{{userError}} </p>
+      <div layout="column" layout-gt-xs="row">
+        <md-input-container flex>
+          <label>用户名</label>
+          <input type="text" name="username" autocomplete="off" ng-model="user.username" required minlength="1" ng-disabled="{{disabled}}" ng-pattern="/^[a-z0-9]*$/" ui-validate-async="{alreadyExists: 'usernameNotExist($value)'}">
+          <div class="hint" ng-if="form.username.$untouched">必输项，用户名称</div>
+           <div ng-messages="form.username.$error">
+            	<div ng-message="alreadyExists">客户名称已被注册</div>
+            	<div ng-message="minlength">客户名称不能为空</div>
+          </div>
+        </md-input-container>
+        <md-input-container flex>
+          <label>密码</label>
+          <input name="password" onfocus="this.type='password'" autocomplete="off" ng-model="user.password" minlength="2" md-maxlength="20" ng-paste="$event.preventDefault()"  ng-required="user.ifRequired"> 
+          <div class="hint" ng-if="form.password.$untouched">必输项，用户密码</div>
+          <div ng-messages="form.password.$error">
+          	<div ng-message="required">请输入用户密码</div>
+            <div ng-message="minlength">密码必须为2到20个字符</div>
+            <div ng-message="md-maxlength">密码必须为2到20个字符</div>
+          </div>
+        </md-input-container>
+        <md-input-container flex>
+          <label>昵称</label>
+          <input type="text" name="nickname" ng-model="user.nickname">
+          <div ng-messages="form.nickname.$error">
+            <div ng-message="md-maxlength">昵称最多20个字符</div>
+          </div>
+        </md-input-container>
+      </div>
+      <div layout="column" layout-gt-xs="row">
+        <md-input-container flex>
+          <label>姓名</label>
+          <input type="text" name="name" ng-model="user.name">
+          <div ng-messages="form.name.$error">
+            <div ng-message="md-maxlength">昵称最多20个字符</div>
+          </div>
+        </md-input-container>
+        <md-input-container flex>
+          <label>邮箱</label>
+          <input type="email" name="email" ng-model="user.email" required minlength="5" md-maxlength="100" ng-pattern="/^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/" ui-validate-async="{alreadyExists: 'emailNotExist($value)'}">
+          <div class="hint" ng-if="form.email.$untouched">必输项，邮箱地址</div>
+          <div ng-messages="form.email.$error">
+            <div ng-message="required">请输入邮箱地址</div>
+            <div ng-message="pattern">邮箱地址格式不合法</div>
+            <div ng-message="minlength">邮箱地址必须为5到100个字符</div>
+            <div ng-message="md-maxlength">邮箱地址必须为5到100个字符</div>
+            <div ng-message="alreadyExists">邮箱地址已被注册</div>
+          </div>
+        </md-input-container>
+        <md-input-container flex>
+          <label>电话</label>
+          <input type="text" name="phone" ng-model="user.phone" ng-pattern="/^\d{11}$/" minlength="11" md-maxlength="11" ui-validate-async="{alreadyExists: 'phoneNotExist($value)'}">
+          <div ng-messages="form.phone.$error">
+            <div ng-message="patten">电话必须11位数字</div>
+            <div ng-message="minlength">电话必须11位数字</div>
+            <div ng-message="md-maxlength">电话必须11位数字</div>
+            <div ng-message="alreadyExists">电话号码已被注册</div>
+          </div>
+        </md-input-container>
+      </div>
+      <md-input-container class="md-block">
+        <label>角色</label>
+        <md-chips ng-model="user.roles" md-autocomplete-snap md-require-match="true" md-transform-chip="transformChip($chip)">
+          <md-autocomplete md-min-length="0" md-selected-item="selectedItem" md-search-text="searchText"
+                           md-items="item in queryRole(searchText)" md-item-text="item.roleName" placeholder="角色">
+            <span md-highlight-text="searchText">{{item.roleName}}</span>
+          </md-autocomplete>
+          <md-chip-template>
+            <span>{{$chip.roleName}}</span>
+          </md-chip-template>
+        </md-chips>
+      </md-input-container>
+    </md-card-content>
+    <md-card-actions layout="row" layout-padding layout-align="center center">
+      <md-checkbox ng-model="user.activated" class="md-primary">激活</md-checkbox>
+      <md-checkbox ng-model="user.enabled" class="md-primary">可用</md-checkbox>
+      <span flex></span>
+      <md-button ng-click="cancel()" class="md-warn md-raised">
+        取消
+      </md-button>
+      <md-button type="submit" class="md-primary md-raised">
+        保存
+      </md-button>
+    </md-card-actions>
+  </md-card>
+</form>

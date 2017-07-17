@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>APIManager</title>
+  <meta name="description" content="">
+  <meta name="Keywords" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <link rel="shortcut icon" href="images/favicon.ico">
+  <!-- build:css styles/vendor.css -->
+  <!-- bower:css -->
+  <link rel="stylesheet" href="bower_components/angular-material/angular-material.css" />
+  <link rel="stylesheet" href="bower_components/codemirror/lib/codemirror.css" />
+  <link rel="stylesheet" href="bower_components/angular-loading-bar/build/loading-bar.css" />
+  <link rel="stylesheet" href="bower_components/angular-material-data-table/dist/md-data-table.css" />
+  <link rel="stylesheet" href="bower_components/angular-chart.js/dist/angular-chart.css" />
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
+  <link rel="stylesheet" href="bower_components/angular-ui-tree/dist/angular-ui-tree.css" />
+  <link rel="stylesheet" href="bower_components/angular-tree-control/css/tree-control-attribute.css">
+  <link rel="stylesheet" href="bower_components/angular-tree-control/css/tree-control.css">
+  <link rel="stylesheet" href="bower_components/ng-dialog/css/ngDialog.css">
+  <link rel="stylesheet" href="bower_components/ng-dialog/css/ngDialog-theme-default.css">
+  <link rel="stylesheet" href="bower_components/angular-dialog-service/dist/dialogs.css">
+  <link rel="stylesheet" href="bower_components/angular-growl-v2/build/angular-growl.css">
+  <link rel="stylesheet" href="bower_components/katex/dist/katex.min.css" />
+  <link rel="stylesheet" href="bower_components/editor.md/css/editormd.min.css" />
+  <link rel="stylesheet" href="bower_components/editor.md/lib/codemirror/codemirror.min.css" />
+
+
+  <!-- endbower -->
+  <!-- endbuild -->
+  <!-- build:css styles/main.css -->
+  <link rel="stylesheet" href="styles/main.css">
+  <!-- endbuild -->
+</head>
+
+
+<body ng-app="app" ng-controller="SiteCtrl" layout="column" layout-fill ng-cloak>
+  <!--[if lt IE 10]>
+    <p class="browsehappy">您使用的浏览器<strong>版本过低</strong>。请<a href="http://browsehappy.com/">升级您的浏览器</a>以获得更加的良好浏览体验。</p>
+  <![endif]-->
+  <header>
+    <md-toolbar class="md-whiteframe-z1">
+      <div class="md-toolbar-tools">
+        <md-button class="md-icon-button" ng-click="toggleSidenav('left')" hide-gt-sm aria-label="Menu" ng-if="isAuthenticated()">
+          <md-icon>menu</md-icon>
+        </md-button>
+        <h2><md-icon>traffic</md-icon> 管理台 {{softVersion.version}}</h2>
+        <span flex></span>
+        <md-menu ng-if="isAuthenticated()">
+          <md-button ng-click="$mdOpenMenu($event)">
+            <md-icon md-menu-origin>account_circle</md-icon> {{account.nickname || account.username}}
+          </md-button>
+          <md-menu-content width="4">
+            <md-menu-item>
+              <md-button ui-sref="password">
+                <md-icon md-menu-align-target>lock</md-icon>
+                修改密码
+              </md-button>
+            </md-menu-item>
+            <md-menu-item>
+              <md-button ui-sref="profile">
+                <md-icon>person</md-icon>
+                用户信息
+              </md-button>
+            </md-menu-item>
+            <md-menu-divider></md-menu-divider>
+            <md-menu-item>
+              <md-button confirm="您确认要退出登录吗？" ng-click="logout()">
+                <md-icon>exit_to_app</md-icon>
+                注销
+              </md-button>
+            </md-menu-item>
+          </md-menu-content>
+        </md-menu>
+      </div>
+    </md-toolbar>
+  </header>
+  <div growl></div>
+  <div ng-cloak cg-busy="{promise:cgbusy,delay:0,minDuration:500}"></div>
+  <main layout="row" flex>
+    <md-sidenav  style="width:16%;" layout="column"  class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$mdMedia('gt-sm')" ng-if="isAuthenticated()">
+      <md-content flex role="navigation">
+        <md-list>
+          <div ng-repeat="item in menu">
+            <md-list-item ng-class="{active: $state.includes(item.active||item.state)}" ui-sref="{{item.state}}" has-authority="{{item.authorities}}" ng-if="item.state">
+              <md-icon>{{item.icon}}</md-icon>
+              <p>{{item.title}}</p>
+            </md-list-item>
+            <md-divider ng-if="!item.state"></md-divider>
+            <md-subheader has-authority="{{item.authorities}}" ng-if="!item.state">{{item.title}}</md-subheader>
+          </div>
+        </md-list>
+      </md-content>
+    </md-sidenav>
+    <article ui-view flex layout="column" role="main"></article>
+  </main>
+  <!-- build:js scripts/vendor.js -->
+
+  <!-- bower:js -->
+   <script src="bower_components/jquery/dist/jquery.js"></script>
+   <script src="bower_components/angular/angular.js"></script>
+	<script src="bower_components/angular-resource/angular-resource.js"></script>
+	<script src="bower_components/angular-cookies/angular-cookies.js"></script>
+	<script src="bower_components/angular-messages/angular-messages.js"></script>
+	<script src="bower_components/angular-animate/angular-animate.js"></script>
+	<script src="bower_components/angular-aria/angular-aria.js"></script>
+	<script src="bower_components/angular-route/angular-route.js"></script>
+	<script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+	<script src="bower_components/angular-material/angular-material.js"></script>
+	<script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+	<script src="bower_components/angular-ui-validate/dist/validate.js"></script>
+	<script src="bower_components/codemirror/lib/codemirror.js"></script>
+	<script src="bower_components/angular-ui-codemirror/ui-codemirror.js"></script>
+	<script src="bower_components/angular-loading-bar/build/loading-bar.js"></script>
+	<script src="bower_components/angular-local-storage/dist/angular-local-storage.js"></script>
+	<script src="bower_components/moment/moment.js"></script>
+	<script src="bower_components/angular-moment/angular-moment.js"></script>
+	<script src="bower_components/Chart.js/Chart.js"></script>
+	<script src="bower_components/angular-chart.js/dist/angular-chart.js"></script>
+	<script src="bower_components/angular-filter/dist/angular-filter.min.js"></script>
+
+	<script src="bower_components/angular-material-data-table/dist/md-data-table.js"></script>
+	<script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
+
+	<!-- 解析markdown所需的插件 -->
+  <script src="bower_components/katex/dist/katex.min.js"></script>
+  <script src="bower_components/editor.md/editormd.min.js"></script>
+  <script src="bower_components/angular-i18n/angular-locale_zh-cn.js"></script>
+  <script src="bower_components/moment/locale/zh-cn.js"></script>
+  <script src="bower_components/editor.md/lib/marked.min.js"></script>
+  <script src="bower_components/editor.md/lib/prettify.min.js"></script>
+  <script src="bower_components/editor.md/lib/raphael.min.js"></script>
+  <script src="bower_components/editor.md/lib/underscore.min.js"></script>
+  <script src="bower_components/editor.md/lib/sequence-diagram.min.js"></script>
+  <script src="bower_components/editor.md/lib/flowchart.min.js"></script>
+  <script src="bower_components/editor.md/lib/jquery.flowchart.min.js"></script>
+  <script src="bower_components/editor.md/lib/codemirror/addons.min.js"></script>
+  <script src="bower_components/editor.md/lib/codemirror/codemirror.min.js"></script>
+ <!--  <script src="bower_components/editor.md/lib/codemirror/modes.min.js"></script>  -->
+  <script src="bower_components/editor.md/plugins/code-block-dialog/code-block-dialog.js"></script>
+  <script src="bower_components/editor.md/plugins/emoji-dialog/emoji-dialog.js"></script>
+  <script src="bower_components/editor.md/plugins/goto-line-dialog/goto-line-dialog.js"></script>
+  <script src="bower_components/editor.md/plugins/help-dialog/help-dialog.js"></script>
+  <script src="bower_components/editor.md/plugins/html-entities-dialog/html-entities-dialog.js"></script>
+  <script src="bower_components/editor.md/plugins/image-dialog/image-dialog.js"></script>
+  <script src="bower_components/editor.md/plugins/link-dialog/link-dialog.js"></script>
+  <script src="bower_components/editor.md/plugins/preformatted-text-dialog/preformatted-text-dialog.js"></script>
+  <script src="bower_components/editor.md/plugins/reference-link-dialog/reference-link-dialog.js"></script>
+  <script src="bower_components/editor.md/plugins/table-dialog/table-dialog.js"></script>
+  <script src="bower_components/editor.md/plugins/test-plugin/test-plugin.js"></script>
+
+
+
+
+  <script src="bower_components/angular-ui-tree/dist/angular-ui-tree.js"></script>
+  <script src="bower_components/angular-tree-control/angular-tree-control.js"></script>
+  <script src="bower_components/ng-dialog/js/ngDialog.js"></script>
+  <script src="bower_components/angular-translate/angular-translate.js"></script>
+  <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+  <script src="bower_components/angular-dialog-service/dist/dialogs.js"></script>
+  <script src="bower_components/angular-dialog-service/dist/dialogs-default-translations.js"></script>
+  <script src="bower_components/angular-growl-v2/build/angular-growl.js"></script>
+  <script src="bower_components/angular-utils-pagination/dirPagination.js"></script>
+
+  <script src='bower_components/xlsx-model/xlsx-model.js'></script>
+  <script src='bower_components/js-xlsx/dist/xlsx.full.min.js'></script>
+  <script src="bower_components/codemirror/mode/yaml/yaml.js"></script>
+  <script src="bower_components/angular-cookies/angular-cookies.min.js"></script>
+  <script src="bower_components/file-saver/FileSaver.js"></script>
+  <script src="scripts/directives/xlsx-master/xlsx.full.min.js"></script>
+
+
+
+
+
+
+  <!-- endbower -->
+
+
+  <!-- endbuild -->
+  <!-- build:js scripts/scripts.js -->
+  <script src="scripts/app.js"></script>
+  <script src="scripts/constants.js"></script>
+  <script src="scripts/config.js"></script>
+  <script src="bower_components/requirejs/require.js"></script>
+  <script src="scripts/directives/confirm.js"></script>
+  <script src="scripts/directives/authority.js"></script>
+  <script src="scripts/directives/containerDirectives.js"></script>
+  <script src="scripts/directives/myMarkDown.js"></script>
+  <script src="scripts/directives/abn-tree/abn_tree_directive.js"></script>
+  <script src="scripts/directives/xlsx-master/sheet-js-import.js"></script>
+  <script src="scripts/filters/filters.js"></script>
+  <script src="scripts/filters/truncate.filter.js"></script>
+  <script src="scripts/filters/expireType.filter.js"></script>
+  <script src="scripts/services/interceptors.js"></script>
+  <script src="scripts/services/validate.js"></script>
+  <script src="scripts/services/register.js"></script>
+  <script src="scripts/services/activate.js"></script>
+  <script src="scripts/services/reset.js"></script>
+  <script src="scripts/services/account.js"></script>
+  <script src="scripts/services/password.js"></script>
+  <script src="scripts/services/session.js"></script>
+  <script src="scripts/services/auth.js"></script>
+  <script src="scripts/services/principal.js"></script>
+  <script src="scripts/services/user.js"></script>
+  <script src="scripts/services/authority.js"></script>
+  <script src="scripts/services/role.js"></script>
+  <script src="scripts/services/softVersion.js"></script>
+
+  <script src="scripts/services/apiGroupInfo.js"></script>
+  <script src="scripts/services/apiInfo.js"></script>
+  <script src="scripts/services/userPermissions.js"></script>
+  <script src="scripts/services/apiUser.js"></script>
+  <script src="scripts/services/dsApiInfoUpdate.js"></script>
+  <script src="scripts/services/UpdateCache.js"></script>
+  <script src="scripts/services/apiHotSearch.js"></script>
+  <script src="scripts/services/apiTestCase.js"></script>
+  <script src="scripts/services/sysUpgrade.js"></script>
+  <script src="scripts/services/apiServerInfo.js"></script>
+
+
+  <!-- controllers -->
+  <script src="scripts/controllers/site.js"></script>
+  <script src="scripts/controllers/login.js"></script>
+  <script src="scripts/controllers/password.js"></script>
+  <script src="scripts/controllers/user.js"></script>
+  <script src="scripts/controllers/dashboard.js"></script>
+  <script src="scripts/controllers/profile.js"></script>
+  <script src="scripts/controllers/sysuser.js"></script>
+  <script src="scripts/controllers/role.js"></script>
+  <script src="scripts/controllers/authority.js"></script>
+
+  <script src="scripts/controllers/apiGroupInfo.js"></script>
+  <script src="scripts/controllers/apiInfo.js"></script>
+  <script src="scripts/controllers/userPermissions.js"></script>
+  <script src="scripts/controllers/apiUser.js"></script>
+  <script src="scripts/controllers/apiInfoTest.js"></script>
+  <script src="scripts/controllers/dsApiInfoUpdate.js"></script>
+  <script src="scripts/controllers/apiHotSearch.js"></script>
+  <script src="scripts/controllers/apiTestCase.js"></script>
+  <script src="scripts/controllers/apiSysUpgrade.js"></script>
+  <script src="scripts/controllers/apiSysUpgradeEdit.js"></script>
+  <script src="scripts/controllers/apiServerInfo.js"></script>
+  <script src="scripts/app.push.js"></script>
+
+
+  <!-- endbuild -->
+</body>
+
+</html>

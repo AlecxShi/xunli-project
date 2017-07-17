@@ -1,0 +1,87 @@
+<form class="md-inline-form" name="form" novalidate ng-submit="save($event)">
+  <md-card class="md-whiteframe-z1">
+    <md-card-title>
+      <md-card-title-text>
+        <span class="md-title">角色编辑</span>
+      </md-card-title-text>
+    </md-card-title>
+    <md-card-content>
+      <p class="error" ng-show="error">
+        保存失败，请稍候再试。
+      </p>
+      <md-input-container flex>
+        <label>角色名称</label>
+        <input type="text" name="roleName" autocomplete="off" ng-model="role.roleName" required>
+        <div class="hint" ng-if="form.roleName.$untouched">必输项，角色名称</div>
+        <div ng-messages="form.roleName.$error">
+          <div ng-message="required">请输入角色名称</div>
+        </div>
+      </md-input-container>
+      <md-input-container flex>
+        <label>角色代码</label>
+        <input type="text" name="roleCode" autocomplete="off" ng-model="role.roleCode" required>
+        <div class="hint" ng-if="form.roleCode.$untouched">必输项，角色代码</div>
+        <div ng-messages="form.roleCode.$error">
+          <div ng-message="required">请输入角色代码</div>
+        </div>
+      </md-input-container>
+      <md-input-container flex>
+        <label>角色描述</label>
+        <input type="text" name="roleDesc" autocomplete="off" ng-model="role.roleDesc" required>
+      </md-input-container>
+      <div layout="row">
+        <div class="content-container" flex>
+          <label>可选</label>
+          <md-content>
+            <md-list>
+              <md-list-item ng-repeat="item in availables">
+                <md-checkbox ng-model="item.selected"></md-checkbox>
+                <p>{{item.authorityName}}</p>
+                <p class="md-secondary" hide show-gt-xs>{{item.authorityCode}}</p>
+              </md-list-item>
+            </md-list>
+          </md-content>
+        </div>
+        <div layout="column" layout-align="center center">
+          <md-button class="md-icon-button" ng-click="add($event)">
+            <md-icon>fast_forward</md-icon>
+            <md-tooltip>添加</md-tooltip>
+          </md-button>
+          <md-button class="md-icon-button" ng-click="remove($event)">
+            <md-icon>fast_rewind</md-icon>
+            <md-tooltip>删除</md-tooltip>
+          </md-button>
+          <md-button class="md-icon-button" ng-click="addAll($event)">
+            <md-icon>skip_next</md-icon>
+            <md-tooltip>全部添加</md-tooltip>
+          </md-button>
+          <md-button class="md-icon-button" ng-click="removeAll($event)">
+            <md-icon>skip_previous</md-icon>
+            <md-tooltip>全部删除</md-tooltip>
+          </md-button>
+        </div>
+        <div class="content-container" flex>
+          <label>已选</label>
+          <md-content>
+            <md-list>
+              <md-list-item ng-repeat="item in role.authorities">
+                <md-checkbox ng-model="item.selected"></md-checkbox>
+                <p>{{item.authorityName}}</p>
+                <p class="md-secondary" hide show-gt-xs>{{item.authorityCode}}</p>
+              </md-list-item>
+            </md-list>
+          </md-content>
+        </div>
+      </div>
+    </md-card-content>
+    <md-card-actions layout="row" layout-padding layout-align="center center">
+      <span flex></span>
+      <md-button ng-click="cancel()" class="md-warn md-raised">
+        取消
+      </md-button>
+      <md-button type="submit" class="md-primary md-raised">
+        保存
+      </md-button>
+    </md-card-actions>
+  </md-card>
+</form>

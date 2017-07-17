@@ -1,0 +1,71 @@
+<md-dialog aria-label="">
+<form class="md-inline-form"  name="form" novalidate ng-submit="save($event)">
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2>{{taskName}}</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="cancel()">
+         <md-icon>close</md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+<md-dialog-content>
+  <md-card class="md-whiteframe-z1"> 
+	<md-card-content> 
+	<!-- <div ng-switch on="list">
+		<div ng-switch-when="list.length == 0">
+			<md-toolbar class="md-table-toolbar md-default">
+		     <div class="md-toolbar-tools" >
+		      <md-icon>search</md-icon>
+		      <form flex name="filter.form">
+		        <input type="text"  style="font-size: 14px; width:100%;margin: 0;border: none; color: rgba(0, 0, 0, 0.87);"  ng-model="filtervalue"  placeholder="筛选" >
+		      </form>
+		     </div>
+		   </md-toolbar>
+		</div>
+		<div ng-switch-default>
+        	<center>没有数据</center>
+    	</div>
+	</div> -->
+    <md-toolbar class="md-table-toolbar md-default" ng-show="list.length">
+     	<div class="md-toolbar-tools">
+      		<md-icon>search</md-icon>
+      		<form flex name="filter.form">
+        		<input type="text"  style="font-size: 14px; width:100%;margin: 0;border: none; color: rgba(0, 0, 0, 0.87);"  ng-model="filtervalue"  placeholder="筛选" >
+      		</form>
+     	</div>
+   </md-toolbar>
+   <div ng-hide="list.length">
+    		<center>没有数据</center>
+    </div>
+     <treecontrol class="tree-light"
+				   tree-model="list"
+				   options="treeOptions"
+				   expanded-nodes="expandedData"
+				   filter-expression="filtervalue" 
+				   filter-comparator="false">
+				   <span ng-switch="" on="node.isSub">
+				   		<span ng-switch-when="0" class="glyphicon glyphicon-user" aria-hidden="true"></span>
+				   		<span ng-switch-when="1">
+				   			<span ng-switch="" on="node.ifUse">
+				   					<span ng-switch-when="N" class="glyphicon glyphicon-folder-close" aria-hidden="true"></span>
+				   					<span ng-switch-when="Y" class="glyphicon glyphicon-folder-open" aria-hidden="true"></span>
+				   			</span>
+				   		</span>
+				   </span>
+				   {{node.desc}}
+	 </treecontrol> 
+		
+  </md-card-content>
+  </md-card>
+</md-dialog-content>
+<md-dialog-actions layout="row">
+      <span flex></span>
+      <md-button ng-click="cancel()" style="margin-right:20px;" >
+                         关闭
+      </md-button>
+</md-dialog-actions>
+</form>
+</md-dialog>
+
+

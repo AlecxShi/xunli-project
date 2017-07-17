@@ -1,0 +1,36 @@
+<md-dialog style="width: 600px;">
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <h2>推送-{{label}}</h2>
+      <md-button class="md-icon-button" ng-click="checkAll()">
+        <md-icon>refresh</md-icon>
+      </md-button>
+      <span flex></span>
+      <md-button class="md-icon-button" ng-click="cancel()">
+        <md-icon>clear</md-icon>
+      </md-button>
+    </div>
+  </md-toolbar>
+  <md-dialog-content>
+    <form class="md-inline-form" name="form" novalidate>
+      <md-list>
+        <md-list-item ng-repeat="apiServer in apiServers">
+          <md-checkbox ng-model="apiServer.selected" aria-label="1"></md-checkbox>
+          <span>{{apiServer.serverAddress}}</span>
+          <span ng-if="apiServer.status && !apiServer.error" style="color:blue;">({{apiServer.status}})</span>
+          <span ng-if="apiServer.status && apiServer.error" style="color:red;">({{apiServer.status}})</span>
+          <span ng-if="apiServer.apiServerState == 'N'">(不可用)</span>
+          <!-- <md-progress-circular ng-if="apiServer.activated" ng-disabled="!apiServer.activated" class="md-secondary"
+                                md-diameter="30px" md-mode="indeterminate"></md-progress-circular> -->
+          <md-icon class="md-primary md-secondary" ng-if="apiServer.hasSend && apiServer.result">done</md-icon>
+          <md-icon class="md-warn md-secondary" ng-if="apiServer.hasSend && !apiServer.result">clear</md-icon> 
+        </md-list-item>
+      </md-list>
+    </form>
+  </md-dialog-content>
+  <md-dialog-actions layout="row">
+    <md-button ng-click="push()" class="md-primary md-raised">推送</md-button>
+    <md-button ng-click="cancel()" class="md-warn md-raised">关闭</md-button>
+  </md-dialog-actions>
+
+</md-dialog>
