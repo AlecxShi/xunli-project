@@ -14,13 +14,13 @@ public class DictInfo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "dictType")
+    @Column(name = "dict_type")
     private String dictType;
 
-    @Column(name = "dictValue")
+    @Column(name = "dict_value")
     private String dictValue;
 
-    @Column(name = "dictDesc")
+    @Column(name = "dict_desc")
     private String dictDesc;
 
     @Override

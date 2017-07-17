@@ -21,23 +21,23 @@ public class CommonUser {
     private Long id;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="userType", referencedColumnName="id")
+    @JoinColumn(name="usertype", referencedColumnName="id")
     private DictInfo usertype;
 
-    @Column(name = "userName")
+    @Column(name = "username")
     private String username;
 
-    @Column(name = "passWord")
+    @Column(name = "password")
     private String password;
 
     @Column(name = "excit")
     private Integer excit;
 
-    @Column(name = "createDate")
+    @Column(name = "create_date")
     @CreatedDate
     private Date createdate = new Date();
 
-    @Column(name = "lastModified")
+    @Column(name = "last_modified")
     @LastModifiedDate
     private Date lastmodified = new Date();
 

@@ -1,6 +1,7 @@
 CREATE TABLE DICT_INFO(
     id INT AUTO_INCREMENT PRIMARY KEY,
-    dictType VARCHAR(50),
-    dictValue VARCHAR(10),
-    dictDesc   VARCHAR(255)
+    dict_type VARCHAR(50),
+    dict_value VARCHAR(10),
+    dict_desc   VARCHAR(255)
 )
+INSERT INTO DICT_INFO(id,dict_type,dict_value,dict_desc) VALUES(1,'USER_TYPE','COMMON','PTYH')
