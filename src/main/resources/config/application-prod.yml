@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://rdsw46k48c465jzyyih9.mysql.rds.aliyuncs.com:3306/APIManager?characterEncoding=utf8&autoReconnect=true&rewriteBatchedStatements=true
-    username: gildaas
-    password: 83Mc73OvWT
+    url: jdbc:mysql://localhost:3306/XunLiManager?characterEncoding=utf8&autoReconnect=true&rewriteBatchedStatements=true
+    username: root
+    password: 1234@abcd
     max-active: 10
     max-idle: 8
     min-idle: 8
@@ -19,7 +19,7 @@ spring:
     database-platform: org.hibernate.dialect.MySQLInnoDBDialect
     database: MYSQL
     open-in-view: false
-    show-sql: false
+    show-sql: true
     generate-ddl: false
     hibernate:
       ddl-auto: none
