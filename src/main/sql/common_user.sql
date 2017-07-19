@@ -1,4 +1,4 @@
-CREATE TABLE COMMON_USER_INFO(
+CREATE TABLE common_user_info(
     id INT AUTO_INCREMENT PRIMARY KEY  ,    --注册用户编号，唯一
     usertype INT,           --注册用户类型,分为系统、机器、普通用户
     phone CHAR(11),              --注册手机号

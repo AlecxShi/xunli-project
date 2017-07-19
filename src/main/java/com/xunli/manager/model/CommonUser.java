@@ -5,6 +5,7 @@ import org.springframework.data.annotation.*;
 
 import javax.persistence.*;
 import javax.persistence.Id;
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -12,8 +13,8 @@ import java.util.Date;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
-@Table(name = "COMMON_USER_INFO")
-public class CommonUser {
+@Table(name = "common_user_info")
+public class CommonUser implements Serializable{
 
     @Id
     @Column(name="id")

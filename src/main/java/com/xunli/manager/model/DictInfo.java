@@ -1,13 +1,14 @@
 package com.xunli.manager.model;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * Created by Betty on 2017/7/16.
  */
 @Entity
-@Table(name = "DICT_INFO")
-public class DictInfo {
+@Table(name = "dict_info")
+public class DictInfo implements Serializable{
 
     @Id
     @Column(name = "id")
