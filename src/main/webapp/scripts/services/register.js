@@ -2,5 +2,5 @@
 
 angular.module('app')
   .factory('Register', function($resource,$rootScope) {
-    return $resource($rootScope.managerUrl + 'api/register', {}, {});
+    return $resource('api/register', {}, {});
   });

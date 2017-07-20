@@ -2,9 +2,9 @@
 
 angular.module('app')
   .factory('Authority', function($resource,$rootScope) {
-    return $resource($rootScope.managerUrl + 'api/authority/:id', {}, {
+    return $resource('api/authority/:id', {}, {
       all: {
-        url: $rootScope.managerUrl +  'api/authorities',
+        url: 'api/authorities',
         method: 'GET',
         isArray: true
       },

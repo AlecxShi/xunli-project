@@ -39,8 +39,6 @@ angular
 
     $rootScope.$state = $state;
     $rootScope.$stateParams = $stateParams;
-
-    $rootScope.API_SERVER_URL = "http://localhost:8888";
     
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
       $rootScope.toState = toState;

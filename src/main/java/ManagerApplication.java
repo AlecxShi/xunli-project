@@ -1,5 +1,6 @@
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.boot.orm.jpa.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
@@ -16,5 +17,11 @@ public class ManagerApplication extends SpringBootServletInitializer {
     public static void main(String[] args)
     {
         SpringApplication.run(ManagerApplication.class,args);
+    }
+
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder application)
+    {
+        return application.sources(ManagerApplication.class);
     }
 }

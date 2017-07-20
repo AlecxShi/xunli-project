@@ -32,6 +32,8 @@ import com.xunli.manager.security.AjaxAuthenticationSuccessHandler;
 import com.xunli.manager.security.AjaxLogoutSuccessHandler;
 import com.xunli.manager.security.Http401UnauthorizedEntryPoint;
 
+import static com.xunli.manager.config.Constants.ROLE_ADMIN;
+
 @Configuration
 @Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
 @EnableWebSecurity
@@ -95,21 +97,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     .antMatchers("/test/**");
   }
 
-  public CorsFilter corsFilter() {
-      UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-      CorsConfiguration config = new CorsConfiguration();
-      config.setAllowCredentials(true);
-      config.addAllowedOrigin("*");
-      config.addAllowedHeader("*");
-      config.addAllowedMethod("*");
-      source.registerCorsConfiguration("/**", config);
-      return new CorsFilter(source);
-  }
-
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http
-    	.addFilterBefore(corsFilter(), ChannelProcessingFilter.class)
 //    .requestMatcher(CorsUtils::isPreFlightRequest)
 //  .csrf()
 //    .ignoringAntMatchers("/websocket/**")
@@ -153,22 +143,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     .antMatchers("/api/activate").permitAll()
     .antMatchers("/api/authenticate").permitAll()
     .antMatchers("/api/reset").permitAll()
-    .antMatchers("/api/NextGroupInfo/**").permitAll()
-
-
-
-    .antMatchers("/api/hotSearch").permitAll()
-    .antMatchers("/api/GroupInfo/AllPublic").permitAll()
-    .antMatchers("/api/GroupInfo/IfPublic").permitAll()
-    .antMatchers("/api/ApiInfo/PageQuery/manyConditions").permitAll()
-    .antMatchers("/api/ApiInfo/getAllByGroupIdAndIfPublic").permitAll()
-    .antMatchers("/api/ApiInfo/getApiInfoByApiId").permitAll()
-    .antMatchers("/api/getUpgradeInfo").permitAll()
-    .antMatchers("/api/ApiInfo/associate").permitAll()
-    .antMatchers("/api/ApiInfo/exportAsExcel").permitAll()
+    .antMatchers("/api/accountAuth").permitAll()
+    .antMatchers("/api/**").authenticated()
+    .antMatchers("/api/logs/**").hasAuthority(ROLE_ADMIN)
+    .antMatchers("/api/audits/**").hasAuthority(ROLE_ADMIN)
+    .antMatchers("/manage/**").hasAuthority(ROLE_ADMIN)
+    .antMatchers("/protected/**").authenticated();
 
     //.antMatchers("/api/**").authenticated()
-    .anyRequest().authenticated();
+   /* .anyRequest().authenticated();*/
   }
 
   @Bean

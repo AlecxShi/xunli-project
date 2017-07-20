@@ -2,5 +2,5 @@
 
 angular.module('app')
   .factory('Reset', function($resource,$rootScope) {
-    return $resource($rootScope.managerUrl +'api/reset', {}, {});
+    return $resource('api/reset', {}, {});
   });
