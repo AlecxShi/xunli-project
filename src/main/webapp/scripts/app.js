@@ -35,7 +35,7 @@ angular
     $httpProvider.defaults.withCredentials = true;
   }
   ])
-.run(function($rootScope, $state, $stateParams, $window,$templateCache,$mdToast, $mdDialog, Auth, Principal,SoftVersion) {
+.run(function($rootScope, $state, $stateParams, $window,$templateCache,$mdToast, $mdDialog, Auth, Principal) {
 
     $rootScope.$state = $state;
     $rootScope.$stateParams = $stateParams;
@@ -57,10 +57,7 @@ angular
       if (toState.data && toState.data.title) {
         $window.document.title = '管理台－ ' + toState.data.title;
       }
-      
-      SoftVersion.getversion({}, function(value, responseHeaders) {
-  		$rootScope.softVersion = value;
-		}).$promise;
+
 
     });
 

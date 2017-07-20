@@ -28,12 +28,6 @@ angular.module('app')
       title: '用户管理',
       icon: 'group',
       authorities: 'ROLE_ADMIN'
-    }, {
-      state: 'database.list',
-      active: 'database.list',
-      title: '测试数据库配置',
-      icon: 'reorder',
-      authorities: 'ROLE_ADMIN'
     },{
       state: 'role.list',
       active: 'role',
@@ -47,7 +41,7 @@ angular.module('app')
       icon: 'format_list_bulleted',
       authorities: 'ROLE_ADMIN'
     }
-    ,{
+    /*,{
       title: '运维监控',
       authorities: 'ROLE_ADMIN'
     }, {
@@ -70,6 +64,6 @@ angular.module('app')
       title: '日志配置',
       icon: 'storage',
       authorities: 'ROLE_ADMIN'
-    }
+    }*/
     ];
   });
