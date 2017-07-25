@@ -7,10 +7,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
+ * 该部分提供APP端发起注册，查询等功能
  * Created by Betty on 2017/7/15.
  */
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api")
 public class CommonUserController {
 
     @Autowired

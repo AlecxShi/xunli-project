@@ -229,15 +229,23 @@ angular.module('app').config(function($stateProvider, $urlRouterProvider) {
 			title : '无权访问',
 		},
 		templateUrl : 'views/denied.html'
-	})
-}).config(
-		function($mdThemingProvider) {
+	}).state('dictinfo', {
+      		url : '/dictinfo',
+      		data : {
+      			authorities : ['ROLE_ADMIN'],
+      			title : '字典管理',
+      		},
+      		templateUrl : 'views/dictinfo.html',
+      		controller : 'DictInfoCtrl'
+      	})
+}).config(function($mdThemingProvider) {
 			$mdThemingProvider.theme('default').primaryPalette('blue')
-					.accentPalette('pink').warnPalette('red')
-					.backgroundPalette('grey');
+                .accentPalette('pink').warnPalette('red')
+                .backgroundPalette('grey');
 			$mdThemingProvider.theme('success').primaryPalette('green');
 			$mdThemingProvider.theme('error').primaryPalette('red');
-		}).config(function($mdDateLocaleProvider,$httpProvider) {
+		})
+    .config(function($mdDateLocaleProvider,$httpProvider) {
 			
 			$httpProvider.defaults.xsrfCookieName = 'CSRF-TOKEN';
 			$httpProvider.defaults.xsrfHeaderName = 'X-CSRF-TOKEN';
@@ -246,6 +254,6 @@ angular.module('app').config(function($stateProvider, $urlRouterProvider) {
 			// $httpProvider.interceptors.push('errorHandlerInterceptor');
 			$httpProvider.interceptors.push('authExpiredInterceptor');
 			
-	$mdDateLocaleProvider.days = [ '周日', '周一', '周二', '周三', '周四', '周五', '周六' ];
-	$mdDateLocaleProvider.shortDays = [ '日', '一', '二', '三', '四', '五', '六' ];
+            $mdDateLocaleProvider.days = [ '周日', '周一', '周二', '周三', '周四', '周五', '周六' ];
+            $mdDateLocaleProvider.shortDays = [ '日', '一', '二', '三', '四', '五', '六' ];
 });

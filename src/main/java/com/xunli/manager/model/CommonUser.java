@@ -42,6 +42,8 @@ public class CommonUser implements Serializable{
     @LastModifiedDate
     private Date lastmodified = new Date();
 
+
+
     public String toString()
     {
         return String.format("{id = %s,userName = %s,passWord = %s,userType = %s,excit = %s,createDate = %s,lastModified = %s}",

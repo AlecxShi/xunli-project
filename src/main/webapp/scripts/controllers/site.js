@@ -10,6 +10,14 @@ angular.module('app')
       authorities: 'ROLE_USER'
     },
     {
+      title: '系统配置',
+      authorities: 'ROLE_ADMIN'
+    }, {
+       state: 'dictinfo',
+       title: '字典管理',
+       icon: 'lock',
+       authorities: 'ROLE_ADMIN'
+    },{
       title: '系统用户设置',
       authorities: 'ROLE_USER'
     }, {

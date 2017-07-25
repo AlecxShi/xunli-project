@@ -1,5 +1,11 @@
 server:
-  port: 8888
+   port: 8888
+#  port: 8443
+#  ssl:
+#    key-store: classpath:keystore.p12
+#    key-store-password: mypassword
+#    keyStoreType: PKCS12
+#    keyAlias: tomcat
 spring:
   profiles:
     active: @spring.profiles.active@
