@@ -81,4 +81,10 @@ public class DictInfoController {
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("dict",ids.toString())).build();
     }
 
+    @RequestMapping(value = "/dictinfo/getByType",method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
+    @Transactional(readOnly = true)
+    public List<DictInfo> getAllByDictType(String dictType)
+    {
+        return dictInfoRepository.findAllByDictType(dictType);
+    }
 }

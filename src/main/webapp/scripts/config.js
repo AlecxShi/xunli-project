@@ -230,14 +230,22 @@ angular.module('app').config(function($stateProvider, $urlRouterProvider) {
 		},
 		templateUrl : 'views/denied.html'
 	}).state('dictinfo', {
-      		url : '/dictinfo',
-      		data : {
-      			authorities : ['ROLE_ADMIN'],
-      			title : '字典管理',
-      		},
-      		templateUrl : 'views/dictinfo.html',
-      		controller : 'DictInfoCtrl'
-      	})
+        url : '/dictinfo',
+        data : {
+            authorities : ['ROLE_ADMIN'],
+            title : '字典管理',
+        },
+        templateUrl : 'views/dictinfo.html',
+        controller : 'DictInfoCtrl'
+    }).state('commonuser', {
+        url : '/commonuser',
+        data : {
+            authorities : ['ROLE_ADMIN'],
+            title : '用户管理',
+        },
+        templateUrl : 'views/commonuser.list.html',
+        controller : 'CommonUserInfoCtrl'
+    })
 }).config(function($mdThemingProvider) {
 			$mdThemingProvider.theme('default').primaryPalette('blue')
                 .accentPalette('pink').warnPalette('red')

@@ -22,6 +22,7 @@ CREATE TABLE children_base_info(
     height INT,                                              --身高
     education BIGINT,                                        --教育程度
     score INT,                                               --当前评分
+    label VARCHAR(255),                                      --标签
     create_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,         --创建日期
     last_modified    TIMESTAMP DEFAULT CURRENT_TIMESTAMP     --最后修改时间
 )
@@ -35,7 +36,7 @@ CREATE TABLE children_extend_info(
     school  VARCHAR(255),                                    --毕业学校
     income BIGINT,                                           --收入情况,字典匹配
     car BIT,                                                 --是否有车
-    house BIT,                                               --是否有房
+    house BIGINT,                                            --是否有房
     photo VARCHAR(255),                                      --照片信息,照片存储路径
     hobby VARCHAR(255),                                      --爱好信息,字典组装
     create_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,         --创建日期

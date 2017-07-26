@@ -20,14 +20,11 @@ angular
     'angular-loading-bar',
     'angular.filter',
     'LocalStorageModule',
-    'treeControl',
     'ngDialog',
     'ui.bootstrap',
     'dialogs.main',
     'pascalprecht.translate',
     'dialogs.default-translations',
-    'angularBootstrapNavTree',
-    'xlsx-model',
     'ngCookies'
   ])
   .config(['$httpProvider',function($httpProvider)
@@ -76,11 +73,10 @@ angular
     };
     
     $templateCache.put('loading.html', '<md-dialog style="background-color:transparent;box-shadow:none;z-index:99999;">' +
-    	      '<div layout="row" layout-sm="column" layout-align="center center" aria-label="wait">' +
-    	        '<md-progress-circular md-mode="indeterminate"></md-progress-circular>' +
-    	      '<div loader-css="line-scale"></div>' +
-    	      '</div>' +
-    	      '</md-dialog>');
+      '<div layout="row" layout-sm="column" layout-align="center center" aria-label="wait">' +
+      '<div loader-css="line-scale"></div>' +
+      '</div>' +
+      '</md-dialog>');
 
     /**
      * 显示遮罩
@@ -99,7 +95,5 @@ angular
     $rootScope.hideLoading = function () {
       $mdDialog.cancel();
     };
-    	    
-    	    
-    	    
-  });
+
+});

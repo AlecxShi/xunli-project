@@ -59,6 +59,9 @@ public class ChildrenBaseInfo implements Serializable{
     @Transient
     private ChildrenExtendInfo extendInfo;
 
+    @Column(name = "label")
+    private String label;
+
     public Long getId() {
         return id;
     }
@@ -153,5 +156,13 @@ public class ChildrenBaseInfo implements Serializable{
 
     public void setExtendInfo(ChildrenExtendInfo extendInfo) {
         this.extendInfo = extendInfo;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
     }
 }

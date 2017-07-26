@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('app')
-  .controller('DictInfoCtrl', function($scope, $state, $stateParams, $mdToast,$mdDialog,DictInfo) {
+  .controller('DictInfoCtrl', function($scope, $rootScope,$state, $stateParams, $mdToast,$mdDialog,DictInfo) {
 
     var bookmark;
 
@@ -22,7 +22,7 @@ angular.module('app')
 
 
     $scope.onChange = function() {
-
+      $rootScope.showLoading();
       var sort = $scope.query.order;
       if (sort && sort.length > 0) {
         if (sort.charAt(0) === '-') {
@@ -40,6 +40,7 @@ angular.module('app')
           filter: $scope.query.filter
         },
         function(value, responseHeaders) {
+          $rootScope.hideLoading();
           $scope.data = value;
         }
       ).$promise;

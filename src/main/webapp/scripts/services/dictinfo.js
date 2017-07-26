@@ -10,6 +10,11 @@ angular.module('app')
         url: 'system/dictinfo',
         method: 'GET',
         isArray: true
+      },
+      getByDictType: {
+        url : 'system/dictinfo/getByType',
+        method: 'GET',
+        isArray: true
       }
     });
   });

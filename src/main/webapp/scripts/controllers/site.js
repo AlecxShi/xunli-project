@@ -17,6 +17,11 @@ angular.module('app')
        title: '字典管理',
        icon: 'lock',
        authorities: 'ROLE_ADMIN'
+    }, {
+        state: 'commonuser',
+        title: '用户管理',
+        icon: 'lock',
+        authorities: 'ROLE_ADMIN'
     },{
       title: '系统用户设置',
       authorities: 'ROLE_USER'

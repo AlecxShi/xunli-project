@@ -27,9 +27,14 @@
   <link rel="stylesheet" href="bower_components/katex/dist/katex.min.css" />
   <link rel="stylesheet" href="bower_components/editor.md/css/editormd.min.css" />
   <link rel="stylesheet" href="bower_components/editor.md/lib/codemirror/codemirror.min.css" />
+  <link rel="stylesheet" href="bower_components/loaders.css/loaders.css" />
 
 
   <!-- endbower -->
+  <link rel="stylesheet" href="bower_components/integralui/css/integralui.css"/>
+  <link rel="stylesheet" href="bower_components/integralui/css/integralui.checkbox.css"/>
+  <link rel="stylesheet" href="bower_components/integralui/css/integralui.treeview.css"/>
+  <link rel="stylesheet" href="bower_components/integralui/css/themes/theme-windows10.css"/>
   <!-- endbuild -->
   <!-- build:css styles/main.css -->
   <link rel="stylesheet" href="styles/main.css">
@@ -156,7 +161,6 @@
 
 
   <script src="bower_components/angular-ui-tree/dist/angular-ui-tree.js"></script>
-  <script src="bower_components/angular-tree-control/angular-tree-control.js"></script>
   <script src="bower_components/ng-dialog/js/ngDialog.js"></script>
   <script src="bower_components/angular-translate/angular-translate.js"></script>
   <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
@@ -165,12 +169,9 @@
   <script src="bower_components/angular-growl-v2/build/angular-growl.js"></script>
   <script src="bower_components/angular-utils-pagination/dirPagination.js"></script>
 
-  <script src='bower_components/xlsx-model/xlsx-model.js'></script>
-  <script src='bower_components/js-xlsx/dist/xlsx.full.min.js'></script>
   <script src="bower_components/codemirror/mode/yaml/yaml.js"></script>
   <script src="bower_components/angular-cookies/angular-cookies.min.js"></script>
   <script src="bower_components/file-saver/FileSaver.js"></script>
-  <script src="scripts/directives/xlsx-master/xlsx.full.min.js"></script>
 
 
 
@@ -178,7 +179,10 @@
 
 
   <!-- endbower -->
-
+  <script src="bower_components/integralui/js/angular.integralui.min.js"></script>
+  <script src="bower_components/integralui/js/angular.integralui.lists.min.js"></script>
+  <script src="bower_components/integralui/js/angular.integralui.checkbox.min.js"></script>
+  <script src="bower_components/integralui/js/angular.integralui.treeview.min.js"></script>
 
   <!-- endbuild -->
   <!-- build:js scripts/scripts.js -->
@@ -190,8 +194,6 @@
   <script src="scripts/directives/authority.js"></script>
   <script src="scripts/directives/containerDirectives.js"></script>
   <script src="scripts/directives/myMarkDown.js"></script>
-  <script src="scripts/directives/abn-tree/abn_tree_directive.js"></script>
-  <script src="scripts/directives/xlsx-master/sheet-js-import.js"></script>
   <script src="scripts/filters/filters.js"></script>
   <script src="scripts/filters/truncate.filter.js"></script>
   <script src="scripts/filters/expireType.filter.js"></script>
@@ -209,6 +211,9 @@
   <script src="scripts/services/authority.js"></script>
   <script src="scripts/services/role.js"></script>
   <script src="scripts/services/dictinfo.js"></script>
+  <script src="scripts/services/commonuser.js"></script>
+  <script src="scripts/services/childrenbase.js"></script>
+  <script src="scripts/services/childrenextend.js"></script>
 
 
 
@@ -223,6 +228,7 @@
   <script src="scripts/controllers/role.js"></script>
   <script src="scripts/controllers/authority.js"></script>
   <script src="scripts/controllers/dictinfo.js"></script>
+  <script src="scripts/controllers/commonuser.js"></script>
 
 
   <!-- endbuild -->
