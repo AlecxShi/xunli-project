@@ -245,15 +245,22 @@ angular.module('app').config(function($stateProvider, $urlRouterProvider) {
         },
         templateUrl : 'views/commonuser.list.html',
         controller : 'CommonUserInfoCtrl'
-    })
+    }).state('children', {
+        url : '/children',
+        data : {
+            authorities : ['ROLE_ADMIN'],
+            title : '子女管理',
+        },
+        templateUrl : 'views/children.list.html',
+        controller : 'ChildrenBaseInfoCtrl'
+  })
 }).config(function($mdThemingProvider) {
 			$mdThemingProvider.theme('default').primaryPalette('blue')
                 .accentPalette('pink').warnPalette('red')
                 .backgroundPalette('grey');
 			$mdThemingProvider.theme('success').primaryPalette('green');
 			$mdThemingProvider.theme('error').primaryPalette('red');
-		})
-    .config(function($mdDateLocaleProvider,$httpProvider) {
+}).config(function($mdDateLocaleProvider,$httpProvider) {
 			
 			$httpProvider.defaults.xsrfCookieName = 'CSRF-TOKEN';
 			$httpProvider.defaults.xsrfHeaderName = 'X-CSRF-TOKEN';

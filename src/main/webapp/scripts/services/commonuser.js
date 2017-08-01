@@ -10,6 +10,10 @@ angular.module('app')
         url: 'system/user',
         method: 'GET',
         isArray: true
+      },
+      batchCreate: {
+        url: 'system/user/quick',
+        method: 'POST'
       }
     });
   });

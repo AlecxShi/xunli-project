@@ -21,9 +21,8 @@ public class ChildrenExtendInfo implements Serializable{
     @Column(name="id")
     private Long id;
 
-    @JoinColumn(name = "childrenId",referencedColumnName = "id")
-    @OneToOne
-    private ChildrenBaseInfo children;
+    @Column(name = "childrenId")
+    private Long childrenId;
 
     @Column(name="profession")
     private String profession;
@@ -62,6 +61,9 @@ public class ChildrenExtendInfo implements Serializable{
     @LastModifiedDate
     private Date lastmodified = new Date();
 
+    @Column(name = "score")
+    private Integer score;
+
     public Long getId() {
         return id;
     }
@@ -70,12 +72,12 @@ public class ChildrenExtendInfo implements Serializable{
         this.id = id;
     }
 
-    public ChildrenBaseInfo getChildren() {
-        return children;
+    public Long getChildrenId() {
+        return childrenId;
     }
 
-    public void setChildren(ChildrenBaseInfo children) {
-        this.children = children;
+    public void setChildrenId(Long childrenId) {
+        this.childrenId = childrenId;
     }
 
     public String getProfession() {
@@ -164,5 +166,13 @@ public class ChildrenExtendInfo implements Serializable{
 
     public void setLastmodified(Date lastmodified) {
         this.lastmodified = lastmodified;
+    }
+
+    public Integer getScore() {
+        return score;
+    }
+
+    public void setScore(Integer score) {
+        this.score = score;
     }
 }

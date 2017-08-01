@@ -53,9 +53,7 @@
     "angular-utils-pagination":"0.11.1",
     "editor.md": "1.5.0",
     "katex": "0.7.1",
-    "file-saver":"1.3.3",
-    "loaders.css": "0.1.2",
-    "integralui": "luhuiguo/integralui#3.2"
+    "file-saver":"1.3.3"
   },
   "devDependencies": {
     "angular-mocks": "~1.5.0-rc.2",

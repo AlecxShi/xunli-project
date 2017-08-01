@@ -71,8 +71,7 @@ angular.module('app')
       filter: '',
       order: '-id',
       page: 1,
-      size: 10,
-      status: 'NORMAL'
+      size: 10
     };
 
     $scope.advancedSearchToggle = function (advancedSearchEvent) {
@@ -209,13 +208,11 @@ angular.module('app')
       });
     };
 
+    //快速创建
     $scope.quickAdd = function (event) {
-      $mdDialog.show({
-        templateUrl: 'quickAdd.html',
-        controller: quickAddController,
-        parent: angular.element(document.body),
-        clickOutsideToClose: true
-      })
+      CommonUserInfo.batchCreate({},function(value){
+
+      });
     };
 
     $scope.edit = function (itemId) {
@@ -230,9 +227,11 @@ angular.module('app')
       $scope.selected.forEach(function (item, index) {
         ids.push(item.id);
       });
-      Agreement.remove({
+      $rootScope.showLoading();
+      CommonUserInfo.remove({
         id: ids.join(',')
       }).$promise.then(function () {
+        $rootScope.hideLoading();
         $scope.refresh();
       });
     };

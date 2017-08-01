@@ -21,9 +21,8 @@ public class ChildrenBaseInfo implements Serializable{
     @Column(name="id")
     private Long id;
 
-    @JoinColumn(name="parentId",referencedColumnName = "id")
-    @OneToOne
-    private CommonUser parent;
+    @Column(name = "parentId")
+    private Long parentId;
 
     @JoinColumn(name="gender",referencedColumnName = "id")
     @OneToOne
@@ -37,6 +36,9 @@ public class ChildrenBaseInfo implements Serializable{
 
     @Column(name="age")
     private Integer age;
+
+    @Column(name = "birthday")
+    private String birthday;
 
     @Column(name="height")
     private Integer height;
@@ -56,11 +58,25 @@ public class ChildrenBaseInfo implements Serializable{
     @LastModifiedDate
     private Date lastmodified = new Date();
 
+    @Column(name = "label")
+    private String label;
+
+    @Column(name = "name")
+    private String name;
+
     @Transient
     private ChildrenExtendInfo extendInfo;
 
-    @Column(name = "label")
-    private String label;
+    @Transient
+    private CommonUser parent;
+
+    public String getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(String birthday) {
+        this.birthday = birthday;
+    }
 
     public Long getId() {
         return id;
@@ -70,12 +86,12 @@ public class ChildrenBaseInfo implements Serializable{
         this.id = id;
     }
 
-    public CommonUser getParent() {
-        return parent;
+    public Long getParentId() {
+        return parentId;
     }
 
-    public void setParent(CommonUser parent) {
-        this.parent = parent;
+    public void setParentId(Long parentId) {
+        this.parentId = parentId;
     }
 
     public DictInfo getGender() {
@@ -164,5 +180,21 @@ public class ChildrenBaseInfo implements Serializable{
 
     public void setLabel(String label) {
         this.label = label;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setParent(CommonUser parent) {
+        this.parent = parent;
+    }
+
+    public CommonUser getParent() {
+        return parent;
     }
 }

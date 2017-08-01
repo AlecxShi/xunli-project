@@ -18,10 +18,15 @@ angular.module('app')
        icon: 'lock',
        authorities: 'ROLE_ADMIN'
     }, {
-        state: 'commonuser',
-        title: '用户管理',
-        icon: 'lock',
-        authorities: 'ROLE_ADMIN'
+       state: 'commonuser',
+       title: '用户管理',
+       icon: 'group',
+       authorities: 'ROLE_ADMIN'
+    },{
+      state: 'children',
+      title: '子女管理',
+      icon: 'assignment_ind',
+      authorities: 'ROLE_ADMIN'
     },{
       title: '系统用户设置',
       authorities: 'ROLE_USER'

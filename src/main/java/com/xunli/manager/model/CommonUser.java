@@ -42,12 +42,14 @@ public class CommonUser implements Serializable{
     @LastModifiedDate
     private Date lastmodified = new Date();
 
+    @Column(name = "location")
+    private String location;
 
 
     public String toString()
     {
-        return String.format("{id = %s,userName = %s,passWord = %s,userType = %s,excit = %s,createDate = %s,lastModified = %s}",
-                id,username,usertype.getDictDesc(),excit,createdate,lastmodified);
+        return String.format("{id = %s,userName = %s,passWord = %s,userType = %s,location = %s,excit = %s,createDate = %s,lastModified = %s}",
+                id,username,usertype.getDictDesc(),location,excit,createdate,lastmodified);
     }
 
     public Long getId() {
@@ -104,5 +106,13 @@ public class CommonUser implements Serializable{
 
     public void setLastmodified(Date lastmodified) {
         this.lastmodified = lastmodified;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 }
