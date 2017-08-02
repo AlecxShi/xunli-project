@@ -2,14 +2,8 @@ package com.xunli.manager.web;
 
 import com.xunli.manager.domain.criteria.CommonUserCriteria;
 import com.xunli.manager.domain.specification.CommonUserSpecification;
-import com.xunli.manager.model.ChildrenBaseInfo;
-import com.xunli.manager.model.ChildrenExtendInfo;
-import com.xunli.manager.model.CommonUser;
-import com.xunli.manager.model.DictInfo;
-import com.xunli.manager.repository.ChildrenBaseInfoRepository;
-import com.xunli.manager.repository.ChildrenExtendInfoRepository;
-import com.xunli.manager.repository.CommonUserRepository;
-import com.xunli.manager.repository.DictInfoRepository;
+import com.xunli.manager.model.*;
+import com.xunli.manager.repository.*;
 import com.xunli.manager.service.GenerateService;
 import com.xunli.manager.util.HeaderUtil;
 import org.springframework.data.domain.Page;
@@ -47,16 +41,13 @@ public class SystemUserController {
     private CommonUserRepository commonUserRepository;
 
     @Resource
-    private ChildrenBaseInfoRepository childrenBaseInfoRepository;
-
-    @Resource
-    private ChildrenExtendInfoRepository childrenExtendInfoRepository;
-
-    @Resource
     private GenerateService generateService;
 
     @Resource
     private DictInfoRepository dictInfoRepository;
+
+    @Resource
+    private ChildrenInfoRepository childrenInfoRepository;
 
     @RequestMapping(value = "/user",method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
     public Page<CommonUser> query(@ModelAttribute CommonUserCriteria criteria, @PageableDefault Pageable page)
@@ -101,16 +92,9 @@ public class SystemUserController {
     public ResponseEntity<Void> delete(@PathVariable List<Long> id)
     {
         List<CommonUser> users = commonUserRepository.findAllByIdIn(id);
-        List<ChildrenBaseInfo> childrens = childrenBaseInfoRepository.findAllByParentIdIn(id);
-        List<Long> childrenIds = new ArrayList<Long>();
-        for(ChildrenBaseInfo child : childrens)
-        {
-            childrenIds.add(child.getId());
-        }
-        List<ChildrenExtendInfo> extend = childrenExtendInfoRepository.findAllByChildrenIdIn(childrenIds);
+        List<ChildrenInfo> childrens = childrenInfoRepository.findAllByParentIdIn(id);
         commonUserRepository.deleteInBatch(users);
-        childrenBaseInfoRepository.deleteInBatch(childrens);
-        childrenExtendInfoRepository.deleteInBatch(extend);
+        childrenInfoRepository.deleteInBatch(childrens);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("commonuser",id.toString())).build();
     }
 
@@ -121,11 +105,7 @@ public class SystemUserController {
     {
         List<DictInfo> dictInfos = dictInfoRepository.findAll();
         List<CommonUser> users = commonUserRepository.save(generateService.generateRobotUser(dictInfos));
-        commonUserRepository.flush();
-        List<ChildrenBaseInfo> childrens = childrenBaseInfoRepository.save(generateService.generateChildrenBaseInfo(users,dictInfos));
-        childrenBaseInfoRepository.flush();
-        List<ChildrenExtendInfo> extendInfos = childrenExtendInfoRepository.save(generateService.generateChildrenExtendInfo(childrens,dictInfos));
-        childrenExtendInfoRepository.flush();
+        List<ChildrenInfo> childrens = childrenInfoRepository.save(generateService.generateChildrenInfo(users,dictInfos));
         return ResponseEntity.ok().build();
     }
 

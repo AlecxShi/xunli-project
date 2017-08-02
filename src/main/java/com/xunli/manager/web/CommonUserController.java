@@ -1,19 +1,14 @@
 package com.xunli.manager.web;
 
-import com.xunli.manager.model.ChildrenBaseInfo;
-import com.xunli.manager.model.ChildrenExtendInfo;
 import com.xunli.manager.model.CommonUser;
-import com.xunli.manager.model.DictInfo;
 import com.xunli.manager.repository.DictInfoRepository;
 import com.xunli.manager.service.CommonUserService;
 import com.xunli.manager.service.GenerateService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * 该部分提供APP端发起注册，查询等功能

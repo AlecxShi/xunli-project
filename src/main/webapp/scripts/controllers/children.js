@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('app')
-  .controller('ChildrenBaseInfoCtrl', function ($scope, $state, $filter, $mdDialog, $rootScope, $stateParams, $mdToast, CommonUserInfo,ChildrenBaseInfo,ChildrenExtendInfo,DictInfo) {
+  .controller('ChildrenInfoCtrl', function ($scope, $state, $filter, $mdDialog, $rootScope, $stateParams, $mdToast, CommonUserInfo,ChildrenInfo,DictInfo) {
     var bookmark;
 
     $scope.products = {};
@@ -93,7 +93,7 @@ angular.module('app')
         }
       }
       // = '';
-      return ChildrenBaseInfo.get({
+      return ChildrenInfo.get({
           page: $scope.query.page - 1,
           size: $scope.query.size,
           sort: sort,
@@ -142,7 +142,7 @@ angular.module('app')
         startDate: $scope.startDate,
         endDate: $scope.endDate
       };
-      return ChildrenBaseInfo.get(params,function (value, responseHeaders) {
+      return ChildrenInfo.get(params,function (value, responseHeaders) {
           $rootScope.hideLoading();
           $scope.data = value;
           for(var i=0;i<value.content.length;i++){
@@ -1325,7 +1325,7 @@ function AgreementBatchTableImportCtrl($scope, $rootScope, Upload, IntegralUITre
   // }
 
 };
-function quickAddController($scope, $mdDialog, $state, $rootScope, CommonUserInfo, ChildrenBaseInfo,ChildrenExtendInfo,DictInfo) {
+function quickAddController($scope, $mdDialog, $state, $rootScope, CommonUserInfo, ChildrenInfo,DictInfo) {
 
   $scope.cancel = function () {
     $mdDialog.hide();

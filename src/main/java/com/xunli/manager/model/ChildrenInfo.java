@@ -114,9 +114,6 @@ public class ChildrenInfo implements Serializable{
     private Date lastmodified = new Date();
 
     @Transient
-    private ChildrenExtendInfo extendInfo;
-
-    @Transient
     private CommonUser parent;
 
     public String getBirthday() {
@@ -205,14 +202,6 @@ public class ChildrenInfo implements Serializable{
 
     public void setLastmodified(Date lastmodified) {
         this.lastmodified = lastmodified;
-    }
-
-    public ChildrenExtendInfo getExtendInfo() {
-        return extendInfo;
-    }
-
-    public void setExtendInfo(ChildrenExtendInfo extendInfo) {
-        this.extendInfo = extendInfo;
     }
 
     public String getLabel() {

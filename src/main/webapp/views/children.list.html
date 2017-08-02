@@ -1,0 +1,263 @@
+<!--<ui-view flex layout="column">-->
+<md-card flex >
+  <md-toolbar class="md-table-toolbar md-default" ng-hide="selected.length || filter.show">
+    <div class="md-toolbar-tools">
+      <span class="md-title title-margin-select">子女管理</span>
+      <md-icon>search</md-icon>
+      <form name="filter.form">
+        <input type="text" ng-model="query.filter" ng-model-options="filter.options" placeholder="搜索">
+      </form>
+      <md-button class="md-icon-button" ng-click="removeFilter()" ng-show="query.filter.length > 0">
+        <md-icon>close</md-icon>
+      </md-button>
+      <div flex></div>
+      <md-button class="md-icon-button" ng-click="advancedSearchToggle(advancedSearchFlag)">
+        <md-tooltip>高级搜索</md-tooltip>
+        <md-icon>gps_fixed</md-icon>
+      </md-button>
+      <md-button class="md-icon-button" ng-click="refresh($event)">
+        <md-tooltip>刷新</md-tooltip>
+        <md-icon>refresh</md-icon>
+      </md-button>
+      <md-button class="md-icon-button" ng-click="add($event)" has_Authority="ROLE_ADMIN">
+        <md-tooltip>添加</md-tooltip>
+        <md-icon>add</md-icon>
+      </md-button>
+     <md-button class="md-icon-button" ng-click="quickAdd($event)" has_Authority="ROLE_ADMIN">
+        <md-tooltip>批量添加</md-tooltip>
+        <md-icon>add_box</md-icon>
+      </md-button>
+    </div>
+  </md-toolbar>
+  <md-toolbar class="md-table-toolbar alternate" ng-show="selected.length">
+    <div class="md-toolbar-tools">
+        <div>选中 {{selected.length}} 行</div>
+        <div flex></div>
+        <md-button class="md-icon-button" ng-click="delete()">
+            <md-tooltip>删除</md-tooltip>
+            <md-icon>delete</md-icon>
+        </md-button>
+    </div>
+  </md-toolbar>
+
+  <md-card ng-show="advancedSearchFlag==true">
+    <form class="md-inline-form"  name="advancedSearchForm" novalidate ng-submit="advancedSearchSave($event)">
+      <md-card-title>
+        <md-card-title-text>
+          <span class="md-title">高级条件搜索</span>
+        </md-card-title-text>
+      </md-card-title>
+      <md-card-content>
+        <div layout-gt-sm="row" style="margin-top:-15px">
+          <md-input-container flex>
+            <label>用户类型</label>
+            <md-select name="userType" ng-model="query.userType">
+                <md-option ng-repeat="type in userType" value="{{type.id}}">
+                    {{type.dictDesc}}
+                </md-option>
+            </md-select>
+          </md-input-container>
+
+          <md-input-container flex>
+            <label>家乡所在省</label>
+            <md-select name="bornLocationProvince" ng-model="query.bornLocationProvince">
+              <md-option ng-repeat="type in bornLocationProvince" value="{{type}}">
+                {{type.dictDesc}}
+              </md-option>
+            </md-select>
+          </md-input-container>
+          <md-input-container flex ng-show="bornLocationCity">
+            <label>家乡所在市</label>
+            <md-select name="bornLocationCity" ng-model="query.bornLocationCity">
+                <md-option ng-repeat="type in bornLocationCity" value="{{type}}">
+                    {{type.dictDesc}}
+                </md-option>
+            </md-select>
+          </md-input-container>
+
+          <md-input-container flex>
+            <label>当前所在省</label>
+            <md-select name="currentLocationProvince" ng-model="query.currentLocationProvince">
+              <md-option ng-repeat="type in currentLocationProvince" value="{{type}}">
+                {{type.dictDesc}}
+              </md-option>
+            </md-select>
+          </md-input-container>
+
+          <md-input-container flex ng-show="currentLocationCity">
+            <label>当前所在市</label>
+            <md-select name="currentLocationCity" ng-model="query.currentLocationCity">
+                <md-option ng-repeat="type in currentLocationCity" value="{{type}}">
+                    {{type.dictDesc}}
+                </md-option>
+            </md-select>
+          </md-input-container>
+
+          <md-input-container flex>
+            <label>身高</label>
+            <input type="number" name="height" ng-model="query.height" >
+          </md-input-container>
+
+        </div>
+        <div layout-gt-sm="row" style="margin-top:-40px">
+
+            <md-input-container flex>
+                <label>性别</label>
+                <md-select name="gender" ng-model="query.gender">
+                    <md-option ng-repeat="type in gender" value="{{type}}">
+                        {{type.dictDesc}}
+                    </md-option>
+                </md-select>
+            </md-input-container>
+
+            <md-input-container flex>
+                <label>是否有车</label>
+                <md-select name="car" ng-model="query.car">
+                    <md-option ng-repeat="type in car" value="{{type}}">
+                        {{type.desc}}
+                    </md-option>
+                </md-select>
+            </md-input-container>
+
+            <md-input-container flex>
+                <label>是否有房</label>
+                <md-select name="house" ng-model="query.house">
+                    <md-option ng-repeat="type in house" value="{{type}}">
+                        {{type.dictDesc}}
+                    </md-option>
+                </md-select>
+            </md-input-container>
+
+            <div class="date-picker-row" style="margin-left:30px;margin-top:20px;">
+                <label>出生日期开始</label>
+                <md-datepicker flex name="bornStartTime"  ng-model="query.bornStartTime"
+                               md-placeholder="出生日期开始"></md-datepicker>
+            </div>
+            <div class="date-picker-row"  style="margin-left:30px;margin-top:20px;">
+                <label>出生日期结束</label>
+                <md-datepicker flex name="bornEndTime" ng-model="query.bornEndTime"
+                               md-placeholder="出生日期结束"></md-datepicker>
+            </div>
+        </div>
+      </md-card-content>
+      <md-card-actions style="margin-top:-45px" layout="row" layout-align="end end">
+        <md-checkbox ng-model="query.isHistory" class="md-primary" style="left: 10px">全部记录</md-checkbox>
+        <span flex></span>
+        <md-button class="md-warn md-raised" ng-click="cleanAdvancedSearch()">
+          清除
+        </md-button>
+        <md-button type="submit" class="md-primary md-raised">
+          搜索
+        </md-button>
+      </md-card-actions>
+    </form>
+  </md-card>
+  <md-table-container flex >
+    <table md-table multiple ng-model="selected" md-progress="promise" md-row-select>
+      <thead  md-head md-order="query.order" md-on-reorder="advancedSearchSave" fix-head >
+        <tr md-row>
+              <th md-column md-order-by="id">用户编号</th>
+              <th md-column>用户名称</th>
+              <th md-column>性别</th>
+              <th md-column>家乡所在地</th>
+              <th md-column>当前所在地</th>
+              <th md-column>年 龄</th>
+              <th md-column>身 高(cm)</th>
+              <th md-column>学 历</th>
+              <th md-column>毕业学校</th>
+              <th md-column>职 业</th>
+              <th md-column>所在公司</th>
+              <th md-column>当前职位</th>
+              <th md-column>当 前 收 入</th>
+              <th md-column>是否有车</th>
+              <th md-column>是 否 有 房</th>
+              <th md-column>兴趣爱好</th>
+              <th md-column>静态评分</th>
+              <th md-column>标 签</th>
+              <th md-column>操 作</th>
+        </tr>
+      </thead>
+      <tbody md-body>
+        <tr md-row md-select="item" md-select-id="{{item.id}}" ng-repeat="item in data.content">
+            <td md-cell>{{item.id}}</td>
+            <td md-cell>{{item.name}}</td>
+            <td md-cell>{{item.gender.dictDesc}}</td>
+            <td md-cell>{{item.bornLocation}}</td>
+            <td md-cell>{{item.currentLocation}}</td>
+            <td md-cell>{{transferAge(item.birthday)}}</td>
+            <td md-cell>{{item.height}}</td>
+            <td md-cell>{{item.education.dictDesc}}</td>
+            <td md-cell>{{item.school}}</td>
+            <td md-cell>{{item.profession}}</td>
+            <td md-cell>{{item.company}}</td>
+            <td md-cell>{{item.position}}</td>
+            <td md-cell>{{item.income.dictDesc}}</td>
+            <td md-cell>{{item.car ? '有' : '无'}}</td>
+            <td md-cell>{{item.house.dictDesc}}</td>
+            <td md-cell>{{item.hobby}}</td>
+            <td md-cell>{{item.score}}</td>
+            <td md-cell>{{item.label}}</td>
+          <td md-cell>
+            <md-button class="md-icon-button" ng-click="edit(item.id)" aria-label="编辑">
+              <md-icon>edit</md-icon>
+            </md-button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </md-table-container>
+  <md-table-pagination md-label="{page: '页:', rowsPerPage: '每页行数:', of: '共'}" md-limit="query.size" md-limit-options="[10, 20, 50,100,]" md-page="query.page" md-total="{{data.totalElements}}" md-on-paginate="pageRefresh" md-page-select></md-table-pagination>
+</md-card>
+<!--</ui-view>-->
+<script type="text/ng-template" id="quickAdd.html">
+<md-dialog style="width: 1000px;">
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <h2>快速添加</h2>
+      <span flex></span>
+      <md-button class="md-icon-button" ng-click="cancel()">
+        <md-icon>clear</md-icon>
+      </md-button>
+    </div>
+  </md-toolbar>
+  <md-dialog-content class="md-padding">
+    <form layout="row" class="md-inline-form" name="form" novalidate>
+
+    </form>
+  </md-dialog-content>
+  <md-dialog-actions layout="row">
+    <md-button ng-click="search($event)" class="md-primary md-raised">确定</md-button>
+    <md-button ng-click="cancel()" class="md-warn md-raised">关闭</md-button>
+  </md-dialog-actions>
+
+</md-dialog>
+</script>
+<script type="text/ng-template" id="update_endDate.html">
+<md-dialog style="width: 600px;">
+ <md-toolbar>
+    <div class="md-toolbar-tools">
+      <h2>批量延期协议</h2>
+      <span flex></span>
+      <md-button class="md-icon-button" ng-click="cancel()">
+        <md-icon>clear</md-icon>
+      </md-button>
+    </div>
+  </md-toolbar>
+ <md-dialog-content class="md-padding">
+     <form name="form" novalidate ng-submit="save($event)">
+        <div layout="row" class="date-picker-row">
+              <label translate class="agr_date_label">截止日期</label>
+              <md-datepicker name="endDate" ng-model="endDate" md-placeholder="截止日期" required></md-datepicker>
+              <div class="validation-messages" ng-messages="form.endDate.$error">
+                <div ng-message="required">请选择截止日期</div>
+              </div>
+            </div>
+     </form>
+ </md-dialog-content>
+ <md-dialog-actions layout="row">
+    <md-button type="submit" class="md-primary md-raised">确定</md-button>
+    <md-button ng-click="cancel()" class="md-warn md-raised">关闭</md-button>
+ </md-dialog-actions>
+   </form>
+</md-dialog>
+</script>

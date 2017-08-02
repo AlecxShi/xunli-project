@@ -28,12 +28,12 @@ spring:
       hibernate.cache.use_query_cache: false
       hibernate.generate_statistics: false
       hibernate.cache.region.factory_class: org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory
-      hibernate.jdbc.batch_size: 500
+      hibernate.jdbc.batch_size: 2000
     thymeleaf:
       mode: XHTML
       cache: false
 logging:
   level:
-    com.gildaas: debug
+    com.xunli: debug
     org.springframework: info
     org.hibernate: WARN

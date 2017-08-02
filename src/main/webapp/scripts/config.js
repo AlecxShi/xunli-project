@@ -252,7 +252,7 @@ angular.module('app').config(function($stateProvider, $urlRouterProvider) {
             title : '子女管理',
         },
         templateUrl : 'views/children.list.html',
-        controller : 'ChildrenBaseInfoCtrl'
+        controller : 'ChildrenInfoCtrl'
   })
 }).config(function($mdThemingProvider) {
 			$mdThemingProvider.theme('default').primaryPalette('blue')
