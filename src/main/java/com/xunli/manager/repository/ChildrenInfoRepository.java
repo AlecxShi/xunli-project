@@ -16,4 +16,6 @@ public interface ChildrenInfoRepository extends JpaRepository<ChildrenInfo,Long>
     List<ChildrenInfo> findAllByIdIn(List<Long> id);
 
     List<ChildrenInfo> findAllByParentIdIn(List<Long> id);
+
+    ChildrenInfo findOneByParentId(Long id);
 }

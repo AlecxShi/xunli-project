@@ -55,6 +55,15 @@ public class SystemUserController {
         return commonUserRepository.findAll(new CommonUserSpecification(criteria),page);
     }
 
+    @RequestMapping(value = "/user/{id}",method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<CommonUser> getById(@PathVariable Long id)
+    {
+        return Optional.ofNullable(commonUserRepository.findOne(id)).map(user -> {
+            user.setChildren(childrenInfoRepository.findOneByParentId(user.getId()));
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        }).orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
     @RequestMapping(value = "/user",method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.READ_COMMITTED)
     @Secured(ROLE_ADMIN)

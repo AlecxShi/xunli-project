@@ -5,6 +5,7 @@ import org.springframework.data.annotation.*;
 
 import javax.persistence.*;
 import javax.persistence.Id;
+import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -31,6 +32,9 @@ public class CommonUser implements Serializable{
     @Column(name = "password")
     private String password;
 
+    @Column(name = "phone")
+    private String phone;
+
     @Column(name = "excit")
     private Integer excit;
 
@@ -45,6 +49,8 @@ public class CommonUser implements Serializable{
     @Column(name = "location")
     private String location;
 
+    @Transient
+    private ChildrenInfo children;
 
     public String toString()
     {
@@ -114,5 +120,21 @@ public class CommonUser implements Serializable{
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public ChildrenInfo getChildren() {
+        return children;
+    }
+
+    public void setChildren(ChildrenInfo children) {
+        this.children = children;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }
