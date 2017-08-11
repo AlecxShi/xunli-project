@@ -1,0 +1,225 @@
+<form  class="md-inline-form" name="form" novalidate ng-submit="save($event)">
+  <md-card class="md-whiteframe-z1">
+    <md-card-title>
+      <md-card-title-text>
+        <span class="md-title">注册用户信息</span>
+      </md-card-title-text>
+    </md-card-title>
+    <md-card-content>
+      <p class="error">{{userError}} </p>
+      <div layout="column" layout-gt-xs="row">
+        <md-input-container ng-show="commonUser.id" flex>
+          <label>用户编号</label>
+          <input type="text" name="username" ng-model="commonUser.id" disabled>
+        </md-input-container>
+        <md-input-container flex>
+          <label>用户名称</label>
+          <input type="text" name="username" ng-model="commonUser.username">
+        </md-input-container>
+        <md-input-container flex>
+          <label>登录密码</label>
+          <input type="password" name="originalPassword" autocomplete="off" ng-model="commonUser.password" required minlength="2" md-maxlength="20" ng-paste="$event.preventDefault()">
+          <div ng-messages="form.originalPassword.$error">
+            <div ng-message="required">请输入原密码</div>
+            <div ng-message="minlength">密码必须为2到20个字符</div>
+            <div ng-message="md-maxlength">密码必须为2到20个字符</div>
+          </div>
+        </md-input-container>
+      </div>
+      <div layout="column" layout-gt-xs="row">
+        <md-input-container flex>
+          <label>用户类型</label>
+          <md-select name="userType" ng-model="commonUser.userType">
+            <md-option ng-repeat="type in userType" value="{{type.id}}">
+              {{type.dictDesc}}
+            </md-option>
+          </md-select>
+        </md-input-container>
+        <md-input-container flex>
+          <label>电话</label>
+          <input type="text" id="phone" name="phone" ng-model="commonUser.phone" ng-pattern="/^\d{11}$/" ui-validate-async="{alreadyExists: 'phoneNotExist($value)'}">
+          <div ng-messages="form.phone.$error">
+            <div ng-message="pattern">电话必须11位数字</div>
+            <div ng-message="minlength">电话必须11位数字</div>
+            <div ng-message="md-maxlength">电话必须11位数字</div>
+            <div ng-message="alreadyExists">电话号码已被注册</div>
+          </div>
+        </md-input-container>
+      </div>
+      <div layout="column" layout-gt-xs="row">
+        <md-input-container flex>
+          <label>家乡所在省</label>
+          <md-select name="bornLocationProvince" ng-model="commonUser.bornLocationProvince">
+            <md-option ng-repeat="type in bornLocationProvince" value="{{type}}">
+              {{type.dictDesc}}
+            </md-option>
+          </md-select>
+        </md-input-container>
+        <md-input-container flex ng-show="bornLocationCity">
+          <label>家乡所在市</label>
+          <md-select name="bornLocationCity" ng-model="commonUser.bornLocationCity">
+            <md-option ng-repeat="type in bornLocationCity" value="{{type}}">
+              {{type.dictDesc}}
+            </md-option>
+          </md-select>
+        </md-input-container>
+      </div>
+  </md-card>
+  <md-card class="md-whiteframe-z1">
+    <md-card-title>
+      <md-card-title-text>
+        <span class="md-title">子女信息</span>
+      </md-card-title-text>
+    </md-card-title>
+    <md-card-content>
+      <p class="error">{{userError}} </p>
+      <div layout="column" layout-gt-xs="row">
+        <md-input-container flex>
+          <label>显示名称</label>
+          <input type="text" name="username" ng-model="commonUser.children.name">
+        </md-input-container>
+        <md-input-container flex>
+          <label>性别</label>
+          <md-select name="gender" ng-model="commonUser.children.gender">
+            <md-option ng-repeat="type in gender" value="{{type}}">
+              {{type.dictDesc}}
+            </md-option>
+          </md-select>
+        </md-input-container>
+      </div>
+      <div layout="column" layout-gt-xs="row">
+        <md-input-container flex>
+          <label>出生地所在省</label>
+          <md-select name="bornLocationProvince" ng-model="commonUser.children.bornLocationProvince">
+            <md-option ng-repeat="type in bornLocationProvince" value="{{type}}">
+              {{type.dictDesc}}
+            </md-option>
+          </md-select>
+        </md-input-container>
+        <md-input-container flex ng-show="childrenBornLocationCity">
+          <label>出生地所在市</label>
+          <md-select name="bornLocationCity" ng-model="commonUser.children.bornLocationCity">
+            <md-option ng-repeat="type in childrenBornLocationCity" value="{{type}}">
+              {{type.dictDesc}}
+            </md-option>
+          </md-select>
+        </md-input-container>
+      </div>
+      <div layout="column" layout-gt-xs="row">
+        <md-input-container flex>
+          <label>当前所在省</label>
+          <md-select name="currentLocationProvince" ng-model="commonUser.children.currentLocationProvince">
+            <md-option ng-repeat="type in currentLocationProvince" value="{{type}}">
+              {{type.dictDesc}}
+            </md-option>
+          </md-select>
+        </md-input-container>
+
+        <md-input-container flex ng-show="currentLocationCity">
+          <label>当前所在市</label>
+          <md-select name="currentLocationCity" ng-model="commonUser.children.currentLocationCity">
+            <md-option ng-repeat="type in currentLocationCity" value="{{type}}">
+              {{type.dictDesc}}
+            </md-option>
+          </md-select>
+        </md-input-container>
+      </div>
+      <div layout="column" layout-gt-xs="row">
+        <md-input-container flex>
+          <label>出生年份</label>
+          <input type="text" name="username" ng-model="commonUser.children.birthday">
+        </md-input-container>
+        <md-input-container flex>
+          <label>学历</label>
+          <md-select name="education" ng-model="commonUser.children.education">
+            <md-option ng-repeat="type in education" value="{{type}}">
+              {{type.dictDesc}}
+            </md-option>
+          </md-select>
+        </md-input-container>
+      </div>
+      <div layout="column" layout-gt-xs="row">
+        <!-- 职业 -->
+        <md-input-container flex>
+          <label>职业</label>
+          <input type="text" name="username" ng-model="commonUser.children.profession">
+        </md-input-container>
+        <!-- 收入 -->
+        <md-input-container flex>
+          <label>收入</label>
+          <md-select name="income" ng-model="commonUser.children.income">
+              {{type.dictDesc}}
+            </md-option>
+          </md-select>
+        </md-input-container>
+      </div>
+      <div layout="column" layout-gt-xs="row">
+        <!-- 身高 -->
+        <md-input-container flex>
+          <label>身高</label>
+          <input type="number" name="height" ng-model="commonUser.children.height" >
+        </md-input-container>
+        <!-- 体重 -->
+        <md-input-container flex>
+          <label>体重</label>
+          <input type="number" name="height" ng-model="commonUser.children.weight" >
+        </md-input-container>
+      </div>
+      <div layout="column" layout-gt-xs="row">
+        <!-- 是否有车 -->
+        <md-input-container flex>
+          <label>是否有车</label>
+          <md-select name="car" ng-model="commonUser.children.car">
+            <md-option ng-repeat="type in car" value="{{type}}">
+              {{type.desc}}
+            </md-option>
+          </md-select>
+        </md-input-container>
+        <!-- 是否有房 -->
+        <md-input-container flex>
+          <label>是否有房</label>
+          <md-select name="gender" ng-model="commonUser.children.house">
+            <md-option ng-repeat="type in house" value="{{type}}">
+              {{type.dictDesc}}
+            </md-option>
+          </md-select>
+        </md-input-container>
+      </div>
+      <div layout="column" layout-gt-xs="row">
+        <!-- 所在公司 -->
+        <md-input-container flex>
+          <label>所在公司</label>
+          <input type="text" name="username" ng-model="commonUser.children.company">
+        </md-input-container>
+        <!-- 职位 -->
+        <md-input-container flex>
+          <label>职位</label>
+          <input type="text" name="username" ng-model="commonUser.children.position">
+        </md-input-container>
+      </div>
+      <div layout="column" layout-gt-xs="row">
+        <!-- 学校 -->
+        <md-input-container flex>
+          <label>学校</label>
+          <input type="text" name="username" ng-model="commonUser.children.school">
+        </md-input-container>
+        <!-- 兴趣爱好 -->
+        <md-input-container flex>
+          <label>兴趣爱好</label>
+          <input type="text" name="username" ng-model="commonUser.children.hobby">
+        </md-input-container>
+      </div>
+      <div layout="column" layout-gt-xs="row">
+
+      </div>
+    </md-card-content>
+  </md-card>
+  <div style="text-align:center">
+    <md-button ng-click="cancel()" class="md-warn md-raised">
+      取消
+    </md-button>
+    <md-button type="submit" class="md-primary md-raised">
+      保存
+    </md-button>
+  </div>
+</form>
