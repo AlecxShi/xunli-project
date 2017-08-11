@@ -18,7 +18,7 @@ angular.module('app')
        icon: 'lock',
        authorities: 'ROLE_ADMIN'
     }, {
-       state: 'commonuser',
+       state: 'commonuser.list',
        title: '用户管理',
        icon: 'group',
        authorities: 'ROLE_ADMIN'

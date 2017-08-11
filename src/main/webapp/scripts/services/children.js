@@ -10,6 +10,10 @@ angular.module('app')
         url: 'system/children',
         method: 'GET',
         isArray: true
+      },
+      phoneNotExist: {
+        url: 'api/validate/commonuser/phone/unique',
+        method: 'POST'
       }
     });
   });

@@ -238,13 +238,45 @@ angular.module('app').config(function($stateProvider, $urlRouterProvider) {
         templateUrl : 'views/dictinfo.html',
         controller : 'DictInfoCtrl'
     }).state('commonuser', {
-        url : '/commonuser',
+        url: '/commonuser',
+        abstract: true,
+        data: {
+          authorities: ['ROLE_ADMIN'],
+          title: '权限',
+        },
+        templateUrl: 'views/authority.html'
+    }).state('commonuser.list', {
+        url : '',
         data : {
             authorities : ['ROLE_ADMIN'],
             title : '用户管理',
         },
         templateUrl : 'views/commonuser.list.html',
         controller : 'CommonUserInfoCtrl'
+    }).state('commonuser.edit', {
+        url : '/{id}',
+        data : {
+            authorities : ['ROLE_ADMIN'],
+            title : '用户修改',
+        },
+        templateUrl : 'views/commonuser.edit.html',
+        controller : 'CommonUserInfoEditCtrl',
+        resolve : {
+             commonUser : function($stateParams, CommonUserInfo) {
+                 console.log('config',$stateParams.id);
+                 if ($stateParams.id === 'new') {
+                      return {
+                          children:{
+
+                          }
+                      };
+                 }else {
+                      return CommonUserInfo.get({
+                          id : $stateParams.id
+                      }).$promise;
+                 }
+             }
+        }
     }).state('children', {
         url : '/children',
         data : {
@@ -253,7 +285,7 @@ angular.module('app').config(function($stateProvider, $urlRouterProvider) {
         },
         templateUrl : 'views/children.list.html',
         controller : 'ChildrenInfoCtrl'
-  })
+    })
 }).config(function($mdThemingProvider) {
 			$mdThemingProvider.theme('default').primaryPalette('blue')
                 .accentPalette('pink').warnPalette('red')
