@@ -164,9 +164,10 @@
               <th md-column>年 龄</th>
               <th md-column>身 高(cm)</th>
               <th md-column>学 历</th>
+              <th md-column>学校情况</th>
               <th md-column>毕业学校</th>
               <th md-column>职 业</th>
-              <th md-column>所在公司</th>
+              <th md-column>公司情况</th>
               <th md-column>当前职位</th>
               <th md-column>当 前 收 入</th>
               <th md-column>是否有车</th>
@@ -181,19 +182,20 @@
         <tr md-row md-select="item" md-select-id="{{item.id}}" ng-repeat="item in data.content">
             <td md-cell>{{item.id}}</td>
             <td md-cell>{{item.name}}</td>
-            <td md-cell>{{item.gender.dictDesc}}</td>
+            <td md-cell>{{showDictionary(item.gender,gender)}}</td>
             <td md-cell>{{item.bornLocation}}</td>
             <td md-cell>{{item.currentLocation}}</td>
             <td md-cell>{{transferAge(item.birthday)}}</td>
             <td md-cell>{{item.height}}</td>
-            <td md-cell>{{item.education.dictDesc}}</td>
+            <td md-cell>{{showDictionary(item.education,education)}}</td>
+            <td md-cell>{{showDictionary(item.schoolType,school)}}</td>
             <td md-cell>{{item.school}}</td>
             <td md-cell>{{item.profession}}</td>
-            <td md-cell>{{item.company}}</td>
+            <td md-cell>{{showDictionary(item.company,company)}}</td>
             <td md-cell>{{item.position}}</td>
-            <td md-cell>{{item.income.dictDesc}}</td>
+            <td md-cell>{{showDictionary(item.income,income)}}</td>
             <td md-cell>{{item.car ? '有' : '无'}}</td>
-            <td md-cell>{{item.house.dictDesc}}</td>
+            <td md-cell>{{showDictionary(item.house,house)}}</td>
             <td md-cell>{{item.hobby}}</td>
             <td md-cell>{{item.score}}</td>
             <td md-cell>{{item.label}}</td>

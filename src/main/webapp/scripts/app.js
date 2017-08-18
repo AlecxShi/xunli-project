@@ -96,4 +96,18 @@ angular
       $mdDialog.cancel();
     };
 
+    $rootScope.showDictionary = function(key,list)
+    {
+        if(angular.isArray(list))
+        {
+            for(var i in list)
+            {
+                var dict = list[i];
+                if(angular.isObject(dict) && dict['id'] == key)
+                {
+                    return dict['dictDesc'];
+                }
+            }
+        }
+    }
 });

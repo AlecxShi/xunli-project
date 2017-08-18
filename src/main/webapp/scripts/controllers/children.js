@@ -10,6 +10,11 @@ angular.module('app')
         return new Date().getFullYear() - birth;
     }
 
+    $scope.showDictionary = function(key,list)
+    {
+        return $rootScope.showDictionary(key,list);
+    }
+
     $scope.advancedSearchFlag = false;
     //用户类型
     DictInfo.getByDictType({dictType:'USER_TYPE'}).$promise.then(function (data) {
@@ -31,6 +36,20 @@ angular.module('app')
     //房产
     DictInfo.getByDictType({dictType:'House'}).$promise.then(function (data) {
       $scope.house = data;
+    });
+    //收入
+    DictInfo.getByDictType({dictType:'Income'}).$promise.then(function (data) {
+      $scope.income = data;
+    });
+
+    //学校类型
+    DictInfo.getByDictType({dictType:'School'}).$promise.then(function (data) {
+      $scope.school = data;
+    });
+
+    //公司类型
+    DictInfo.getByDictType({dictType:'Company'}).$promise.then(function (data) {
+      $scope.company = data;
     });
 
     //是否有车

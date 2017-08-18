@@ -3,7 +3,10 @@ package com.xunli.manager.web;
 import com.xunli.manager.domain.criteria.ChildrenInfoCriteria;
 import com.xunli.manager.domain.specification.ChildrenInfoSpecification;
 import com.xunli.manager.model.ChildrenInfo;
+import com.xunli.manager.model.DictInfo;
 import com.xunli.manager.repository.ChildrenInfoRepository;
+import com.xunli.manager.repository.DictInfoRepository;
+import com.xunli.manager.service.GenerateService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -30,6 +33,9 @@ public class ChildrenInfoController {
     @Resource
     private ChildrenInfoRepository childrenInfoRepository;
 
+    @Resource
+    private DictInfoRepository dictInfoRepository;
+
     @RequestMapping(value = "/children",method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional(readOnly = true)
     public Page<ChildrenInfo> query(@ModelAttribute ChildrenInfoCriteria criteria, @PageableDefault Pageable pageable)
@@ -46,6 +52,9 @@ public class ChildrenInfoController {
         {
             return update(childrenInfo);
         }
+        List<DictInfo> dictInfos = dictInfoRepository.findAll();
+        childrenInfo.setScore(GenerateService.createScore(childrenInfo,dictInfos));
+        childrenInfo.setLabel(GenerateService.createLabel(childrenInfo,dictInfos));
         return ResponseEntity.ok().body(childrenInfoRepository.save(childrenInfo));
     }
 
@@ -54,6 +63,9 @@ public class ChildrenInfoController {
     @Secured(ROLE_ADMIN)
     public ResponseEntity<ChildrenInfo> update(@RequestBody ChildrenInfo childrenInfo)
     {
+        List<DictInfo> dictInfos = dictInfoRepository.findAll();
+        childrenInfo.setScore(GenerateService.createScore(childrenInfo,dictInfos));
+        childrenInfo.setLabel(GenerateService.createLabel(childrenInfo,dictInfos));
         return ResponseEntity.ok().body(childrenInfoRepository.save(childrenInfo));
     }
 

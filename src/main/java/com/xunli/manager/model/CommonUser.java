@@ -22,9 +22,10 @@ public class CommonUser implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="usertype", referencedColumnName="id")
-    private DictInfo usertype;
+    /*@OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="usertype", referencedColumnName="id")*/
+    @Column(name="usertype")
+    private Long usertype;
 
     @Column(name = "username")
     private String username;
@@ -52,10 +53,13 @@ public class CommonUser implements Serializable{
     @Transient
     private ChildrenInfo children;
 
+    @Transient
+    private ChildrenInfoTwo childrenInfoTwo;
+
     public String toString()
     {
         return String.format("{id = %s,userName = %s,passWord = %s,userType = %s,location = %s,excit = %s,createDate = %s,lastModified = %s}",
-                id,username,usertype.getDictDesc(),location,excit,createdate,lastmodified);
+                id,username,usertype,location,excit,createdate,lastmodified);
     }
 
     public Long getId() {
@@ -66,11 +70,11 @@ public class CommonUser implements Serializable{
         this.id = id;
     }
 
-    public DictInfo getUsertype() {
+    public Long getUsertype() {
         return usertype;
     }
 
-    public void setUsertype(DictInfo usertype) {
+    public void setUsertype(Long usertype) {
         this.usertype = usertype;
     }
 
@@ -136,5 +140,13 @@ public class CommonUser implements Serializable{
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public ChildrenInfoTwo getChildrenInfoTwo() {
+        return childrenInfoTwo;
+    }
+
+    public void setChildrenInfoTwo(ChildrenInfoTwo childrenInfoTwo) {
+        this.childrenInfoTwo = childrenInfoTwo;
     }
 }

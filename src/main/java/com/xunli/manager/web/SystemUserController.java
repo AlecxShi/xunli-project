@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -49,6 +50,9 @@ public class SystemUserController {
     @Resource
     private ChildrenInfoRepository childrenInfoRepository;
 
+    @Resource
+    private ChildrenInfoController childrenInfoController;
+
     @RequestMapping(value = "/user",method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
     public Page<CommonUser> query(@ModelAttribute CommonUserCriteria criteria, @PageableDefault Pageable page)
     {
@@ -67,13 +71,18 @@ public class SystemUserController {
     @RequestMapping(value = "/user",method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.READ_COMMITTED)
     @Secured(ROLE_ADMIN)
-    public ResponseEntity<CommonUser> addOrEdit(@RequestBody CommonUser user) throws URISyntaxException
+    public ResponseEntity<CommonUser> addOrEdit(@Valid @RequestBody CommonUser user) throws URISyntaxException
     {
         if(user.getId() != null)
         {
             return update(user);
         }
         CommonUser sa = commonUserRepository.save(user);
+        if(sa.getChildren() != null)
+        {
+            sa.getChildren().setParentId(sa.getId());
+            childrenInfoController.addOrEdit(sa.getChildren());
+        }
         return ResponseEntity.created(new URI("/system/user")).headers(HeaderUtil.createEntityCreationAlert("user",sa.getId().toString())).body(sa);
     }
 
@@ -82,12 +91,12 @@ public class SystemUserController {
     @Secured(ROLE_ADMIN)
     public ResponseEntity<CommonUser> update(@RequestBody CommonUser user)
     {
-        return Optional.ofNullable(commonUserRepository.findOne(user.getId())).map(u -> {
-            u.setLastmodified(new Date());
-            u.setUsername(user.getUsername());
-            u.setPassword(user.getPassword());
-            return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert("commonuser",u.getUsername())).body(commonUserRepository.save(u));
-        }).orElseGet(() -> new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
+        if(user.getChildren() != null)
+        {
+            user.getChildren().setParentId(user.getId());
+            childrenInfoController.addOrEdit(user.getChildren());
+        }
+        return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert("commonuser",user.getUsername())).body(commonUserRepository.save(user));
     }
 
     /**

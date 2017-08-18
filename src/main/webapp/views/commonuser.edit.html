@@ -20,7 +20,7 @@
           <label>登录密码</label>
           <input type="password" name="originalPassword" autocomplete="off" ng-model="commonUser.password" required minlength="2" md-maxlength="20" ng-paste="$event.preventDefault()">
           <div ng-messages="form.originalPassword.$error">
-            <div ng-message="required">请输入原密码</div>
+            <div ng-message="required">请输入密码</div>
             <div ng-message="minlength">密码必须为2到20个字符</div>
             <div ng-message="md-maxlength">密码必须为2到20个字符</div>
           </div>
@@ -29,7 +29,7 @@
       <div layout="column" layout-gt-xs="row">
         <md-input-container flex>
           <label>用户类型</label>
-          <md-select name="userType" ng-model="commonUser.userType">
+          <md-select name="userType" ng-model="commonUser.usertype">
             <md-option ng-repeat="type in userType" value="{{type.id}}">
               {{type.dictDesc}}
             </md-option>
@@ -49,7 +49,7 @@
       <div layout="column" layout-gt-xs="row">
         <md-input-container flex>
           <label>家乡所在省</label>
-          <md-select name="bornLocationProvince" ng-model="commonUser.bornLocationProvince">
+          <md-select name="bornLocationProvince" ng-model="commonUser.locationProvince">
             <md-option ng-repeat="type in bornLocationProvince" value="{{type}}">
               {{type.dictDesc}}
             </md-option>
@@ -57,7 +57,7 @@
         </md-input-container>
         <md-input-container flex ng-show="bornLocationCity">
           <label>家乡所在市</label>
-          <md-select name="bornLocationCity" ng-model="commonUser.bornLocationCity">
+          <md-select name="bornLocationCity" ng-model="commonUser.locationCity">
             <md-option ng-repeat="type in bornLocationCity" value="{{type}}">
               {{type.dictDesc}}
             </md-option>
@@ -81,7 +81,7 @@
         <md-input-container flex>
           <label>性别</label>
           <md-select name="gender" ng-model="commonUser.children.gender">
-            <md-option ng-repeat="type in gender" value="{{type}}">
+            <md-option ng-repeat="type in gender" value="{{type.id}}">
               {{type.dictDesc}}
             </md-option>
           </md-select>
@@ -129,10 +129,15 @@
           <label>出生年份</label>
           <input type="text" name="username" ng-model="commonUser.children.birthday">
         </md-input-container>
+        <!-- 身高 -->
+        <md-input-container flex>
+          <label>身高</label>
+          <input type="number" name="height" ng-model="commonUser.children.height" >
+        </md-input-container>
         <md-input-container flex>
           <label>学历</label>
           <md-select name="education" ng-model="commonUser.children.education">
-            <md-option ng-repeat="type in education" value="{{type}}">
+            <md-option ng-repeat="type in education" value="{{type.id}}">
               {{type.dictDesc}}
             </md-option>
           </md-select>
@@ -148,48 +153,29 @@
         <md-input-container flex>
           <label>收入</label>
           <md-select name="income" ng-model="commonUser.children.income">
+            <md-option ng-repeat="type in income" value="{{type.id}}">
               {{type.dictDesc}}
             </md-option>
           </md-select>
         </md-input-container>
       </div>
-      <div layout="column" layout-gt-xs="row">
-        <!-- 身高 -->
-        <md-input-container flex>
-          <label>身高</label>
-          <input type="number" name="height" ng-model="commonUser.children.height" >
-        </md-input-container>
-        <!-- 体重 -->
-        <md-input-container flex>
+      <!--<div layout="column" layout-gt-xs="row">
+
+        &lt;!&ndash; 体重 &ndash;&gt;
+        &lt;!&ndash;<md-input-container flex>
           <label>体重</label>
           <input type="number" name="height" ng-model="commonUser.children.weight" >
-        </md-input-container>
-      </div>
-      <div layout="column" layout-gt-xs="row">
-        <!-- 是否有车 -->
-        <md-input-container flex>
-          <label>是否有车</label>
-          <md-select name="car" ng-model="commonUser.children.car">
-            <md-option ng-repeat="type in car" value="{{type}}">
-              {{type.desc}}
-            </md-option>
-          </md-select>
-        </md-input-container>
-        <!-- 是否有房 -->
-        <md-input-container flex>
-          <label>是否有房</label>
-          <md-select name="gender" ng-model="commonUser.children.house">
-            <md-option ng-repeat="type in house" value="{{type}}">
-              {{type.dictDesc}}
-            </md-option>
-          </md-select>
-        </md-input-container>
-      </div>
+        </md-input-container>&ndash;&gt;
+      </div>-->
       <div layout="column" layout-gt-xs="row">
         <!-- 所在公司 -->
         <md-input-container flex>
           <label>所在公司</label>
-          <input type="text" name="username" ng-model="commonUser.children.company">
+          <md-select name="income" ng-model="commonUser.children.company">
+            <md-option ng-repeat="type in company" value="{{type.id}}">
+              {{type.dictDesc}}
+            </md-option>
+          </md-select>
         </md-input-container>
         <!-- 职位 -->
         <md-input-container flex>
@@ -198,6 +184,35 @@
         </md-input-container>
       </div>
       <div layout="column" layout-gt-xs="row">
+        <!-- 是否有车 -->
+        <md-input-container flex>
+          <label>是否有车</label>
+          <md-select name="car" ng-model="commonUser.children.car">
+            <md-option ng-repeat="type in car" value="{{type.value}}">
+              {{type.desc}}
+            </md-option>
+          </md-select>
+        </md-input-container>
+        <!-- 是否有房 -->
+        <md-input-container flex>
+          <label>是否有房</label>
+          <md-select name="gender" ng-model="commonUser.children.house">
+            <md-option ng-repeat="type in house" value="{{type.id}}">
+              {{type.dictDesc}}
+            </md-option>
+          </md-select>
+        </md-input-container>
+      </div>
+      <div layout="column" layout-gt-xs="row">
+        <!-- 学校类型 -->
+        <md-input-container flex>
+          <label>学校情况</label>
+          <md-select name="gender" ng-model="commonUser.children.schoolType">
+            <md-option ng-repeat="type in school" value="{{type.id}}">
+              {{type.dictDesc}}
+            </md-option>
+          </md-select>
+        </md-input-container>
         <!-- 学校 -->
         <md-input-container flex>
           <label>学校</label>
@@ -210,7 +225,6 @@
         </md-input-container>
       </div>
       <div layout="column" layout-gt-xs="row">
-
       </div>
     </md-card-content>
   </md-card>

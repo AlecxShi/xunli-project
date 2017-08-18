@@ -10,12 +10,12 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * Created by shihj on 2017/7/25.
+ * Created by shihj on 2017/8/11.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
 @Table(name="children_info")
-public class ChildrenInfo implements Serializable{
+public class ChildrenInfoTwo implements Serializable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,11 +31,10 @@ public class ChildrenInfo implements Serializable{
     @ColumnComment("所属用户")
     private Long parentId;
 
-    /*@JoinColumn(name="gender",referencedColumnName = "id")
-    @OneToOne*/
-    @Column(name="gender")
+    @JoinColumn(name="gender",referencedColumnName = "id")
+    @OneToOne
     @ColumnComment("性别")
-    private Long gender;
+    private DictInfo gender;
 
     @Column(name="bornLocation")
     @ColumnComment("家乡所在地")
@@ -53,11 +52,10 @@ public class ChildrenInfo implements Serializable{
     @ColumnComment("身高")
     private Integer height;
 
-    /*@JoinColumn(name="education",referencedColumnName = "id")
-    @OneToOne*/
+    @JoinColumn(name="education",referencedColumnName = "id")
+    @OneToOne
     @ColumnComment("教育程度")
-    @Column(name="education")
-    private Long education;
+    private DictInfo education;
 
     @Column(name="profession")
     @ColumnComment("职业信息")
@@ -65,34 +63,26 @@ public class ChildrenInfo implements Serializable{
 
     @Column(name="company")
     @ColumnComment("公司信息")
-    private Long company;
+    private String company;
 
     @Column(name="position")
     @ColumnComment("职位信息")
     private String position;
 
-    @Column(name = "school_type")
-    @ColumnComment("学校类型")
-    private Long schoolType;
-
     @Column(name="school")
     @ColumnComment("毕业学校")
     private String school;
 
-   /* @JoinColumn(name="income",referencedColumnName = "id")
-    @OneToOne*/
-    @ColumnComment("收入等级")
     @Column(name="income")
+    @ColumnComment("收入等级")
     private Long income;
 
     @Column(name="car")
     @ColumnComment("是否有车")
     private Boolean car;
 
-    /*@JoinColumn(name="house",referencedColumnName = "id")
-    @OneToOne*/
-    @ColumnComment("房产信息")
     @Column(name="house")
+    @ColumnComment("房产信息")
     private Long house;
 
     @Column(name="photo")
@@ -148,11 +138,11 @@ public class ChildrenInfo implements Serializable{
         this.parentId = parentId;
     }
 
-    public Long getGender() {
+    public DictInfo getGender() {
         return gender;
     }
 
-    public void setGender(Long gender) {
+    public void setGender(DictInfo gender) {
         this.gender = gender;
     }
 
@@ -188,11 +178,11 @@ public class ChildrenInfo implements Serializable{
         this.height = height;
     }
 
-    public Long getEducation() {
+    public DictInfo getEducation() {
         return education;
     }
 
-    public void setEducation(Long education) {
+    public void setEducation(DictInfo education) {
         this.education = education;
     }
 
@@ -204,20 +194,12 @@ public class ChildrenInfo implements Serializable{
         this.profession = profession;
     }
 
-    public Long getCompany() {
+    public String getCompany() {
         return company;
     }
 
-    public void setCompany(Long company) {
+    public void setCompany(String company) {
         this.company = company;
-    }
-
-    public Long getSchoolType() {
-        return schoolType;
-    }
-
-    public void setSchoolType(Long schoolType) {
-        this.schoolType = schoolType;
     }
 
     public String getPosition() {

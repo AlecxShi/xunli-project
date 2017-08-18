@@ -5,7 +5,7 @@ CREATE TABLE common_user_info(
     password VARCHAR(32),                                    --登录密码
     location    VARCHAR(255),                                --当前所在地,获取地理信息而得
     username    VARCHAR(255),                                --用户名称
-    excit   INT DEFAULT 0,                                             --激励标记
+    excit   INT DEFAULT 0,                                   --激励标记
     create_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,         --创建日期
     last_modified    TIMESTAMP DEFAULT CURRENT_TIMESTAMP     --最后修改时间
 );
@@ -21,14 +21,15 @@ CREATE TABLE children_info(
     height INT,                                              --身高
     education BIGINT,                                        --教育程度
     profession VARCHAR(255),                                 --职业信息
-    company VARCHAR(255),                                    --所在公司
+    company BIGINT,                                          --所在公司,字典匹配
     position    VARCHAR(255),                                --当前职位
+    school_type BIGINT,                                      --学校类型,字典匹配
     school  VARCHAR(255),                                    --毕业学校,
     income BIGINT,                                           --收入情况,字典匹配
     car BIT,                                                 --是否有车
     house BIGINT,                                            --是否有房,字典匹配
     photo VARCHAR(255),                                      --照片信息,照片存储路径
-    hobby VARCHAR(255),                                      --爱好信息,字典组装
+    hobby VARCHAR(255),                                      --爱好信息,尚未确定是否选择
     score INT,                                               --当前评分
     label VARCHAR(255),                                      --标签
     create_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,         --创建日期

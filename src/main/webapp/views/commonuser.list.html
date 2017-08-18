@@ -165,7 +165,7 @@
       <tbody md-body>
         <tr md-row md-select="item" md-select-id="{{item.id}}" ng-repeat="item in data.content">
           <td md-cell>{{item.id}}</td>
-          <td md-cell>{{item.usertype.dictDesc}}</td>
+          <td md-cell>{{showDictionary(item.usertype,userType)}}</td>
           <td md-cell>{{item.location}}</td>
           <td md-cell>
             <md-button class="md-icon-button" ng-click="edit(item.id)" aria-label="编辑">
@@ -178,56 +178,4 @@
   </md-table-container>
   <md-table-pagination md-label="{page: '页:', rowsPerPage: '每页行数:', of: '共'}" md-limit="query.size" md-limit-options="[10, 20, 50,100,]" md-page="query.page" md-total="{{data.totalElements}}" md-on-paginate="pageRefresh" md-page-select></md-table-pagination>
 </md-card>
-<!--</ui-view>-->
-<script type="text/ng-template" id="quickAdd.html">
-<md-dialog style="width: 1000px;">
-  <md-toolbar>
-    <div class="md-toolbar-tools">
-      <h2>快速添加</h2>
-      <span flex></span>
-      <md-button class="md-icon-button" ng-click="cancel()">
-        <md-icon>clear</md-icon>
-      </md-button>
-    </div>
-  </md-toolbar>
-  <md-dialog-content class="md-padding">
-    <form layout="row" class="md-inline-form" name="form" novalidate>
 
-    </form>
-  </md-dialog-content>
-  <md-dialog-actions layout="row">
-    <md-button ng-click="search($event)" class="md-primary md-raised">确定</md-button>
-    <md-button ng-click="cancel()" class="md-warn md-raised">关闭</md-button>
-  </md-dialog-actions>
-
-</md-dialog>
-</script>
-<script type="text/ng-template" id="update_endDate.html">
-<md-dialog style="width: 600px;">
- <md-toolbar>
-    <div class="md-toolbar-tools">
-      <h2>批量延期协议</h2>
-      <span flex></span>
-      <md-button class="md-icon-button" ng-click="cancel()">
-        <md-icon>clear</md-icon>
-      </md-button>
-    </div>
-  </md-toolbar>
- <md-dialog-content class="md-padding">
-     <form name="form" novalidate ng-submit="save($event)">
-        <div layout="row" class="date-picker-row">
-              <label translate class="agr_date_label">截止日期</label>
-              <md-datepicker name="endDate" ng-model="endDate" md-placeholder="截止日期" required></md-datepicker>
-              <div class="validation-messages" ng-messages="form.endDate.$error">
-                <div ng-message="required">请选择截止日期</div>
-              </div>
-            </div>
-     </form>
- </md-dialog-content>
- <md-dialog-actions layout="row">
-    <md-button type="submit" class="md-primary md-raised">确定</md-button>
-    <md-button ng-click="cancel()" class="md-warn md-raised">关闭</md-button>
- </md-dialog-actions>
-   </form>
-</md-dialog>
-</script>

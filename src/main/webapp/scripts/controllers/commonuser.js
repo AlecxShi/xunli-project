@@ -28,6 +28,16 @@ angular.module('app')
       $scope.house = data;
     });
 
+    //学校类型
+    DictInfo.getByDictType({dictType:'School'}).$promise.then(function (data) {
+      $scope.school = data;
+    });
+
+    //公司类型
+    DictInfo.getByDictType({dictType:'Company'}).$promise.then(function (data) {
+      $scope.company = data;
+    });
+
     //是否有车
     $scope.car = [
         {
@@ -58,6 +68,11 @@ angular.module('app')
         });
       }
     });
+
+    $scope.showDictionary = function(key,list)
+    {
+        return $rootScope.showDictionary(key,list);
+    }
 
     $scope.selected = [];
 
@@ -294,9 +309,18 @@ angular.module('app')
             desc:'否'
         }
     ];
+    //学校类型
+    DictInfo.getByDictType({dictType:'School'}).$promise.then(function (data) {
+      $scope.school = data;
+    });
+
+    //公司类型
+    DictInfo.getByDictType({dictType:'Company'}).$promise.then(function (data) {
+      $scope.company = data;
+    });
 
     //出生省份联动城市
-    $scope.$watch('commonUser.bornLocationProvince', function (newValue, oldValue) {
+    $scope.$watch('commonUser.locationProvince', function (newValue, oldValue) {
       if (newValue && newValue !== oldValue) {
         var dict = angular.fromJson(newValue);
         DictInfo.getByDictType({dictType:dict.dictValue}).$promise.then(function (data) {
@@ -341,6 +365,68 @@ angular.module('app')
       });
     };
 
+    $scope.save = function(event) {
+      event.preventDefault();
+      angular.forEach($scope.form.$error.required, function(field) {
+        field.$setTouched();
+      });
+
+      /*var saveData = {};
+      //组装user数据
+      saveData.id = $scope.commonUser.id;
+      saveData.username = $scope.commonUser.username;
+      saveData.password = $scope.commonUser.password;
+      saveData.phone = $scope.commonUser.phone;
+      saveData.usertype = $scope.commonUser.usertype ? Number($scope.commonUser.usertype) : $scope.commonUser.usertype;
+      saveData.bornLocation = angular.fromJson($scope.commonUser.bornLocationProvince ? "{}" : $scope.commonUser.bornLocationProvince)['dictDesc'] + "," + angular.fromJson($scope.commonUser.bornLocationCity ? "{}" : $scope.commonUser.bornLocationCity)['dictDesc'];
+      //组装children数据
+      var children = {};
+      children.id = $scope.commonUser.children.id;
+      children.name = $scope.commonUser.children.name;
+      children.gender = $scope.commonUser.children.gender ? Number($scope.commonUser.children.gender) : $scope.commonUser.children.gender;
+      children.height = $scope.commonUser.children.height;
+      children.birthday = $scope.commonUser.children.birthday;
+      children.car = $scope.commonUser.children.car == 'true' ? true : false;
+      children.company = $scope.commonUser.children.company;
+      children.education = $scope.commonUser.children.education ? Number($scope.commonUser.children.education) : $scope.commonUser.children.education;
+      children.hobby = $scope.commonUser.children.hobby;
+      children.house = $scope.commonUser.children.house ? Number($scope.commonUser.children.house) : $scope.commonUser.children.house;
+      children.income = $scope.commonUser.children.income ? Number($scope.commonUser.children.income) : $scope.commonUser.children.income;
+      children.position = $scope.commonUser.children.position;
+      children.profession = $scope.commonUser.children.profession;
+      children.school = $scope.commonUser.children.school;
+      children.bornLocation = angular.fromJson($scope.commonUser.children.bornLocationProvince)['dictDesc'] + "," + angular.fromJson($scope.commonUser.children.bornLocationCity)['dictDesc'];
+      children.currentLocation = angular.fromJson($scope.commonUser.children.currentLocationProvince)['dictDesc'] + "," + angular.fromJson($scope.commonUser.children.currentLocationCity)['dictDesc'];
+      saveData.children = children;
+      console.log('saveData',saveData);*/
+
+      $scope.commonUser.location = angular.fromJson($scope.commonUser.locationProvince ? $scope.commonUser.locationProvince : '{"dictDesc":""}')['dictDesc'] + "," + angular.fromJson($scope.commonUser.locationCity ? $scope.commonUser.locationCity : '{"dictDesc":""}')['dictDesc'];
+      $scope.commonUser.children.bornLocation = angular.fromJson($scope.commonUser.children.bornLocationProvince ? $scope.commonUser.children.bornLocationProvince : '{"dictDesc":""}')['dictDesc'] + "," + angular.fromJson($scope.commonUser.children.bornLocationCity ? $scope.commonUser.children.bornLocationCity : '{"dictDesc":""}')['dictDesc'];
+      $scope.commonUser.children.currentLocation = angular.fromJson($scope.commonUser.children.currentLocationProvince ? $scope.commonUser.children.currentLocationProvince : '{"dictDesc":""}')['dictDesc'] + "," + angular.fromJson($scope.commonUser.children.currentLocationCity ? $scope.commonUser.children.currentLocationCity : '{"dictDesc":""}')['dictDesc'];
+      if ($scope.form.$valid) {
+        CommonUserInfo.save($scope.commonUser).$promise.then(
+          function(result, responseHeaders){
+              $scope.error = null;
+              $scope.success = 'SUCCESS';
+              $mdToast.show(
+                $mdToast.simple()
+                .content('注册成功。')
+                .hideDelay(3000)
+                .theme('success')
+              );
+          }
+        ).catch(function(httpResponse){
+          $scope.error = 'ERROR';
+          $scope.success = null;
+          $mdToast.show(
+            $mdToast.simple()
+            .content('用户保存失败。')
+            .hideDelay(3000)
+            .theme('error')
+          );
+        });
+      }
+    };
 
   });
 
