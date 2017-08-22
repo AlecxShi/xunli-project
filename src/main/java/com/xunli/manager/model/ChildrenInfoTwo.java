@@ -27,14 +27,14 @@ public class ChildrenInfoTwo implements Serializable{
     @ColumnComment("显示名称")
     private String name;
 
-    @Column(name = "parentId")
-    @ColumnComment("所属用户")
-    private Long parentId;
-
-    @JoinColumn(name="gender",referencedColumnName = "id")
+    @JoinColumn(name = "parentId",referencedColumnName = "id")
     @OneToOne
+    @ColumnComment("所属用户")
+    private CommonUser parent;
+
+    @Column(name="gender")
     @ColumnComment("性别")
-    private DictInfo gender;
+    private Long gender;
 
     @Column(name="bornLocation")
     @ColumnComment("家乡所在地")
@@ -52,10 +52,9 @@ public class ChildrenInfoTwo implements Serializable{
     @ColumnComment("身高")
     private Integer height;
 
-    @JoinColumn(name="education",referencedColumnName = "id")
-    @OneToOne
+    @Column(name="education")
     @ColumnComment("教育程度")
-    private DictInfo education;
+    private Long education;
 
     @Column(name="profession")
     @ColumnComment("职业信息")
@@ -63,11 +62,15 @@ public class ChildrenInfoTwo implements Serializable{
 
     @Column(name="company")
     @ColumnComment("公司信息")
-    private String company;
+    private Long company;
 
     @Column(name="position")
     @ColumnComment("职位信息")
     private String position;
+
+    @Column(name = "school_type")
+    @ColumnComment("学校类型")
+    private Long schoolType;
 
     @Column(name="school")
     @ColumnComment("毕业学校")
@@ -111,9 +114,6 @@ public class ChildrenInfoTwo implements Serializable{
     @ColumnComment("最后修改日期")
     private Date lastmodified = new Date();
 
-    @Transient
-    private CommonUser parent;
-
     public Long getId() {
         return id;
     }
@@ -130,19 +130,12 @@ public class ChildrenInfoTwo implements Serializable{
         this.name = name;
     }
 
-    public Long getParentId() {
-        return parentId;
-    }
 
-    public void setParentId(Long parentId) {
-        this.parentId = parentId;
-    }
-
-    public DictInfo getGender() {
+    public Long getGender() {
         return gender;
     }
 
-    public void setGender(DictInfo gender) {
+    public void setGender(Long gender) {
         this.gender = gender;
     }
 
@@ -178,11 +171,11 @@ public class ChildrenInfoTwo implements Serializable{
         this.height = height;
     }
 
-    public DictInfo getEducation() {
+    public Long getEducation() {
         return education;
     }
 
-    public void setEducation(DictInfo education) {
+    public void setEducation(Long education) {
         this.education = education;
     }
 
@@ -194,11 +187,11 @@ public class ChildrenInfoTwo implements Serializable{
         this.profession = profession;
     }
 
-    public String getCompany() {
+    public Long getCompany() {
         return company;
     }
 
-    public void setCompany(String company) {
+    public void setCompany(Long company) {
         this.company = company;
     }
 
@@ -208,6 +201,14 @@ public class ChildrenInfoTwo implements Serializable{
 
     public void setPosition(String position) {
         this.position = position;
+    }
+
+    public Long getSchoolType() {
+        return schoolType;
+    }
+
+    public void setSchoolType(Long schoolType) {
+        this.schoolType = schoolType;
     }
 
     public String getSchool() {

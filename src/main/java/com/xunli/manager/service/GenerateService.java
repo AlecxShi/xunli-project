@@ -23,26 +23,30 @@ public class GenerateService {
      * @param
      * @return
      */
-    public  List<CommonUser> generateRobotUser(List<DictInfo> dictInfos)
+    public  List<CommonUser> generateRobotUser()
     {
         List<CommonUser> list = new ArrayList();
-        DictInfo userType = DictInfoUtil.getByDictTypeAndDictValue(dictInfos,"USER_TYPE","ROBOT");
-        List<DictInfo> home = DictInfoUtil.getByDictType(dictInfos,"Province");
+        DictInfo userType = DictInfoUtil.getByDictTypeAndDictValue("USER_TYPE","ROBOT");
+        List<DictInfo> home = DictInfoUtil.getByDictType("Province");
         for(DictInfo province : home)
         {
-            DictInfo city = DictInfoUtil.getByDictTypeAndDictValue(dictInfos,"Province",province.getDictValue());
+            List<DictInfo> citys = DictInfoUtil.getByDictType(province.getDictValue());
             int number = TWO;
-            if(checkIfOne(city))
+            for(DictInfo city : citys)
             {
-                number = ONE;
+                if(checkIfOne(city))
+                {
+                    number = ONE;
+                }
+                for(int i = 0; i < number;i++)
+                {
+                    CommonUser user = new CommonUser();
+                    user.setUsertype(userType.getId());
+                    user.setLocation(province.getDictDesc() + "," + city.getDictDesc());
+                    list.add(user);
+                }
             }
-            for(int i = 0; i < number;i++)
-            {
-                CommonUser user = new CommonUser();
-                user.setUsertype(userType.getId());
-                user.setLocation(province.getDictDesc() + "," + city.getDictDesc());
-                list.add(user);
-            }
+
         }
         return list;
     }
@@ -50,41 +54,40 @@ public class GenerateService {
     /**
      * 创建统一的子女信息
      * @param user
-     * @param dictInfos
      * @return
      */
-    public List<ChildrenInfo> generateChildrenInfo(List<CommonUser> user, List<DictInfo> dictInfos)
+    public List<ChildrenInfo> generateChildrenInfo(List<CommonUser> user)
     {
         List<ChildrenInfo> list = new ArrayList<ChildrenInfo>();
-        DictInfo male = DictInfoUtil.getByDictTypeAndDictValue(dictInfos,"Gender","Male");
-        DictInfo female = DictInfoUtil.getByDictTypeAndDictValue(dictInfos,"Gender","Female");
+        DictInfo male = DictInfoUtil.getByDictTypeAndDictValue("Gender","Male");
+        DictInfo female = DictInfoUtil.getByDictTypeAndDictValue("Gender","Female");
         for(int i = 0; i < user.size();i++)
         {
 
             ChildrenInfo children = new ChildrenInfo();
             children.setParentId(user.get(i).getId());
             children.setGender(i % 2 == 0 ? male.getId() : female.getId());
-            children.setName(createName(DictInfoUtil.getItemById(children.getGender(),dictInfos)));
-            children.setEducation(createEducation(user.get(i),DictInfoUtil.getByDictType(dictInfos,"Education")).getId());
+            children.setName(createName(DictInfoUtil.getItemById(children.getGender())));
+            children.setEducation(createEducation(user.get(i),DictInfoUtil.getByDictType("Education")).getId());
 
-            children.setBornLocation(createBornLocation(user.get(i),dictInfos));
-            children.setCurrentLocation(createCurrentLocation(children,dictInfos));
+            children.setBornLocation(createBornLocation(user.get(i)));
+            children.setCurrentLocation(createCurrentLocation(children));
 
             children.setBirthday(createBirthday(children));
-            children.setHeight(createHeight(children,dictInfos));
+            children.setHeight(createHeight(children));
 
 
             children.setCar(createCar());
-            children.setHouse(createHouse(children,dictInfos).getId());
-            children.setIncome(createIncome(children,DictInfoUtil.getByDictType(dictInfos,"Income")).getId());
-            children.setCompany(createCompany(children,DictInfoUtil.getByDictType(dictInfos,"Company")));
+            children.setHouse(createHouse(children).getId());
+            children.setIncome(createIncome(children,DictInfoUtil.getByDictType("Income")).getId());
+            children.setCompany(createCompany(children));
             children.setProfession("");
             children.setPosition("");
             children.setSchool("");
             children.setHobby(createHobby());
 
-            children.setScore(createScore(children,dictInfos));
-            children.setLabel(createLabel(children,dictInfos));
+            children.setScore(createScore(children));
+            children.setLabel(createLabel(children));
             list.add(children);
         }
         return list;
@@ -147,7 +150,7 @@ public class GenerateService {
      * @param
      * @return
      */
-    private String createBornLocation(CommonUser user,List<DictInfo> list)
+    private String createBornLocation(CommonUser user)
     {
         return user.getLocation();
     }
@@ -157,11 +160,11 @@ public class GenerateService {
      * @param
      * @return
      */
-    private String createCurrentLocation(ChildrenInfo children,List<DictInfo> list)
+    private String createCurrentLocation(ChildrenInfo children)
     {
         //出生地为一线城市
         int v = (int)(Math.random() * 100);
-        if(DictInfoUtil.getOneLineCity(list).contains(children.getBornLocation()))
+        if(DictInfoUtil.getOneLineCity().contains(children.getBornLocation()))
         {
             if(v <= 50)
             {
@@ -169,12 +172,12 @@ public class GenerateService {
             }
             else if(v > 50 && v <= 80)
             {
-                List<String> other = DictInfoUtil.getOneLineCityExcept(list,children.getBornLocation());
+                List<String> other = DictInfoUtil.getOneLineCityExcept(children.getBornLocation());
                 return other.get((int)(Math.random() * (other.size() - 1)));
             }
             else
             {
-                List<String> two = DictInfoUtil.getTwoLineCity(list);
+                List<String> two = DictInfoUtil.getTwoLineCity();
                 return two.get((int)(Math.random() * (two.size() - 1)));
             }
         }
@@ -185,7 +188,7 @@ public class GenerateService {
         }
         else
         {
-            List<String> one = DictInfoUtil.getOneLineCity(list);
+            List<String> one = DictInfoUtil.getOneLineCity();
             return one.get((int)(Math.random() * (one.size() - 1)));
         }
     }
@@ -244,10 +247,10 @@ public class GenerateService {
      * @param
      * @return
      */
-    private Integer createHeight(ChildrenInfo children,List<DictInfo> dictInfos)
+    private Integer createHeight(ChildrenInfo children)
     {
         int v = (int)(Math.random() * 100);
-        if("Male".equals(DictInfoUtil.getItemById(children.getGender(),dictInfos).getDictValue()))
+        if("Male".equals(DictInfoUtil.getItemById(children.getGender()).getDictValue()))
         {
             if(v <= 5)
             {
@@ -313,12 +316,12 @@ public class GenerateService {
      * @param child
      * @return
      */
-    public static Integer createScore(ChildrenInfo child,List<DictInfo> dictInfos)
+    public static Integer createScore(ChildrenInfo child)
     {
         int score = 0;
         if(child != null)
         {
-            if("Male".equals(DictInfoUtil.getItemById(child.getGender(),dictInfos).getDictValue()))
+            if("Male".equals(DictInfoUtil.getItemById(child.getGender()).getDictValue()))
             {
                 if(child.getHeight() < 170)
                     score += 1;
@@ -352,32 +355,32 @@ public class GenerateService {
                 score += 1;
             }
             //是否有房评分
-            if("1".equals(DictInfoUtil.getItemById(child.getHouse(),dictInfos).getDictValue()))
+            if("1".equals(DictInfoUtil.getItemById(child.getHouse()).getDictValue()))
             {
                 score += 1;
             }
-            else if("2".equals(DictInfoUtil.getItemById(child.getHouse(),dictInfos).getDictValue()))
+            else if("2".equals(DictInfoUtil.getItemById(child.getHouse()).getDictValue()))
             {
                 score += 3;
             }
-            else if("3".equals(DictInfoUtil.getItemById(child.getHouse(),dictInfos).getDictValue()))
+            else if("3".equals(DictInfoUtil.getItemById(child.getHouse()).getDictValue()))
             {
                 score += 5;
             }
             //工作单位评分
-            if(DictInfoUtil.getItemById(child.getCompany(),dictInfos).getDictDesc().contains("政府"))
+            if(DictInfoUtil.getItemById(child.getCompany()).getDictDesc().contains("政府"))
             {
                 score += 3;
             }
-            else if(DictInfoUtil.getItemById(child.getCompany(),dictInfos).getDictDesc().contains("事业单位"))
+            else if(DictInfoUtil.getItemById(child.getCompany()).getDictDesc().contains("事业单位"))
             {
                 score += 2;
             }
-            else if(DictInfoUtil.getItemById(child.getCompany(),dictInfos).getDictDesc().contains("国企"))
+            else if(DictInfoUtil.getItemById(child.getCompany()).getDictDesc().contains("国企"))
             {
                 score += 2;
             }
-            else if(DictInfoUtil.getItemById(child.getCompany(),dictInfos).getDictDesc().contains("外企"))
+            else if(DictInfoUtil.getItemById(child.getCompany()).getDictDesc().contains("外企"))
             {
                 score += 3;
             }
@@ -386,23 +389,23 @@ public class GenerateService {
                 score += 1;
             }
             //收入评分
-            if("1".equals(DictInfoUtil.getItemById(child.getIncome(),dictInfos).getDictValue()))
+            if("1".equals(DictInfoUtil.getItemById(child.getIncome()).getDictValue()))
             {
                 score += 1;
             }
-            else if("2".equals(DictInfoUtil.getItemById(child.getIncome(),dictInfos).getDictValue()))
+            else if("2".equals(DictInfoUtil.getItemById(child.getIncome()).getDictValue()))
             {
                 score += 2;
             }
-            else if("3".equals(DictInfoUtil.getItemById(child.getIncome(),dictInfos).getDictValue()))
+            else if("3".equals(DictInfoUtil.getItemById(child.getIncome()).getDictValue()))
             {
                 score += 3;
             }
-            else if("4".equals(DictInfoUtil.getItemById(child.getIncome(),dictInfos).getDictValue()))
+            else if("4".equals(DictInfoUtil.getItemById(child.getIncome()).getDictValue()))
             {
                 score += 4;
             }
-            else if("5".equals(DictInfoUtil.getItemById(child.getIncome(),dictInfos).getDictValue()))
+            else if("5".equals(DictInfoUtil.getItemById(child.getIncome()).getDictValue()))
             {
                 score += 5;
             }
@@ -428,26 +431,25 @@ public class GenerateService {
     /**
      * 创建标签策略
      * @param child
-     * @param dictInfos
      * @return
      */
-    public  static String createLabel(ChildrenInfo child,List<DictInfo> dictInfos) {
+    public  static String createLabel(ChildrenInfo child) {
         StringBuffer sb = new StringBuffer();
         if(child != null)
         {
-            if(DictInfoUtil.getItemById(child.getCompany(),dictInfos).getDictDesc().contains("政府"))
+            if(DictInfoUtil.getItemById(child.getCompany()).getDictDesc().contains("政府"))
             {
                 sb.append("公务员").append(",");
             }
-            else if(DictInfoUtil.getItemById(child.getCompany(),dictInfos).getDictDesc().contains("外企"))
+            else if(DictInfoUtil.getItemById(child.getCompany()).getDictDesc().contains("外企"))
             {
                 sb.append("海外名企").append(",");
             }
-            if("4".equals(DictInfoUtil.getItemById(child.getIncome(),dictInfos).getDictValue()) || "5".equals(DictInfoUtil.getItemById(child.getIncome(),dictInfos).getDictValue()))
+            if("4".equals(DictInfoUtil.getItemById(child.getIncome()).getDictValue()) || "5".equals(DictInfoUtil.getItemById(child.getIncome()).getDictValue()))
             {
                 sb.append("多金优质").append(",");
             }
-            if("3".equals(DictInfoUtil.getItemById(child.getHouse(),dictInfos).getDictValue()))
+            if("3".equals(DictInfoUtil.getItemById(child.getHouse()).getDictValue()))
             {
                 sb.append("坐拥多套房产").append(",");
             }
@@ -463,40 +465,39 @@ public class GenerateService {
     /**
      * 生成房产策略
      * @param children
-     * @param list
      * @return
      */
-    private DictInfo createHouse(ChildrenInfo children,List<DictInfo> list)
+    private DictInfo createHouse(ChildrenInfo children)
     {
         int v = (int) (Math.random() * 100);
-        if("Male".equals(DictInfoUtil.getItemById(children.getGender(),list).getDictValue()))
+        if("Male".equals(DictInfoUtil.getItemById(children.getGender()).getDictValue()))
         {
             if(v < 30)
             {
-                return DictInfoUtil.getByDictTypeAndDictValue(list,"House","1");
+                return DictInfoUtil.getByDictTypeAndDictValue("House","1");
             }
             else if(30 <= v && v < 90)
             {
-                return DictInfoUtil.getByDictTypeAndDictValue(list,"House","2");
+                return DictInfoUtil.getByDictTypeAndDictValue("House","2");
             }
             else
             {
-                return DictInfoUtil.getByDictTypeAndDictValue(list,"House","3");
+                return DictInfoUtil.getByDictTypeAndDictValue("House","3");
             }
         }
         else
         {
             if(v < 70)
             {
-                return DictInfoUtil.getByDictTypeAndDictValue(list,"House","1");
+                return DictInfoUtil.getByDictTypeAndDictValue("House","1");
             }
             else if(70 <= v && v < 95)
             {
-                return DictInfoUtil.getByDictTypeAndDictValue(list,"House","2");
+                return DictInfoUtil.getByDictTypeAndDictValue("House","2");
             }
             else
             {
-                return DictInfoUtil.getByDictTypeAndDictValue(list,"House","3");
+                return DictInfoUtil.getByDictTypeAndDictValue("House","3");
             }
         }
     }
@@ -579,51 +580,50 @@ public class GenerateService {
      * 白领:政府（20%）、事业单位（20%）、国企（20%）、外企（10%）、民企（30%）
      * 蓝领:政府（5%）、事业单位（10%）、国企（20%）、外企（0%）、民企（65%）
      * @param children
-     * @param company
      * @return
      */
-    private Long createCompany(ChildrenInfo children,List<DictInfo> company)
+    private Long createCompany(ChildrenInfo children)
     {
         int v = (int)(Math.random() * 100);
-        if(checkEducation(DictInfoUtil.getItemById(children.getEducation(),company)))
+        if(checkEducation(DictInfoUtil.getItemById(children.getEducation())))
         {
             if(v < 20)
             {
-                return DictInfoUtil.getByDictTypeAndDictValue(company,"Company","1").getId();
+                return DictInfoUtil.getByDictTypeAndDictValue("Company","1").getId();
             }
             else if(20 <= v && v < 40)
             {
-                return DictInfoUtil.getByDictTypeAndDictValue(company,"Company","2").getId();
+                return DictInfoUtil.getByDictTypeAndDictValue("Company","2").getId();
             }
             else if(40 <= v && v < 60)
             {
-                return DictInfoUtil.getByDictTypeAndDictValue(company,"Company","3").getId();
+                return DictInfoUtil.getByDictTypeAndDictValue("Company","3").getId();
             }
             else if(60 <= v && v < 70)
             {
-                return DictInfoUtil.getByDictTypeAndDictValue(company,"Company","4").getId();
+                return DictInfoUtil.getByDictTypeAndDictValue("Company","4").getId();
             }
             else
             {
-                return DictInfoUtil.getByDictTypeAndDictValue(company,"Company","5").getId();
+                return DictInfoUtil.getByDictTypeAndDictValue("Company","5").getId();
             }
 
         }
         if(v < 5)
         {
-            return DictInfoUtil.getByDictTypeAndDictValue(company,"Company","1").getId();
+            return DictInfoUtil.getByDictTypeAndDictValue("Company","1").getId();
         }
         else if(5 <= v && v < 15)
         {
-            return DictInfoUtil.getByDictTypeAndDictValue(company,"Company","2").getId();
+            return DictInfoUtil.getByDictTypeAndDictValue("Company","2").getId();
         }
         else if(15 <= v && v < 35)
         {
-            return DictInfoUtil.getByDictTypeAndDictValue(company,"Company","3").getId();
+            return DictInfoUtil.getByDictTypeAndDictValue("Company","3").getId();
         }
         else
         {
-            return DictInfoUtil.getByDictTypeAndDictValue(company,"Company","5").getId();
+            return DictInfoUtil.getByDictTypeAndDictValue("Company","5").getId();
         }
     }
 

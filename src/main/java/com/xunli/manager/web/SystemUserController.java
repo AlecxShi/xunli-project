@@ -121,9 +121,8 @@ public class SystemUserController {
     @Secured(ROLE_ADMIN)
     public ResponseEntity<Void> quickGenerate()
     {
-        List<DictInfo> dictInfos = dictInfoRepository.findAll();
-        List<CommonUser> users = commonUserRepository.save(generateService.generateRobotUser(dictInfos));
-        List<ChildrenInfo> childrens = childrenInfoRepository.save(generateService.generateChildrenInfo(users,dictInfos));
+        List<CommonUser> users = commonUserRepository.save(generateService.generateRobotUser());
+        List<ChildrenInfo> childrens = childrenInfoRepository.save(generateService.generateChildrenInfo(users));
         return ResponseEntity.ok().build();
     }
 

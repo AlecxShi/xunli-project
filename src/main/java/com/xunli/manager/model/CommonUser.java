@@ -33,6 +33,9 @@ public class CommonUser implements Serializable{
     @Column(name = "password")
     private String password;
 
+    @Column(name = "location")
+    private String location;
+
     @Column(name = "phone")
     private String phone;
 
@@ -46,9 +49,6 @@ public class CommonUser implements Serializable{
     @Column(name = "last_modified")
     @LastModifiedDate
     private Date lastmodified = new Date();
-
-    @Column(name = "location")
-    private String location;
 
     @Transient
     private ChildrenInfo children;

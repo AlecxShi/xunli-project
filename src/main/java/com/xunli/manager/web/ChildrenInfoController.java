@@ -6,6 +6,7 @@ import com.xunli.manager.model.ChildrenInfo;
 import com.xunli.manager.model.DictInfo;
 import com.xunli.manager.repository.ChildrenInfoRepository;
 import com.xunli.manager.repository.DictInfoRepository;
+import com.xunli.manager.service.CommonUserService;
 import com.xunli.manager.service.GenerateService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -36,6 +37,9 @@ public class ChildrenInfoController {
     @Resource
     private DictInfoRepository dictInfoRepository;
 
+    @Resource
+    private CommonUserService commonUserService;
+
     @RequestMapping(value = "/children",method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional(readOnly = true)
     public Page<ChildrenInfo> query(@ModelAttribute ChildrenInfoCriteria criteria, @PageableDefault Pageable pageable)
@@ -52,10 +56,12 @@ public class ChildrenInfoController {
         {
             return update(childrenInfo);
         }
-        List<DictInfo> dictInfos = dictInfoRepository.findAll();
-        childrenInfo.setScore(GenerateService.createScore(childrenInfo,dictInfos));
-        childrenInfo.setLabel(GenerateService.createLabel(childrenInfo,dictInfos));
-        return ResponseEntity.ok().body(childrenInfoRepository.save(childrenInfo));
+        childrenInfo.setScore(GenerateService.createScore(childrenInfo));
+        childrenInfo.setLabel(GenerateService.createLabel(childrenInfo));
+        childrenInfoRepository.save(childrenInfo);
+        //创建推荐表
+        commonUserService.generateRecommendInfo(childrenInfo);
+        return ResponseEntity.ok().body(childrenInfo);
     }
 
     @RequestMapping(value = "/children",method = RequestMethod.PUT,produces = MediaType.APPLICATION_JSON_VALUE)
@@ -63,9 +69,8 @@ public class ChildrenInfoController {
     @Secured(ROLE_ADMIN)
     public ResponseEntity<ChildrenInfo> update(@RequestBody ChildrenInfo childrenInfo)
     {
-        List<DictInfo> dictInfos = dictInfoRepository.findAll();
-        childrenInfo.setScore(GenerateService.createScore(childrenInfo,dictInfos));
-        childrenInfo.setLabel(GenerateService.createLabel(childrenInfo,dictInfos));
+        childrenInfo.setScore(GenerateService.createScore(childrenInfo));
+        childrenInfo.setLabel(GenerateService.createLabel(childrenInfo));
         return ResponseEntity.ok().body(childrenInfoRepository.save(childrenInfo));
     }
 
