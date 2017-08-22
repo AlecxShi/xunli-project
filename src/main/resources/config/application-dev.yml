@@ -37,3 +37,6 @@ logging:
     com.xunli: debug
     org.springframework: info
     org.hibernate: WARN
+context:
+  listener:
+    classes: com.xunli.manager.listener.ApplicationStartupListener
