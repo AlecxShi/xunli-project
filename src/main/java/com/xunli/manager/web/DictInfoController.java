@@ -1,5 +1,6 @@
 package com.xunli.manager.web;
 
+import com.xunli.manager.cache.DictInfoCache;
 import com.xunli.manager.domain.criteria.DictInfoCriteria;
 import com.xunli.manager.domain.specification.DictInfoSpecification;
 import com.xunli.manager.model.DictInfo;
@@ -37,6 +38,9 @@ public class DictInfoController {
     @Resource
     private DictInfoRepository dictInfoRepository;
 
+    @Resource
+    private DictInfoCache dictInfoCache;
+
     @RequestMapping(value = "/dictinfo",method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional(readOnly = true)
     public Page<DictInfo> pageQuery(@ModelAttribute DictInfoCriteria criteria,@PageableDefault Pageable page)
@@ -53,6 +57,7 @@ public class DictInfoController {
             return update(dict);
         }
         DictInfo dc = dictInfoRepository.save(dict);
+        dictInfoCache.updateCache();
         return ResponseEntity.created(new URI("/api/dictinfo")).headers(HeaderUtil.createEntityCreationAlert("dict",dc.getId().toString())).body(dc);
     }
 
@@ -65,7 +70,9 @@ public class DictInfoController {
             d.setDictType(dict.getDictType());
             d.setDictDesc(dict.getDictDesc());
             d.setDictValue(dict.getDictValue());
-            return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert("dict",d.getId().toString())).body(dictInfoRepository.save(d));
+            dictInfoRepository.save(d);
+            dictInfoCache.updateCache();
+            return ResponseEntity.ok().headers(HeaderUtil.createEntityUpdateAlert("dict",d.getId().toString())).body(d);
         }).orElseGet(() -> new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
@@ -78,6 +85,7 @@ public class DictInfoController {
         {
             dictInfoRepository.delete(id);
         }
+        dictInfoCache.updateCache();
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert("dict",ids.toString())).build();
     }
 

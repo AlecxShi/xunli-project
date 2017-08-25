@@ -107,16 +107,16 @@ public class User extends AbstractAuditingEntity implements UserDetails
 
 	//返回给前端的权限
 	@JsonProperty("authorities")
-  public Set<String> getAuthoritiesStr() {
-    Set<String> authorities = new HashSet<>();
-    for(Role role : getRoles()){
-      Set<String> as = role.getAuthorities().stream()
-              .map(authority -> new String("ROLE_" + authority.getAuthorityCode()))
-              .collect(Collectors.toSet());
-      authorities.addAll(as);
-    }
-    return authorities;
-  }
+	public Set<String> getAuthoritiesStr() {
+		Set<String> authorities = new HashSet<>();
+		for(Role role : getRoles()){
+		  Set<String> as = role.getAuthorities().stream()
+				  .map(authority -> new String("ROLE_" + authority.getAuthorityCode()))
+				  .collect(Collectors.toSet());
+		  authorities.addAll(as);
+		}
+		return authorities;
+	}
 
 	public String getUsername()
 	{
