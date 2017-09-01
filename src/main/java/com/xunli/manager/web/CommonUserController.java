@@ -1,6 +1,7 @@
 package com.xunli.manager.web;
 
 import com.xunli.manager.model.CommonUser;
+import com.xunli.manager.model.RequestResult;
 import com.xunli.manager.model.Validation;
 import com.xunli.manager.model.ValidationResult;
 import com.xunli.manager.repository.CommonUserRepository;
@@ -78,5 +79,8 @@ public class CommonUserController {
         return ResponseEntity.ok().build();
     }
 
-
+    public RequestResult commonUserLogin()
+    {
+        return null;
+    }
 }

@@ -1,0 +1,46 @@
+<md-content>
+<form class="md-inline-form" name="form" novalidate>
+  
+ <md-card class="md-whiteframe-z1">
+    <md-card-title>
+      <md-card-title-text>
+        <span class="md-title">文章编辑</span>
+      </md-card-title-text>
+    </md-card-title> 
+    
+    <md-card-content>
+		<md-input-container>
+			<label>升级时间</label>
+			<md-datepicker ng-disabled="ifPublicExpression" ng-model="upgradeInfo.upgradeDate"  name="upgradeDateCtl" md-placeholder="升级时间" required></md-datepicker>
+			<div  class="validation-messages"  ng-messages="form.upgradeDateCtl.$error">
+				<div ng-message="valid">The entered value is not a date!</div>
+				<div ng-message="required">升级时间不能为空!</div>
+			</div>
+		</md-input-container>
+			      
+		<md-input-container class="md-block">
+			 <label>升级简要</label>
+			 <textarea ng-disabled="ifPublicExpression" id="upgradeInfo" name="upgradeInfo"  placeholder="升级简要" ng-model="upgradeInfo.upgradeInfo" required  md-select-on-focus></textarea>
+			 <div class="hint" ng-if="form.upgradeInfo.$untouched">必输项，升级简要</div>
+				<div ng-messages="form.upgradeInfo.$error">
+				<div ng-message="required">升级内容</div>
+			 </div>
+		</md-input-container>
+       			   
+		<md-content  layout="column" style="overflow: hidden" ng-disabled="ifPublicExpression">
+			  <label>详细内容</label>
+
+			   <div id="editormd" flex data-ng-init="setValue()">
+				  <textarea  ng-model="upgradeInfo.upgradeText" style="display:none"></textarea>
+			  </div>
+				<!-- <my-mark-down  ng-model="upgradeInfo.upgradeText"></my-mark-down>   -->
+		</md-content>
+  </md-card-content>
+
+    <md-card-actions layout="row" layout-padding layout-align="center center"> <span flex></span>
+		<md-button ng-disabled="ifPublicExpression" type="submit" class="md-raised md-primary" ng-click="save($event)"> 保存 </md-button> 
+		<md-button ng-click="cancel($event)" class="md-raised md-primary" ng-click="cancel()"> 取消</md-button>
+	</md-card-actions> 
+  </md-card>
+</form>
+</md-content>

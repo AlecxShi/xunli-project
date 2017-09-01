@@ -1,0 +1,8 @@
+DROP TABLE code_info;
+CREATE TABLE code_info(
+    id BIGINT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    code NVARCHAR(8) NOT NULL,
+    code_expire INT NOT NULL,
+    last_modified TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)

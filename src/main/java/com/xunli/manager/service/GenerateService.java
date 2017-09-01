@@ -3,12 +3,10 @@ package com.xunli.manager.service;
 import com.xunli.manager.model.*;
 import com.xunli.manager.util.ConstantValueUtil;
 import com.xunli.manager.util.DictInfoUtil;
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by shihj on 2017/7/30.
@@ -16,8 +14,15 @@ import java.util.List;
 @Service("generateService")
 public class GenerateService {
 
+    private final static Integer YEAR = Calendar.getInstance().get(Calendar.YEAR);
+
     private final static int ONE = 3000;
     private final static int TWO = 2000;
+
+    public final static int getRandom(int base)
+    {
+        return (int)(Math.random() * base);
+    }
     /**
      * 根据数量创建机器用户
      * @param
@@ -100,7 +105,7 @@ public class GenerateService {
      */
     private String createName(DictInfo gender)
     {
-        return ConstantValueUtil.FIRST_NAME_LIST[(int)(Math.random() * (ConstantValueUtil.FIRST_NAME_LIST.length - 1))].trim() +
+        return ConstantValueUtil.FIRST_NAME_LIST[getRandom(ConstantValueUtil.FIRST_NAME_LIST.length - 1)].trim() +
                 ("Male".equals(gender.getDictValue()) ? "先生" : "小姐");
     }
 
@@ -163,7 +168,7 @@ public class GenerateService {
     private String createCurrentLocation(ChildrenInfo children)
     {
         //出生地为一线城市
-        int v = (int)(Math.random() * 100);
+        int v = getRandom(100);
         if(DictInfoUtil.getOneLineCity().contains(children.getBornLocation()))
         {
             if(v <= 50)
@@ -173,12 +178,12 @@ public class GenerateService {
             else if(v > 50 && v <= 80)
             {
                 List<String> other = DictInfoUtil.getOneLineCityExcept(children.getBornLocation());
-                return other.get((int)(Math.random() * (other.size() - 1)));
+                return other.get(getRandom(other.size() - 1));
             }
             else
             {
                 List<String> two = DictInfoUtil.getTwoLineCity();
-                return two.get((int)(Math.random() * (two.size() - 1)));
+                return two.get(getRandom(two.size() - 1));
             }
         }
         //非一线城市
@@ -189,7 +194,7 @@ public class GenerateService {
         else
         {
             List<String> one = DictInfoUtil.getOneLineCity();
-            return one.get((int)(Math.random() * (one.size() - 1)));
+            return one.get(getRandom(one.size() - 1));
         }
     }
 
@@ -206,9 +211,10 @@ public class GenerateService {
                 return Integer.parseInt(o1.getDictValue()) - Integer.parseInt(o2.getDictValue());
             }
         });
+        int v = getRandom(100);
         if(checkIfOne(user.getLocation()))
-            return ((int)(Math.random() * 100)) <= 90 ? education.subList(1,education.size()).get((int)(Math.random() * 4)) : education.get(0);
-        return ((int)(Math.random() * 100)) <= 70 ? education.subList(1,education.size()).get((int)(Math.random() * 4)) : education.get(0);
+            return v <= 90 ? education.subList(1,education.size()).get(getRandom(4)) : education.get(0);
+        return v <= 70 ? education.subList(1,education.size()).get(getRandom(4)) : education.get(0);
     }
 
     /**
@@ -218,27 +224,27 @@ public class GenerateService {
      */
     private String createBirthday(ChildrenInfo children)
     {
-        int v = (int)(Math.random() * 100);
+        int v = getRandom(100);
         if(v <= 10)
         {
             List<String> birth = Arrays.asList(Arrays.copyOfRange(ConstantValueUtil.BIRTHDAY,0,10));
-            return birth.get((int)(Math.random()*(birth.size() - 1)));
+            return birth.get(getRandom(birth.size() - 1));
 
         }
         else if(v > 10 && v <= 30)
         {
             List<String> birth = Arrays.asList(Arrays.copyOfRange(ConstantValueUtil.BIRTHDAY,11,15));
-            return birth.get((int)(Math.random()*(birth.size() - 1)));
+            return birth.get(getRandom(birth.size() - 1));
         }
         else if(v > 30 && v < 80)
         {
             List<String> birth = Arrays.asList(Arrays.copyOfRange(ConstantValueUtil.BIRTHDAY,16,22));
-            return birth.get((int)(Math.random()*(birth.size() - 1)));
+            return birth.get(getRandom(birth.size() - 1));
         }
         else
         {
             List<String> birth = Arrays.asList(Arrays.copyOfRange(ConstantValueUtil.BIRTHDAY,23,ConstantValueUtil.BIRTHDAY.length));
-            return birth.get((int)(Math.random()*(birth.size() - 1)));
+            return birth.get(getRandom(birth.size() - 1));
         }
     }
 
@@ -249,34 +255,34 @@ public class GenerateService {
      */
     private Integer createHeight(ChildrenInfo children)
     {
-        int v = (int)(Math.random() * 100);
+        int v = getRandom(100);
         if("Male".equals(DictInfoUtil.getItemById(children.getGender()).getDictValue()))
         {
             if(v <= 5)
             {
                 Integer[] height = Arrays.copyOfRange(ConstantValueUtil.HEIGHT,5,25);
 
-                return height[(int)(Math.random() * (height.length - 1))];
+                return height[getRandom(height.length - 1)];
             }
             else if(5 < v && v <= 55)
             {
                 Integer[] height = Arrays.copyOfRange(ConstantValueUtil.HEIGHT,25,30);
-                return height[(int)(Math.random() * (height.length - 1))];
+                return height[getRandom(height.length - 1)];
             }
             else if(55 < v && v <= 75)
             {
                 Integer[] height = Arrays.copyOfRange(ConstantValueUtil.HEIGHT,30,35);
-                return height[(int)(Math.random() * (height.length - 1))];
+                return height[getRandom(height.length - 1)];
             }
             else if(75 < v && v <= 95)
             {
                 Integer[] height = Arrays.copyOfRange(ConstantValueUtil.HEIGHT,35,45);
-                return height[(int)(Math.random() * (height.length - 1))];
+                return height[getRandom(height.length - 1)];
             }
             else
             {
                 Integer[] height = Arrays.copyOfRange(ConstantValueUtil.HEIGHT,45,ConstantValueUtil.HEIGHT.length);
-                return height[(int)(Math.random() * (height.length - 1))];
+                return height[getRandom(height.length - 1)];
             }
         }
         else
@@ -285,27 +291,27 @@ public class GenerateService {
             {
                 Integer[] height = Arrays.copyOfRange(ConstantValueUtil.HEIGHT,0,10);
 
-                return height[(int)(Math.random() * (height.length - 1))];
+                return height[getRandom(height.length - 1)];
             }
             else if(5 < v && v <= 55)
             {
                 Integer[] height = Arrays.copyOfRange(ConstantValueUtil.HEIGHT,10,15);
-                return height[(int)(Math.random() * (height.length - 1))];
+                return height[getRandom(height.length - 1)];
             }
             else if(55 < v && v <= 75)
             {
                 Integer[] height = Arrays.copyOfRange(ConstantValueUtil.HEIGHT,15,20);
-                return height[(int)(Math.random() * (height.length - 1))];
+                return height[getRandom(height.length - 1)];
             }
             else if(75 < v && v <= 95)
             {
                 Integer[] height = Arrays.copyOfRange(ConstantValueUtil.HEIGHT,20,25);
-                return height[(int)(Math.random() * (height.length - 1))];
+                return height[getRandom(height.length - 1)];
             }
             else
             {
                 Integer[] height = Arrays.copyOfRange(ConstantValueUtil.HEIGHT,25,ConstantValueUtil.HEIGHT.length);
-                return height[(int)(Math.random() * (height.length - 1))];
+                return height[getRandom(height.length - 1)];
             }
         }
     }
@@ -469,7 +475,7 @@ public class GenerateService {
      */
     private DictInfo createHouse(ChildrenInfo children)
     {
-        int v = (int) (Math.random() * 100);
+        int v = getRandom(100);
         if("Male".equals(DictInfoUtil.getItemById(children.getGender()).getDictValue()))
         {
             if(v < 30)
@@ -509,7 +515,7 @@ public class GenerateService {
      */
     private boolean createCar()
     {
-        return (int)(Math.random() * 100) < 30 ? false : true;
+        return getRandom(100) < 30 ? false : true;
     }
 
     /**
@@ -520,7 +526,7 @@ public class GenerateService {
      */
     private DictInfo createIncome(ChildrenInfo children,List<DictInfo> income)
     {
-        return income.get((int)(Math.random() * (income.size() - 1)));
+        return income.get(getRandom(income.size() - 1));
     }
 
     /**
@@ -529,7 +535,7 @@ public class GenerateService {
      */
     private String createHobby()
     {
-        int v = (int)(Math.random() * 100);
+        int v = getRandom(100);
         if(v < 40)
         {
             return arrayToString(rangeGet(ConstantValueUtil.HOBBY,2));
@@ -584,7 +590,7 @@ public class GenerateService {
      */
     private Long createCompany(ChildrenInfo children)
     {
-        int v = (int)(Math.random() * 100);
+        int v = getRandom(100);
         if(checkEducation(DictInfoUtil.getItemById(children.getEducation())))
         {
             if(v < 20)

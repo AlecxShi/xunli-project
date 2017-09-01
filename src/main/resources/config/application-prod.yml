@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/XunLiManager?characterEncoding=utf8&autoReconnect=true&rewriteBatchedStatements=true
+    url: jdbc:mysql://localhost:3316/XunLiManager?characterEncoding=utf8&autoReconnect=true&rewriteBatchedStatements=true
     username: root
-    password: 1234@abcd
+    password: xunli@123456
     max-active: 10
     max-idle: 8
     min-idle: 8
@@ -37,3 +37,6 @@ logging:
     com.xunli: debug
     org.springframework: info
     org.hibernate: WARN
+context:
+  listener:
+    classes: com.xunli.manager.listener.ApplicationStartupListener
