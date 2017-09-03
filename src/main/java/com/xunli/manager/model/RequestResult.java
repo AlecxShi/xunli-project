@@ -5,7 +5,6 @@ import com.xunli.manager.enumeration.ReturnCode;
 
 /**
  * 查询返回封装类
- * Created by wanglei on 2015/10/29.
  */
 public class RequestResult {
 

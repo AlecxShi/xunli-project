@@ -10,4 +10,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 public interface CommonUserLoginsRepository extends JpaRepository<CommonUserLogins,Long>,JpaSpecificationExecutor<CommonUserLogins>{
 
     CommonUserLogins getByToken(String token);
+
+    CommonUserLogins findOneByUserId(Long id);
 }

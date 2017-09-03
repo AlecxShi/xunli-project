@@ -1,5 +1,6 @@
 package com.xunli.manager.web;
 
+import com.xunli.manager.enumeration.ReturnCode;
 import com.xunli.manager.model.CommonUser;
 import com.xunli.manager.model.RequestResult;
 import com.xunli.manager.model.Validation;
@@ -13,6 +14,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +23,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+
+import java.util.Map;
 
 import static com.xunli.manager.config.Constants.ROLE_ADMIN;
 
@@ -73,14 +79,28 @@ public class CommonUserController {
         return ResponseEntity.ok().build();
     }
 
-    public ResponseEntity<Void> sendCheckCode(@RequestBody @Valid String phone)
+    @RequestMapping(value = "/commonuser/login",method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_VALUE)
+    @Transactional(isolation = Isolation.DEFAULT,propagation = Propagation.REQUIRED)
+    public RequestResult commonUserLogin(HttpServletRequest request)
     {
-
-        return ResponseEntity.ok().build();
+        String phone = request.getParameter("phone");
+        if(phone == null)
+        {
+            return new RequestResult(ReturnCode.API_MISS_PARAMETER);
+        }
+        else
+        {
+            return commonUserRepository.findOneByPhone(phone).map(u -> {
+                return commonUserService.login(u,request);
+            }).orElse(commonUserService.login(createUserByPhone(phone),request));
+        }
     }
 
-    public RequestResult commonUserLogin()
+    @Transactional
+    private CommonUser createUserByPhone(String phone)
     {
-        return null;
+        CommonUser user = new CommonUser();
+        user.setPhone(phone);
+        return commonUserRepository.save(user);
     }
 }

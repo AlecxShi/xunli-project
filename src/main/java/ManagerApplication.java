@@ -23,7 +23,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 public class ManagerApplication extends SpringBootServletInitializer {
     public static void main(String[] args)
     {
+
         SpringApplication.run(ManagerApplication.class,args);
+
     }
 
     @Override
