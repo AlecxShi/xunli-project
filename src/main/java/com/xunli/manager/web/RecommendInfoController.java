@@ -75,6 +75,7 @@ public class RecommendInfoController {
             data.put("currentLocation",info.getTargetChildrenId().getCurrentLocation());
             data.put("birthday",info.getTargetChildrenId().getBirthday());
             data.put("education",info.getTargetChildrenId().getEducation());
+            data.put("label",info.getTargetChildrenId().getLabel());
             list.add(data);
         }
         return new RequestResult(ReturnCode.PUBLIC_SUCCESS,list);
