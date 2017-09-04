@@ -51,7 +51,7 @@ public class RecommendInfoController {
         CommonUserLogins login = commonUserLoginsRepository.getByToken(token.toString());
         if(login == null || login.getExpireTime().compareTo(new Date()) <= 0)
         {
-            return new RequestResult(ReturnCode.AUTH_ACCOUNT_STATUS_ERROR);
+            return new RequestResult(ReturnCode.AUTH_ACCOUNT_NOT_LOGIN);
         }
         CommonUser user = commonUserRepository.findOne(login.getUserId());
         if(user == null)
@@ -61,7 +61,7 @@ public class RecommendInfoController {
         ChildrenInfo childrenInfo = childrenInfoRepository.findOneByParentId(user.getId());
         if(childrenInfo == null)
         {
-            return new RequestResult(ReturnCode.AUTH_ACCOUNT_IS_NULL);
+            return new RequestResult(ReturnCode.AUTH_ACCOUNT_CHILDREN_IS_NULL);
         }
         PageRequest pageable = new PageRequest(Integer.parseInt(page.toString()) - 1,10);
         Page<RecommendInfo> result = recommendInfoRepository.findAll(new RecommendInfoSpecification(new RecommendInfoCriteria(childrenInfo.getId())),pageable);
