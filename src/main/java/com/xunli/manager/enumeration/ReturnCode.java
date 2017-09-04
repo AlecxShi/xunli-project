@@ -2,6 +2,7 @@ package com.xunli.manager.enumeration;
 
 public enum ReturnCode {
 
+	AUTH_PHONE_IS_NULL("AUTH_0001","Phone number is null","手机号码为空"),
 	AUTH_NO_ACCOUNT_NUMBER("AUTH_0002","No account number","没有该账号"),// 登陆LoginResultCode
 	AUTH_ACCOUNT_STATUS_ERROR("AUTH_0003","Account status error","账号状态错误"),
 	AUTH_OLD_PASSWORD_ERROR("AUTH_0004","Old password error","旧密码错误"),

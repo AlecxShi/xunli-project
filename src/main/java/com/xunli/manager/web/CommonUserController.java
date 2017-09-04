@@ -87,7 +87,7 @@ public class CommonUserController {
         String phone = request.getParameter("phone");
         if(phone == null)
         {
-            return new RequestResult(ReturnCode.API_MISS_PARAMETER);
+            return new RequestResult(ReturnCode.AUTH_PHONE_IS_NULL);
         }
         else
         {
