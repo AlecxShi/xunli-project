@@ -50,22 +50,7 @@ public enum ReturnCode {
 	AUTH_PARTIAL_DATA_SYNCHRONOUS_FAILURE("AUTH_0041","Partial data synchronous failure","部分数据同步到第三方平台失败"),
 	AUTH_LOGIN_FAILURE("AUTH_0042","Login failure","登录失败"),
 	
-	//配置系列=======================================================
-	CONFIG_TABLE_NAME_ERROR("CONFIG_0001","Table name error","表名错误"),
-	CONFIG_UPDATE_STRATEGY_KEY_ERROR("CONFIG_0002","Update strategy key error","更新策略key错误"),
-	CONFIG_STORAGE_STRATEGY_ID_ERROR("CONFIG_0003","Storage strategy id error","存储策略ID错误"),//存储策略ID对应的不存在
-	CONFIG_INTERFACE_ID_ERROR("CONFIG_0004","Interface id error","接口Id错误"),//因允许为空，所以只有接口编号不存在
-	CONFIG_GROUP_NAME_NULL("CONFIG_0005","Group name is null","组名为空"),
-	CONFIG_GROUP_ID_ERROR("CONFIG_0006","Group id error","组编号错误"),
-	CONFIG_COULD_NOT_FIND_THE_FILE("CONFIG_0007","Could not find the file","找不到指定文件"),
-	CONFIG_ERROR_READING_FILE_CONTENTS("CONFIG_0008","Error reading file contents","读取文件内容出错"),
-	CONFIG_THE_CONFIG_INFO_TYPE_TO_BE_REFRESHED_IS_NULL("CONFIG_0009","The config info type to be refreshed is null","要刷新的配置信息类型为空"),
-	CONFIG_THE_CONFIG_INFO_TYPE_TO_BE_REFRESHED_IS_ERROR("CONFIG_0010","The config info type to be refreshed is error","要刷新的配置信息类型错误"),
-	CONFIG_THE_CONFIG_INFO_TYPE_VALUE_TO_BE_REFRESHED_IS_NULL("CONFIG_0011","The config info type value to be refreshed is null","要刷新的配置信息类型的值为空"),
-	CONFIG_THE_CONFIG_INFO_TYPE_VALUE_TO_BE_REFRESHED_IS_ERROR("CONFIG_0012","The config info type value to be refreshed is error","要刷新的配置信息类型错误"),
-	
-	//计费系列=======================================================
-	FEE_("FEE_0001","",""),
+
 	
 	//API接口
 	API_NO_INTERFACE("API_0001","NO_INTERFACE","接口不存在"),
@@ -100,15 +85,12 @@ public enum ReturnCode {
 
 	//一些可能会在两个一级映射以上会用到的状态码，抽为公共状态码了。
 
-	//系统系列===================================
 
 	// 系统
 	SYSTEM_SYSTEM_ERROR("SYSTEM_0001","System error","系统错误"), 
-	SYSTEM_ACCESS_INTERNAL_RESOURCE_ERROR("SYSTEM_0002","Access internal resource error","访问内部资源错误") // HTTP请求访问系统内部接口错误
-	
+	SYSTEM_ACCESS_INTERNAL_RESOURCE_ERROR("SYSTEM_0002","Access internal resource error","访问内部资源错误"), // HTTP请求访问系统内部接口错误
 
-	// OSS文件系统
-	,FILE_NOT_FOUND("FILE_0001","File not found!","文件资源找不到"),
+	//
 
 	;
 	private String code;
