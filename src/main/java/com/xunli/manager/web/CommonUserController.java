@@ -27,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import java.util.Map;
+import java.util.Optional;
 
 import static com.xunli.manager.config.Constants.ROLE_ADMIN;
 
@@ -92,7 +93,7 @@ public class CommonUserController {
         {
             return commonUserRepository.findOneByPhone(phone).map(u -> {
                 return commonUserService.login(u,request);
-            }).orElse(commonUserService.login(createUserByPhone(phone),request));
+            }).orElseGet(() -> commonUserService.login(createUserByPhone(phone),request));
         }
     }
 

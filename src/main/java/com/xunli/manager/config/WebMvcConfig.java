@@ -15,6 +15,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) 
 	{
-		//registry.addInterceptor(managerCheckTokenInterceptor).addPathPatterns("/api/**");
+		registry.addInterceptor(managerCheckTokenInterceptor)
+				.addPathPatterns("/api/recommend/show/login");
 	}
 }

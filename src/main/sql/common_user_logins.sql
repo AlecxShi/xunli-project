@@ -5,6 +5,7 @@ CREATE TABLE common_user_logins (
     token NVARCHAR(255) NOT NULL,
     last_used TIMESTAMP,
     ip_address VARCHAR(255) ,
-    user_agent VARCHAR(255)
+    user_agent VARCHAR(255),
+    expire_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
