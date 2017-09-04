@@ -52,7 +52,8 @@ public class CommonUserService {
     public boolean generateRecommendInfo(ChildrenInfo currentChild)
     {
         boolean flag = false;
-        if("COMMON".equals(DictInfoUtil.getItemById(currentChild.getParent().getUsertype()).getDictValue()))
+        CommonUser user = commonUserRepository.findOne(currentChild.getParentId());
+        if("COMMON".equals(DictInfoUtil.getItemById(user.getUsertype()).getDictValue()))
         {
             List<ChildrenInfoTwo> top3 = generateTop3(currentChild);
             List<ChildrenInfoTwo> others = generateOthers(currentChild,top3);
