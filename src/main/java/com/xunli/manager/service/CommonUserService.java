@@ -53,7 +53,9 @@ public class CommonUserService {
     {
         boolean flag = false;
         CommonUser user = commonUserRepository.findOne(currentChild.getParentId());
-        if("COMMON".equals(DictInfoUtil.getItemById(user.getUsertype()).getDictValue()))
+        //创建或重构推荐表时首先删除原来的数据
+        if("COMMON".equals(DictInfoUtil.getItemById(user.getUsertype()).getDictValue())
+                && recommendInfoTwoRepository.deleteAllByChildrenId(currentChild.getId()))
         {
             List<ChildrenInfoTwo> top3 = generateTop3(currentChild);
             List<ChildrenInfoTwo> others = generateOthers(currentChild,top3);
@@ -168,14 +170,4 @@ public class CommonUserService {
         result.put("token",login.getToken());
         return new RequestResult(ReturnCode.PUBLIC_SUCCESS,result);
     }
-
-    /*public static void main(String[] args)
-    {
-        Calendar instance = Calendar.getInstance();
-        Date now = new Date();
-        System.out.println(now);
-       // instance.setTime(now);
-        instance.add(Calendar.MONTH,1);
-        System.out.println(instance.getTime());
-    }*/
 }
