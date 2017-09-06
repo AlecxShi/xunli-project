@@ -1,10 +1,8 @@
 package com.xunli.manager.web;
 
 import com.xunli.manager.enumeration.ReturnCode;
-import com.xunli.manager.model.CommonUser;
-import com.xunli.manager.model.RequestResult;
-import com.xunli.manager.model.Validation;
-import com.xunli.manager.model.ValidationResult;
+import com.xunli.manager.model.*;
+import com.xunli.manager.repository.ChildrenInfoRepository;
 import com.xunli.manager.repository.CommonUserRepository;
 import com.xunli.manager.repository.DictInfoRepository;
 import com.xunli.manager.service.CommonUserService;
@@ -50,6 +48,9 @@ public class CommonUserController {
 
     @Resource
     private CommonUserRepository commonUserRepository;
+
+    @Autowired
+    private ChildrenInfoRepository childrenInfoRepository;
 
     /**
      * 验证手机号是否已被注册
@@ -103,5 +104,18 @@ public class CommonUserController {
         CommonUser user = new CommonUser();
         user.setPhone(phone);
         return commonUserRepository.save(user);
+    }
+
+    @RequestMapping(value = "/commonuser/getDetail",method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_VALUE)
+    @Transactional(readOnly = true)
+    public RequestResult getDetail(HttpServletRequest request)
+    {
+        String targetUserId = request.getParameter("targetUserId");
+        if(targetUserId != null)
+        {
+            ChildrenInfo detail = childrenInfoRepository.findOneByParentId(Long.parseLong(targetUserId));
+            return new RequestResult(ReturnCode.PUBLIC_SUCCESS,detail);
+        }
+        return new RequestResult(ReturnCode.PUBLIC_OTHER_ERROR);
     }
 }

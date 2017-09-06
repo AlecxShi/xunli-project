@@ -155,6 +155,12 @@
             <artifactId>mapstruct-processor</artifactId>
             <version>1.0.0.Final</version>
         </dependency>
+        <!-- TaobaoIM -->
+        <dependency>
+            <groupId>com.aliyun</groupId>
+            <artifactId>api</artifactId>
+            <version>1.0.0</version>
+        </dependency>
     </dependencies>
     <profiles>
         <profile>

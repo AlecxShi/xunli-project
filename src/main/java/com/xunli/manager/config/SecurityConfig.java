@@ -145,6 +145,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     .antMatchers("/api/reset").permitAll()
     .antMatchers("/api/accountAuth").permitAll()
     .antMatchers("/api/commonuser/login").permitAll()
+    .antMatchers("/api/commonuser/getDetail").permitAll()
+    .antMatchers("/api/children/save").permitAll()
     .antMatchers("/api/logs/**").hasAuthority(ROLE_ADMIN)
     .antMatchers("/api/audits/**").hasAuthority(ROLE_ADMIN)
     .antMatchers("/manage/**").hasAuthority(ROLE_ADMIN)
