@@ -15,10 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -83,7 +80,7 @@ public class CommonUserController {
 
     @RequestMapping(value = "/commonuser/login",method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional(isolation = Isolation.DEFAULT,propagation = Propagation.REQUIRED)
-    public RequestResult commonUserLogin(HttpServletRequest request)
+    public RequestResult commonUserLogin(@RequestParam String phone1, HttpServletRequest request)
     {
         String phone = request.getParameter("phone");
         if(phone == null)

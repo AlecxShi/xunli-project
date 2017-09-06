@@ -105,6 +105,7 @@ public class ChildrenInfo2AppController {
             {
                 ch.setSchoolType(childrenInfo.getSchoolType());
             }
+            ch.setLastmodified(new Date());
             ch.setScore(GenerateService.createScore(ch));
             ch.setLabel(GenerateService.createLabel(ch));
             childrenInfoRepository.save(ch);
