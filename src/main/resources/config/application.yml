@@ -15,6 +15,11 @@ spring:
   jackson:
     serialization:
       indent-output: true
+  http:
+    multipart:
+      enabled: true
+      max-file-size: 2Mb
+      max-request-size: 2Mb
 info:
   build:
     artifact: @project.artifactId@
