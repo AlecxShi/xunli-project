@@ -52,6 +52,7 @@ public enum ReturnCode {
 	PUBLIC_MODIFY_FAILURE("0019","Modify failure","操作失败"),
 	PUBLIC_USER_INFORMATION_IS_INCORRECT_OR_NO_LOGIN("0020","User information is incorrect or no login","用户信息有误或没有登录"),
 	PUBLIC_DATE_CONVERSION_ERROR("0021","Date conversion error","日期转换错误"),
+	PUBLIC_UPLOAD_IMAGE_FAIL("0022","Upload image Fail","图片上传失败"),
 
 	// 系统
 	SYSTEM_SYSTEM_ERROR("SYSTEM_0001","System error","系统错误"), 
