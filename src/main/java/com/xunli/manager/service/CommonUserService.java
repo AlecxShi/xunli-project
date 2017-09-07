@@ -54,9 +54,9 @@ public class CommonUserService {
         boolean flag = false;
         CommonUser user = commonUserRepository.findOne(currentChild.getParentId());
         //创建或重构推荐表时首先删除原来的数据
-        if("COMMON".equals(DictInfoUtil.getItemById(user.getUsertype()).getDictValue())
-                && recommendInfoTwoRepository.deleteAllByChildrenId(currentChild.getId()))
+        if("COMMON".equals(DictInfoUtil.getItemById(user.getUsertype()).getDictValue()))
         {
+            recommendInfoTwoRepository.deleteAllByChildrenId(currentChild.getId());
             List<ChildrenInfoTwo> top3 = generateTop3(currentChild);
             List<ChildrenInfoTwo> others = generateOthers(currentChild,top3);
             List<RecommendInfoTwo> data = new ArrayList();

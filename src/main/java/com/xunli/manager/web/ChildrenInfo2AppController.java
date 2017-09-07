@@ -1,22 +1,17 @@
 package com.xunli.manager.web;
 
-import com.xunli.manager.domain.criteria.ChildrenInfoCriteria;
 import com.xunli.manager.domain.criteria.UpdateChildrenInfo;
-import com.xunli.manager.domain.specification.ChildrenInfoSpecification;
 import com.xunli.manager.enumeration.ReturnCode;
+import com.xunli.manager.job.GenerateRecommendInfoJob;
 import com.xunli.manager.model.ChildrenInfo;
-import com.xunli.manager.model.CommonUser;
 import com.xunli.manager.model.CommonUserLogins;
 import com.xunli.manager.model.RequestResult;
 import com.xunli.manager.repository.*;
 import com.xunli.manager.service.CommonUserService;
 import com.xunli.manager.service.GenerateService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
+import com.xunli.manager.util.DictInfoUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,12 +19,8 @@ import org.springframework.web.bind.annotation.*;
 import org.thymeleaf.util.StringUtils;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
-
-import static com.xunli.manager.config.Constants.ROLE_ADMIN;
 
 /**
  * Created by shihj on 2017/8/2.
@@ -50,6 +41,9 @@ public class ChildrenInfo2AppController {
     @Resource
     private CommonUserLoginsRepository commonUserLoginsRepository;
 
+    @Autowired
+    private GenerateRecommendInfoJob generateRecommendInfoJob;
+
     @RequestMapping(value = "/save",method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.READ_COMMITTED)
     public RequestResult edit(@ModelAttribute UpdateChildrenInfo childrenInfo)
@@ -65,9 +59,11 @@ public class ChildrenInfo2AppController {
         }
         ChildrenInfo child = childrenInfoRepository.findOneByParentId(login.getUserId());
         return Optional.ofNullable(child).map( ch -> {
+            boolean ifReCreate = false;
             if(!StringUtils.isEmpty(childrenInfo.getHobby()) && !childrenInfo.getHobby().equals(ch.getHobby()))
             {
                 ch.setHobby(childrenInfo.getHobby());
+                ifReCreate = true;
             }
             if(!StringUtils.isEmpty(childrenInfo.getPosition()) && !childrenInfo.getPosition().equals(ch.getPosition()))
             {
@@ -84,6 +80,7 @@ public class ChildrenInfo2AppController {
             if(childrenInfo.getCompany() != null && !childrenInfo.getCompany().equals(ch.getCompany()))
             {
                 ch.setCompany(childrenInfo.getCompany());
+                ifReCreate = true;
             }
             if(childrenInfo.getHeight() != null && !childrenInfo.getHeight().equals(ch.getHeight()))
             {
@@ -92,25 +89,32 @@ public class ChildrenInfo2AppController {
             if(childrenInfo.getHouse() != null && !childrenInfo.getHouse().equals(ch.getHouse()))
             {
                 ch.setHouse(childrenInfo.getHouse());
+                ifReCreate = true;
             }
             if(childrenInfo.getIncome() != null  && !childrenInfo.getIncome().equals(ch.getIncome()))
             {
                 ch.setIncome(childrenInfo.getIncome());
+                ifReCreate = true;
             }
-            if(childrenInfo.getCar() != null && !childrenInfo.getCar().equals(ch.getCar()))
+            if(childrenInfo.getCar() != null && Boolean.parseBoolean(DictInfoUtil.getItemById(childrenInfo.getCar()).getDictValue()) != ch.getCar())
             {
-                ch.setCar(childrenInfo.getCar());
+                ch.setCar(Boolean.parseBoolean(DictInfoUtil.getItemById(childrenInfo.getCar()).getDictValue()));
+                ifReCreate = true;
             }
             if(childrenInfo.getSchoolType() != null && !childrenInfo.getSchoolType().equals(ch.getSchoolType()))
             {
                 ch.setSchoolType(childrenInfo.getSchoolType());
+                ifReCreate = true;
             }
             ch.setLastmodified(new Date());
             ch.setScore(GenerateService.createScore(ch));
             ch.setLabel(GenerateService.createLabel(ch));
             childrenInfoRepository.save(ch);
             //创建推荐表
-            commonUserService.generateRecommendInfo(ch);
+            if(ifReCreate)
+            {
+                generateRecommendInfoJob.push(ch);
+            }
             return new RequestResult(ReturnCode.PUBLIC_SUCCESS);
         }).orElseGet(() -> {
             return new RequestResult(ReturnCode.PUBLIC_NO_DATA);
