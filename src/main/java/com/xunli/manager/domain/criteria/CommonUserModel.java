@@ -9,6 +9,10 @@ public class CommonUserModel {
 
     private String username;
 
+    private String location;
+
+    private String password;
+
     public String getToken() {
         return token;
     }
@@ -23,5 +27,21 @@ public class CommonUserModel {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

@@ -9,6 +9,7 @@ import com.xunli.manager.repository.CommonUserRepository;
 import com.xunli.manager.repository.DictInfoRepository;
 import com.xunli.manager.service.CommonUserService;
 import com.xunli.manager.service.GenerateService;
+import com.xunli.manager.util.DictInfoUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -93,6 +94,8 @@ public class CommonUserController {
     {
         CommonUser user = new CommonUser();
         user.setPhone(phone);
+        user.setUsertype(DictInfoUtil.getByDictTypeAndDictValue("USER_TYPE","COMMON").getId());
+        user.setUsername("");
         return commonUserRepository.save(user);
     }
 
@@ -126,8 +129,19 @@ public class CommonUserController {
             if(model.getUsername() != null && !model.getUsername().equals(u.getUsername()))
             {
                 u.setUsername(model.getUsername());
-                commonUserRepository.save(u);
             }
+
+            if(model.getLocation() != null && !model.getLocation().equals(u.getLocation()))
+            {
+                u.setLocation(model.getLocation());
+            }
+
+            if(model.getPassword() != null && !model.getPassword().equals(u.getPassword()))
+            {
+                u.setPassword(model.getPassword());
+            }
+            u.setLastmodified(new Date());
+            commonUserRepository.save(u);
             return new RequestResult(ReturnCode.PUBLIC_SUCCESS);
         }).orElseGet(() -> {
             return new RequestResult(ReturnCode.AUTH_ACCOUNT_IS_NULL);
