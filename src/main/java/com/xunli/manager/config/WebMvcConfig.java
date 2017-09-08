@@ -20,7 +20,8 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter
 				.addPathPatterns("/api/recommend/show/login")
 				.addPathPatterns("/api/children/save")
 				.addPathPatterns("/api/collect/save")
-				.addPathPatterns("/api/collect/getAll");
+				.addPathPatterns("/api/collect/getAll")
+				.addPathPatterns("/api/feedback/save");
 	}
 
 	@Override
