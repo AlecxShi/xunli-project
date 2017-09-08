@@ -108,7 +108,6 @@ public class ChildrenInfo2AppController {
             }
             ch.setLastmodified(new Date());
             ch.setScore(GenerateService.createScore(ch));
-            ch.setLabel(GenerateService.createLabel(ch));
             childrenInfoRepository.save(ch);
             //创建推荐表
             if(ifReCreate)
@@ -117,7 +116,31 @@ public class ChildrenInfo2AppController {
             }
             return new RequestResult(ReturnCode.PUBLIC_SUCCESS);
         }).orElseGet(() -> {
-            return new RequestResult(ReturnCode.PUBLIC_NO_DATA);
+            ChildrenInfo info = new ChildrenInfo();
+            info.setName(childrenInfo.getName());
+            info.setGender(childrenInfo.getGender());
+            info.setBirthday(childrenInfo.getBirthday());
+            info.setHeight(childrenInfo.getHeight());
+
+            info.setBornLocation(childrenInfo.getBornLocation());
+            info.setCurrentLocation(childrenInfo.getCurrentLocation());
+            info.setParentId(login.getId());
+            info.setCompany(childrenInfo.getCompany());
+            info.setProfession(childrenInfo.getProfession());
+            info.setIncome(childrenInfo.getIncome());
+            info.setCar("true".equals(DictInfoUtil.getItemById(childrenInfo.getCar()).getDictValue()));
+            info.setHouse(childrenInfo.getHouse());
+
+            info.setEducation(childrenInfo.getEducation());
+            info.setSchoolType(childrenInfo.getSchoolType());
+            info.setSchool(childrenInfo.getSchool());
+            info.setHobby(childrenInfo.getHobby());
+            info.setMoreIntroduce(childrenInfo.getMoreIntroduce());
+
+            info.setLabel(childrenInfo.getLabel());
+            info.setScore(GenerateService.createScore(info));
+            generateRecommendInfoJob.push(childrenInfoRepository.save(info));
+            return new RequestResult(ReturnCode.PUBLIC_SUCCESS);
         });
     }
 }

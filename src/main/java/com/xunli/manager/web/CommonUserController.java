@@ -1,8 +1,10 @@
 package com.xunli.manager.web;
 
+import com.xunli.manager.domain.criteria.CommonUserModel;
 import com.xunli.manager.enumeration.ReturnCode;
 import com.xunli.manager.model.*;
 import com.xunli.manager.repository.ChildrenInfoRepository;
+import com.xunli.manager.repository.CommonUserLoginsRepository;
 import com.xunli.manager.repository.CommonUserRepository;
 import com.xunli.manager.repository.DictInfoRepository;
 import com.xunli.manager.service.CommonUserService;
@@ -19,8 +21,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.swing.text.html.Option;
 import javax.validation.Valid;
 
+import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 
@@ -48,6 +52,9 @@ public class CommonUserController {
 
     @Autowired
     private ChildrenInfoRepository childrenInfoRepository;
+
+    @Autowired
+    private CommonUserLoginsRepository commonUserLoginsRepository;
 
     /**
      * 验证手机号是否已被注册
@@ -100,5 +107,30 @@ public class CommonUserController {
             return new RequestResult(ReturnCode.PUBLIC_SUCCESS,detail);
         }
         return new RequestResult(ReturnCode.PUBLIC_OTHER_ERROR);
+    }
+
+    @RequestMapping(value = "/commonuser/save",method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_VALUE)
+    @Transactional
+    public RequestResult update(@ModelAttribute CommonUserModel model)
+    {
+        if(model.getToken() == null)
+        {
+            return new RequestResult(ReturnCode.PUBLIC_TOKEN_MISSING);
+        }
+        CommonUserLogins login = commonUserLoginsRepository.getByToken(model.getToken());
+        if(login == null || login.getExpireTime().compareTo(new Date()) <= 0)
+        {
+            return new RequestResult(ReturnCode.PUBLIC_TOKEN_IS_INVALID);
+        }
+        return Optional.ofNullable(commonUserRepository.findOne(login.getUserId())).map(u -> {
+            if(model.getUsername() != null && !model.getUsername().equals(u.getUsername()))
+            {
+                u.setUsername(model.getUsername());
+                commonUserRepository.save(u);
+            }
+            return new RequestResult(ReturnCode.PUBLIC_SUCCESS);
+        }).orElseGet(() -> {
+            return new RequestResult(ReturnCode.AUTH_ACCOUNT_IS_NULL);
+        });
     }
 }
