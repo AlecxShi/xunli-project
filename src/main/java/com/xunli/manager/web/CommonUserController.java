@@ -63,12 +63,6 @@ public class CommonUserController {
 
     }
 
-    @RequestMapping("/getuser")
-    public CommonUser getOneUser(Long id)
-    {
-        return commonUserService.getAll(1L);
-    }
-
     @RequestMapping(value = "/commonuser/register",method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> userRegister(@RequestBody @Valid String phone)
     {
@@ -80,19 +74,11 @@ public class CommonUserController {
 
     @RequestMapping(value = "/commonuser/login",method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional(isolation = Isolation.DEFAULT,propagation = Propagation.REQUIRED)
-    public RequestResult commonUserLogin(@RequestParam String phone1, HttpServletRequest request)
+    public RequestResult commonUserLogin(@RequestParam("phone") String phone, HttpServletRequest request)
     {
-        String phone = request.getParameter("phone");
-        if(phone == null)
-        {
-            return new RequestResult(ReturnCode.AUTH_PHONE_IS_NULL);
-        }
-        else
-        {
-            return commonUserRepository.findOneByPhone(phone).map(u -> {
-                return commonUserService.login(u,request);
-            }).orElseGet(() -> commonUserService.login(createUserByPhone(phone),request));
-        }
+        return commonUserRepository.findOneByPhone(phone).map(u -> {
+            return commonUserService.login(u,request);
+        }).orElseGet(() -> commonUserService.login(createUserByPhone(phone),request));
     }
 
     @Transactional

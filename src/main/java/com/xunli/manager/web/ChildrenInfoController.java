@@ -2,6 +2,7 @@ package com.xunli.manager.web;
 
 import com.xunli.manager.domain.criteria.ChildrenInfoCriteria;
 import com.xunli.manager.domain.specification.ChildrenInfoSpecification;
+import com.xunli.manager.job.GenerateRecommendInfoJob;
 import com.xunli.manager.model.ChildrenInfo;
 import com.xunli.manager.model.DictInfo;
 import com.xunli.manager.repository.ChildrenInfoRepository;
@@ -40,6 +41,9 @@ public class ChildrenInfoController {
     @Resource
     private CommonUserService commonUserService;
 
+    @Resource
+    private GenerateRecommendInfoJob generateRecommendInfoJob;
+
     @RequestMapping(value = "/children",method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional(readOnly = true)
     public Page<ChildrenInfo> query(@ModelAttribute ChildrenInfoCriteria criteria, @PageableDefault Pageable pageable)
@@ -60,7 +64,7 @@ public class ChildrenInfoController {
         childrenInfo.setLabel(GenerateService.createLabel(childrenInfo));
         childrenInfoRepository.save(childrenInfo);
         //创建推荐表
-        commonUserService.generateRecommendInfo(childrenInfo);
+        generateRecommendInfoJob.push(childrenInfo);
         return ResponseEntity.ok().body(childrenInfo);
     }
 

@@ -1,6 +1,6 @@
 package com.xunli.manager.web;
 
-import com.xunli.manager.domain.criteria.UpdateChildrenInfo;
+import com.xunli.manager.domain.criteria.ChildrenInfoModel;
 import com.xunli.manager.enumeration.ReturnCode;
 import com.xunli.manager.job.GenerateRecommendInfoJob;
 import com.xunli.manager.model.ChildrenInfo;
@@ -26,7 +26,7 @@ import java.util.Optional;
  * Created by shihj on 2017/8/2.
  */
 @RestController
-@RequestMapping("/api/children")
+@RequestMapping("/api")
 public class ChildrenInfo2AppController {
 
     @Resource
@@ -44,9 +44,9 @@ public class ChildrenInfo2AppController {
     @Autowired
     private GenerateRecommendInfoJob generateRecommendInfoJob;
 
-    @RequestMapping(value = "/save",method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/children/save",method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.READ_COMMITTED)
-    public RequestResult edit(@ModelAttribute UpdateChildrenInfo childrenInfo)
+    public RequestResult saveOrEdit(@ModelAttribute ChildrenInfoModel childrenInfo)
     {
         if(childrenInfo.getToken() == null)
         {
@@ -73,9 +73,9 @@ public class ChildrenInfo2AppController {
             {
                 ch.setSchool(childrenInfo.getSchool());
             }
-            if(!StringUtils.isEmpty(childrenInfo.getMoreIntroduce()) && !childrenInfo.getMoreIntroduce().equals(ch.getSchool()))
+            if(!StringUtils.isEmpty(childrenInfo.getMoreIntroduce()) && !childrenInfo.getMoreIntroduce().equals(ch.getMoreIntroduce()))
             {
-                //ch.setSchool(childrenInfo.getSchool());
+                ch.setMoreIntroduce(childrenInfo.getMoreIntroduce());
             }
             if(childrenInfo.getCompany() != null && !childrenInfo.getCompany().equals(ch.getCompany()))
             {

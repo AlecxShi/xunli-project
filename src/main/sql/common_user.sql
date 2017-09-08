@@ -30,6 +30,7 @@ CREATE TABLE children_info(
     house BIGINT,                                            --是否有房,字典匹配
     photo VARCHAR(255),                                      --照片信息,照片存储路径
     hobby VARCHAR(255),                                      --爱好信息,尚未确定是否选择
+    more_introduce TEXT,                                     --更多自我介绍
     score INT,                                               --当前评分
     label VARCHAR(255),                                      --标签
     create_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,         --创建日期
