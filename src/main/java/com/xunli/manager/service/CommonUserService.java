@@ -39,72 +39,6 @@ public class CommonUserService {
     @Autowired
     private CommonUserLoginsRepository commonUserLoginsRepository;
 
-    public CommonUser getAll(Long id)
-    {
-        return commonUserRepository.findOne(id);
-    }
-
-    /**
-     * 该方法用于创建用户推荐信息表,在用户注册完成之后调用
-     * @return
-     */
-    @Transactional
-    public boolean generateRecommendInfo(ChildrenInfo currentChild)
-    {
-        boolean flag = false;
-        CommonUser user = commonUserRepository.findOne(currentChild.getParentId());
-        //创建或重构推荐表时首先删除原来的数据
-        if("COMMON".equals(DictInfoUtil.getItemById(user.getUsertype()).getDictValue())
-                && recommendInfoTwoRepository.deleteAllByChildrenId(currentChild.getId()))
-        {
-            List<ChildrenInfoTwo> top3 = generateTop3(currentChild);
-            List<ChildrenInfoTwo> others = generateOthers(currentChild,top3);
-            List<RecommendInfoTwo> data = new ArrayList();
-            for(ChildrenInfoTwo target : top3)
-            {
-                RecommendInfoTwo recommendInfo = new RecommendInfoTwo();
-                recommendInfo.setChildrenId(currentChild.getId());
-                recommendInfo.setTargetChildrenId(target.getId());
-                data.add(recommendInfo);
-            }
-            for(ChildrenInfoTwo target : others)
-            {
-                RecommendInfoTwo recommendInfo = new RecommendInfoTwo();
-                recommendInfo.setChildrenId(currentChild.getId());
-                recommendInfo.setTargetChildrenId(target.getId());
-                data.add(recommendInfo);
-            }
-            recommendInfoTwoRepository.save(data);
-            flag = true;
-        }
-        return flag;
-    }
-
-    public List<ChildrenInfoTwo> generateTop3(ChildrenInfo currentChild)
-    {
-        //查询所得结果
-        ChildrenInfoCriteria criteria = new ChildrenInfoCriteria();
-        criteria.setNum(3);
-        criteria.setBornLocation(currentChild.getBornLocation());
-        criteria.setCurrentLocation(currentChild.getCurrentLocation());
-        criteria.setGender(DictInfoUtil.getOppositeSex(DictInfoUtil.getItemById(currentChild.getGender())));
-        criteria.setEducation(DictInfoUtil.getBiggerEducation(currentChild.getEducation()));
-        Long birthday = Long.parseLong(currentChild.getBirthday());
-        if("Male".equals(DictInfoUtil.getItemById(currentChild.getGender()).getDictValue()))
-        {
-            criteria.setStartBirthday(String.valueOf(birthday - 15));
-            criteria.setEndBirthday(String.valueOf(birthday + 8));
-        }
-        else
-        {
-            criteria.setStartBirthday(String.valueOf(birthday - 8));
-            criteria.setEndBirthday(String.valueOf(birthday + 15));
-        }
-        Pageable page = new PageRequest(0,3);
-        List<ChildrenInfoTwo> list = childrenInfoTwoRepository.findAll(new ChildrenInfoTwoSpecification(criteria),page).getContent();
-        return list;
-    }
-
     public List<ChildrenInfoTwo> generateOthers(ChildrenInfo currentChild,List<ChildrenInfoTwo> except)
     {
         //查询所得结果
@@ -148,7 +82,7 @@ public class CommonUserService {
             login.setExpireTime(instance.getTime());
             commonUserLoginsRepository.save(login);
         }
-        else if(login.getExpireTime().before(new Date()))
+        else if(login.getExpireTime().compareTo(new Date()) <= 0)
         {
             login.setToken(RandomUtil.generateToken());
             login.setIpAddress(request.getRemoteAddr());

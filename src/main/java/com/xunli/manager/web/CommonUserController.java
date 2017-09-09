@@ -1,12 +1,15 @@
 package com.xunli.manager.web;
 
+import com.xunli.manager.domain.criteria.CommonUserModel;
 import com.xunli.manager.enumeration.ReturnCode;
 import com.xunli.manager.model.*;
 import com.xunli.manager.repository.ChildrenInfoRepository;
+import com.xunli.manager.repository.CommonUserLoginsRepository;
 import com.xunli.manager.repository.CommonUserRepository;
 import com.xunli.manager.repository.DictInfoRepository;
 import com.xunli.manager.service.CommonUserService;
 import com.xunli.manager.service.GenerateService;
+import com.xunli.manager.util.DictInfoUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +22,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.swing.text.html.Option;
 import javax.validation.Valid;
 
+import java.util.Date;
 import java.util.Map;
 import java.util.Optional;
 
@@ -49,6 +54,9 @@ public class CommonUserController {
     @Autowired
     private ChildrenInfoRepository childrenInfoRepository;
 
+    @Autowired
+    private CommonUserLoginsRepository commonUserLoginsRepository;
+
     /**
      * 验证手机号是否已被注册
      * @param validation
@@ -63,12 +71,6 @@ public class CommonUserController {
 
     }
 
-    @RequestMapping("/getuser")
-    public CommonUser getOneUser(Long id)
-    {
-        return commonUserService.getAll(1L);
-    }
-
     @RequestMapping(value = "/commonuser/register",method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> userRegister(@RequestBody @Valid String phone)
     {
@@ -80,19 +82,11 @@ public class CommonUserController {
 
     @RequestMapping(value = "/commonuser/login",method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional(isolation = Isolation.DEFAULT,propagation = Propagation.REQUIRED)
-    public RequestResult commonUserLogin(@RequestParam String phone1, HttpServletRequest request)
+    public RequestResult commonUserLogin(@RequestParam("phone") String phone, HttpServletRequest request)
     {
-        String phone = request.getParameter("phone");
-        if(phone == null)
-        {
-            return new RequestResult(ReturnCode.AUTH_PHONE_IS_NULL);
-        }
-        else
-        {
-            return commonUserRepository.findOneByPhone(phone).map(u -> {
-                return commonUserService.login(u,request);
-            }).orElseGet(() -> commonUserService.login(createUserByPhone(phone),request));
-        }
+        return commonUserRepository.findOneByPhone(phone).map(u -> {
+            return commonUserService.login(u,request);
+        }).orElseGet(() -> commonUserService.login(createUserByPhone(phone),request));
     }
 
     @Transactional
@@ -100,6 +94,8 @@ public class CommonUserController {
     {
         CommonUser user = new CommonUser();
         user.setPhone(phone);
+        user.setUsertype(DictInfoUtil.getByDictTypeAndDictValue("USER_TYPE","COMMON").getId());
+        user.setUsername("");
         return commonUserRepository.save(user);
     }
 
@@ -114,5 +110,41 @@ public class CommonUserController {
             return new RequestResult(ReturnCode.PUBLIC_SUCCESS,detail);
         }
         return new RequestResult(ReturnCode.PUBLIC_OTHER_ERROR);
+    }
+
+    @RequestMapping(value = "/commonuser/save",method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_VALUE)
+    @Transactional
+    public RequestResult update(@ModelAttribute CommonUserModel model)
+    {
+        if(model.getToken() == null)
+        {
+            return new RequestResult(ReturnCode.PUBLIC_TOKEN_MISSING);
+        }
+        CommonUserLogins login = commonUserLoginsRepository.getByToken(model.getToken());
+        if(login == null || login.getExpireTime().compareTo(new Date()) <= 0)
+        {
+            return new RequestResult(ReturnCode.PUBLIC_TOKEN_IS_INVALID);
+        }
+        return Optional.ofNullable(commonUserRepository.findOne(login.getUserId())).map(u -> {
+            if(model.getUsername() != null && !model.getUsername().equals(u.getUsername()))
+            {
+                u.setUsername(model.getUsername());
+            }
+
+            if(model.getLocation() != null && !model.getLocation().equals(u.getLocation()))
+            {
+                u.setLocation(model.getLocation());
+            }
+
+            if(model.getPassword() != null && !model.getPassword().equals(u.getPassword()))
+            {
+                u.setPassword(model.getPassword());
+            }
+            u.setLastmodified(new Date());
+            commonUserRepository.save(u);
+            return new RequestResult(ReturnCode.PUBLIC_SUCCESS);
+        }).orElseGet(() -> {
+            return new RequestResult(ReturnCode.AUTH_ACCOUNT_IS_NULL);
+        });
     }
 }

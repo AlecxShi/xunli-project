@@ -31,7 +31,7 @@ public class UpdateChildrenInfo implements Serializable{
     private Long house;
 
     //车辆情况
-    private  Boolean car;
+    private  Long car;
 
     //学校情况
     private Long schoolType;
@@ -93,11 +93,11 @@ public class UpdateChildrenInfo implements Serializable{
         this.house = house;
     }
 
-    public Boolean getCar() {
+    public Long getCar() {
         return car;
     }
 
-    public void setCar(Boolean car) {
+    public void setCar(Long car) {
         this.car = car;
     }
 

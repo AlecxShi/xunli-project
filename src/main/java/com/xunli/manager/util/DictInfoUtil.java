@@ -25,14 +25,12 @@ public class DictInfoUtil {
 
     public static DictInfo getByDictTypeAndDictValue(String type,String value)
     {
-        if(type == null || "".equals(type))
-            return null;
-        if(value == null || "".equals(value))
+        if(type == null || "".equals(type) || value == null || "".equals(value))
             return null;
         DictInfo dict = null;
         for(DictInfo d : DictInfoCache.dictInfos)
         {
-            if(d.getDictType().equals(type) && d.getDictValue().equals(value))
+            if(type.equals(d.getDictType()) && value.equals(d.getDictValue()))
             {
                 dict = d;
                 break;

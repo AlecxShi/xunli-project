@@ -1,0 +1,7 @@
+DROP TABLE feed_back_info;
+CREATE TABLE feed_back_info(
+    id BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    userId BIGINT NOT NULL,
+    content TEXT NOT NULL,
+    commit_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)

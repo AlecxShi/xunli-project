@@ -121,6 +121,10 @@ public class ChildrenInfo implements Serializable{
     @ColumnComment("最后修改日期")
     private Date lastmodified = new Date();
 
+    @Column(name = "more_introduce")
+    @ColumnComment("更多自我介绍")
+    private String moreIntroduce;
+
     @Transient
     private CommonUser parent;
 
@@ -314,5 +318,13 @@ public class ChildrenInfo implements Serializable{
 
     public void setParent(CommonUser parent) {
         this.parent = parent;
+    }
+
+    public String getMoreIntroduce() {
+        return moreIntroduce;
+    }
+
+    public void setMoreIntroduce(String moreIntroduce) {
+        this.moreIntroduce = moreIntroduce;
     }
 }
