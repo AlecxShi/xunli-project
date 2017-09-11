@@ -71,15 +71,6 @@ public class CommonUserController {
 
     }
 
-    @RequestMapping(value = "/commonuser/register",method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> userRegister(@RequestBody @Valid String phone)
-    {
-        Validation validation = new Validation();
-        validation.setId(null);
-        validation.setValue(phone);
-        return ResponseEntity.ok().build();
-    }
-
     @RequestMapping(value = "/commonuser/login",method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional(isolation = Isolation.DEFAULT,propagation = Propagation.REQUIRED)
     public RequestResult commonUserLogin(@RequestParam("phone") String phone, HttpServletRequest request)
@@ -110,6 +101,28 @@ public class CommonUserController {
             return new RequestResult(ReturnCode.PUBLIC_SUCCESS,detail);
         }
         return new RequestResult(ReturnCode.PUBLIC_OTHER_ERROR);
+    }
+
+    @RequestMapping(value = "/commonuser/getSelfDetail",method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_VALUE)
+    @Transactional(readOnly = true)
+    public RequestResult getSelfDetail(@RequestParam("token") String token)
+    {
+        if(token == null)
+        {
+            return new RequestResult(ReturnCode.PUBLIC_TOKEN_MISSING);
+        }
+        CommonUserLogins login = commonUserLoginsRepository.getByToken(token);
+        if(login == null || login.getExpireTime().compareTo(new Date()) <= 0)
+        {
+            return new RequestResult(ReturnCode.AUTH_ACCOUNT_NOT_LOGIN);
+        }
+        return Optional.ofNullable(commonUserRepository.findOne(login.getUserId())).map(u -> {
+            ChildrenInfo detail = childrenInfoRepository.findOneByParentId(login.getUserId());
+            u.setChildren(detail);
+            return new RequestResult(ReturnCode.PUBLIC_SUCCESS,u);
+        }).orElseGet(() -> {
+            return new RequestResult(ReturnCode.AUTH_ACCOUNT_IS_NULL);
+        });
     }
 
     @RequestMapping(value = "/commonuser/save",method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_VALUE)
