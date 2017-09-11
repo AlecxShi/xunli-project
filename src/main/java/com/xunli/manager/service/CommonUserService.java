@@ -66,7 +66,7 @@ public class CommonUserService {
     }
 
     @Transactional
-    public RequestResult login(CommonUser user, HttpServletRequest request)
+    public RequestResult login(CommonUser user, HttpServletRequest request,Boolean ifFirstLogin)
     {
         CommonUserLogins login = commonUserLoginsRepository.findOneByUserId(user.getId());
         if(login == null)
@@ -100,8 +100,9 @@ public class CommonUserService {
             login.setLastUsed(new Date());
             commonUserLoginsRepository.save(login);
         }
-        Map<String,String> result = new HashMap();
+        Map<String,Object> result = new HashMap();
         result.put("token",login.getToken());
+        result.put("ifFirstLogin",ifFirstLogin);
         return new RequestResult(ReturnCode.PUBLIC_SUCCESS,result);
     }
 }
