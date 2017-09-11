@@ -16,8 +16,8 @@ public class GenerateService {
 
     private final static Integer YEAR = Calendar.getInstance().get(Calendar.YEAR);
 
-    private final static int ONE = 3000;
-    private final static int TWO = 2000;
+    private final static int ONE = 300;
+    private final static int TWO = 200;
 
     public final static int getRandom(int base)
     {
@@ -39,6 +39,7 @@ public class GenerateService {
             int number = TWO;
             for(DictInfo city : citys)
             {
+                List<DictInfo> states = DictInfoUtil.getByDictType(city.getDictValue());
                 if(checkIfOne(city))
                 {
                     number = ONE;
@@ -225,26 +226,29 @@ public class GenerateService {
     private String createBirthday(ChildrenInfo children)
     {
         int v = getRandom(100);
+        int month = getRandom(ConstantValueUtil.MONTH_AND_DAY.length - 1);
+        int day = getRandom(ConstantValueUtil.MONTH_AND_DAY[month].length - 1);
+        String month_and_day = "-" + (month + 1 < 10 ? "0" + (month + 1) : (month + 1)) + "-" + ConstantValueUtil.MONTH_AND_DAY[month][day];
         if(v <= 10)
         {
             List<String> birth = Arrays.asList(Arrays.copyOfRange(ConstantValueUtil.BIRTHDAY,0,10));
-            return birth.get(getRandom(birth.size() - 1));
+            return birth.get(getRandom(birth.size() - 1)) + month_and_day;
 
         }
         else if(v > 10 && v <= 30)
         {
             List<String> birth = Arrays.asList(Arrays.copyOfRange(ConstantValueUtil.BIRTHDAY,11,15));
-            return birth.get(getRandom(birth.size() - 1));
+            return birth.get(getRandom(birth.size() - 1)) + month_and_day;
         }
         else if(v > 30 && v < 80)
         {
             List<String> birth = Arrays.asList(Arrays.copyOfRange(ConstantValueUtil.BIRTHDAY,16,22));
-            return birth.get(getRandom(birth.size() - 1));
+            return birth.get(getRandom(birth.size() - 1)) + month_and_day;
         }
         else
         {
             List<String> birth = Arrays.asList(Arrays.copyOfRange(ConstantValueUtil.BIRTHDAY,23,ConstantValueUtil.BIRTHDAY.length));
-            return birth.get(getRandom(birth.size() - 1));
+            return birth.get(getRandom(birth.size() - 1)) + month_and_day;
         }
     }
 

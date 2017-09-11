@@ -9,6 +9,7 @@ import com.xunli.manager.model.RecommendInfoTwo;
 import com.xunli.manager.repository.ChildrenInfoTwoRepository;
 import com.xunli.manager.repository.CommonUserRepository;
 import com.xunli.manager.repository.RecommendInfoTwoRepository;
+import com.xunli.manager.util.DateUtil;
 import com.xunli.manager.util.DictInfoUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -101,16 +102,15 @@ public class GenerateRecommendInfoJob {
         criteria.setCurrentLocation(currentChild.getCurrentLocation());
         criteria.setGender(DictInfoUtil.getOppositeSex(DictInfoUtil.getItemById(currentChild.getGender())));
         criteria.setEducation(DictInfoUtil.getBiggerEducation(currentChild.getEducation()));
-        Long birthday = Long.parseLong(currentChild.getBirthday());
         if("Male".equals(DictInfoUtil.getItemById(currentChild.getGender()).getDictValue()))
         {
-            criteria.setStartBirthday(String.valueOf(birthday - 15));
-            criteria.setEndBirthday(String.valueOf(birthday + 8));
+            criteria.setStartBirthday(DateUtil.getDate(currentChild.getBirthday(),- 15));
+            criteria.setEndBirthday(DateUtil.getDate(currentChild.getBirthday(),8));
         }
         else
         {
-            criteria.setStartBirthday(String.valueOf(birthday - 8));
-            criteria.setEndBirthday(String.valueOf(birthday + 15));
+            criteria.setStartBirthday(DateUtil.getDate(currentChild.getBirthday(), - 8));
+            criteria.setEndBirthday(DateUtil.getDate(currentChild.getBirthday(),  15));
         }
         Pageable page = new PageRequest(0,3);
         List<ChildrenInfoTwo> list = childrenInfoTwoRepository.findAll(new ChildrenInfoTwoSpecification(criteria),page).getContent();
@@ -127,16 +127,15 @@ public class GenerateRecommendInfoJob {
         criteria.setCurrentLocation(currentChild.getCurrentLocation());
         criteria.setGender(DictInfoUtil.getOppositeSex(DictInfoUtil.getItemById(currentChild.getGender())));
         criteria.setEducation(DictInfoUtil.getBiggerEducation(currentChild.getEducation()));
-        Long birthday = Long.parseLong(currentChild.getBirthday());
         if("Male".equals(DictInfoUtil.getItemById(currentChild.getGender()).getDictValue()))
         {
-            criteria.setStartBirthday(String.valueOf(birthday - 15));
-            criteria.setEndBirthday(String.valueOf(birthday + 8));
+            criteria.setStartBirthday(DateUtil.getDate(currentChild.getBirthday(), - 15));
+            criteria.setEndBirthday(DateUtil.getDate(currentChild.getBirthday(),  8));
         }
         else
         {
-            criteria.setStartBirthday(String.valueOf(birthday - 8));
-            criteria.setEndBirthday(String.valueOf(birthday + 15));
+            criteria.setStartBirthday(DateUtil.getDate(currentChild.getBirthday(), - 8));
+            criteria.setEndBirthday(DateUtil.getDate(currentChild.getBirthday(),15));
         }
         criteria.setExcept(except);
         Pageable page = new PageRequest(0,197);

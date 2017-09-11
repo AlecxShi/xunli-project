@@ -7,7 +7,7 @@ angular.module('app')
     $scope.products = {};
     $scope.transferAge = function(birth)
     {
-        return new Date().getFullYear() - birth;
+        return new Date().getFullYear() - new Date(birth).getFullYear();
     }
 
     $scope.showDictionary = function(key,list)
