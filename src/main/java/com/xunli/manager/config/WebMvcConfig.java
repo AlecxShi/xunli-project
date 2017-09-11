@@ -31,6 +31,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter
 				.addResourceLocations("file:/alidata/image/photos/");
 		registry.addResourceHandler("/icon/**")
 				.addResourceLocations("file:/alidata/image/icons/private/")
-				.addResourceLocations("file:/alidata/image/icons/public/");
+				.addResourceLocations("file:/alidata/image/icons/public/")
+				.addResourceLocations("file:/alidata/image/icons/discover/");
 	}
 }

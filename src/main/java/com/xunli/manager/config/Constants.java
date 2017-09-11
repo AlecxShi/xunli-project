@@ -20,6 +20,10 @@ public final class Constants
 
 	public final static String IMAGE_ROOT_DIR = "/alidata/image/photos/";
 	public final static String ICON_ROOT_DIR = "/alidata/image/icons/private/";
+	public final static String ICON_DISCOVER_ROOT_DIR = "/alidata/image/icons/discover/";
+
+	public final static String HTTP_IMAGE_PATH = "/image/%s/%s";
+	public final static String HTTP_ICON_PATH = "/icon/%s";
 
 	public final static DateTimeFormatter DATE_PATH_FORMATTER = DateTimeFormatter.ofPattern("yyyy/MM/dd");
 
