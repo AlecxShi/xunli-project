@@ -48,7 +48,6 @@ public class GenerateRecommendInfoJob {
     private ChildrenInfoTwoRepository childrenInfoTwoRepository;
 
     @Scheduled(cron = "* * * * * ?")
-    @Transactional
     public void generate()
     {
         while (true)
@@ -79,15 +78,8 @@ public class GenerateRecommendInfoJob {
                         data.add(recommendInfo);
                     }
                     recommendInfoTwoRepository.save(data);
+                    recommendInfoTwoRepository.flush();
                 }
-            }
-            try
-            {
-                Thread.sleep(500);
-            }
-            catch (InterruptedException e)
-            {
-                logger.error("Sleep Error:", e);
             }
         }
     }

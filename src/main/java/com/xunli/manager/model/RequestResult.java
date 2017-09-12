@@ -8,7 +8,7 @@ import com.xunli.manager.enumeration.ReturnCode;
  */
 public class RequestResult {
 
-    private String code;
+    private Integer code;
 
     private String msg;
 
@@ -49,11 +49,11 @@ public class RequestResult {
         this.data = data;
     }
 
-    public String getCode() {
+    public Integer getCode() {
         return code;
     }
 
-    public void setCode(String code) {
+    public void setCode(Integer code) {
         this.code = code;
     }
 
