@@ -82,7 +82,7 @@ public class ChildrenInfoTwo implements Serializable{
 
     @Column(name="car")
     @ColumnComment("是否有车")
-    private Boolean car;
+    private Long car;
 
     @Column(name="house")
     @ColumnComment("房产信息")
@@ -231,11 +231,11 @@ public class ChildrenInfoTwo implements Serializable{
         this.income = income;
     }
 
-    public Boolean getCar() {
+    public Long getCar() {
         return car;
     }
 
-    public void setCar(Boolean car) {
+    public void setCar(Long car) {
         this.car = car;
     }
 

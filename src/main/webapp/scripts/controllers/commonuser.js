@@ -39,16 +39,9 @@ angular.module('app')
     });
 
     //是否有车
-    $scope.car = [
-        {
-            value:true,
-            desc:'是'
-        },
-        {
-            value:false,
-            desc:'否'
-        }
-    ];
+    DictInfo.getByDictType({dictType:'Car'}).$promise.then(function (data) {
+      $scope.car = data;
+    });
 
     //出生省份联动城市
     $scope.$watch('query.bornLocationProvince', function (newValue, oldValue) {
@@ -299,16 +292,9 @@ angular.module('app')
       $scope.income = data;
     });
     //是否有车
-    $scope.car = [
-        {
-            value:true,
-            desc:'是'
-        },
-        {
-            value:false,
-            desc:'否'
-        }
-    ];
+    DictInfo.getByDictType({dictType:'Car'}).$promise.then(function (data) {
+      $scope.car = data;
+    });
     //学校类型
     DictInfo.getByDictType({dictType:'School'}).$promise.then(function (data) {
       $scope.school = data;
@@ -335,6 +321,16 @@ angular.module('app')
         var dict = angular.fromJson(newValue);
         DictInfo.getByDictType({dictType:dict.dictValue}).$promise.then(function (data) {
           $scope.childrenBornLocationCity = data;
+        });
+      }
+    });
+
+    //子女省份联动城市
+    $scope.$watch('commonUser.children.bornLocationCity', function (newValue, oldValue) {
+      if (newValue && newValue !== oldValue) {
+        var dict = angular.fromJson(newValue);
+        DictInfo.getByDictType({dictType:dict.dictValue}).$promise.then(function (data) {
+          $scope.childrenBornLocationState = data;
         });
       }
     });
@@ -371,34 +367,6 @@ angular.module('app')
         field.$setTouched();
       });
 
-      /*var saveData = {};
-      //组装user数据
-      saveData.id = $scope.commonUser.id;
-      saveData.username = $scope.commonUser.username;
-      saveData.password = $scope.commonUser.password;
-      saveData.phone = $scope.commonUser.phone;
-      saveData.usertype = $scope.commonUser.usertype ? Number($scope.commonUser.usertype) : $scope.commonUser.usertype;
-      saveData.bornLocation = angular.fromJson($scope.commonUser.bornLocationProvince ? "{}" : $scope.commonUser.bornLocationProvince)['dictDesc'] + "," + angular.fromJson($scope.commonUser.bornLocationCity ? "{}" : $scope.commonUser.bornLocationCity)['dictDesc'];
-      //组装children数据
-      var children = {};
-      children.id = $scope.commonUser.children.id;
-      children.name = $scope.commonUser.children.name;
-      children.gender = $scope.commonUser.children.gender ? Number($scope.commonUser.children.gender) : $scope.commonUser.children.gender;
-      children.height = $scope.commonUser.children.height;
-      children.birthday = $scope.commonUser.children.birthday;
-      children.car = $scope.commonUser.children.car == 'true' ? true : false;
-      children.company = $scope.commonUser.children.company;
-      children.education = $scope.commonUser.children.education ? Number($scope.commonUser.children.education) : $scope.commonUser.children.education;
-      children.hobby = $scope.commonUser.children.hobby;
-      children.house = $scope.commonUser.children.house ? Number($scope.commonUser.children.house) : $scope.commonUser.children.house;
-      children.income = $scope.commonUser.children.income ? Number($scope.commonUser.children.income) : $scope.commonUser.children.income;
-      children.position = $scope.commonUser.children.position;
-      children.profession = $scope.commonUser.children.profession;
-      children.school = $scope.commonUser.children.school;
-      children.bornLocation = angular.fromJson($scope.commonUser.children.bornLocationProvince)['dictDesc'] + "," + angular.fromJson($scope.commonUser.children.bornLocationCity)['dictDesc'];
-      children.currentLocation = angular.fromJson($scope.commonUser.children.currentLocationProvince)['dictDesc'] + "," + angular.fromJson($scope.commonUser.children.currentLocationCity)['dictDesc'];
-      saveData.children = children;
-      console.log('saveData',saveData);*/
 
       $scope.commonUser.location = angular.fromJson($scope.commonUser.locationProvince ? $scope.commonUser.locationProvince : '{"dictDesc":""}')['dictDesc'] + "," + angular.fromJson($scope.commonUser.locationCity ? $scope.commonUser.locationCity : '{"dictDesc":""}')['dictDesc'];
       $scope.commonUser.children.bornLocation = angular.fromJson($scope.commonUser.children.bornLocationProvince ? $scope.commonUser.children.bornLocationProvince : '{"dictDesc":""}')['dictDesc'] + "," + angular.fromJson($scope.commonUser.children.bornLocationCity ? $scope.commonUser.children.bornLocationCity : '{"dictDesc":""}')['dictDesc'];

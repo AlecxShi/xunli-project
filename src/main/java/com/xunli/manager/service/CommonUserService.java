@@ -39,32 +39,6 @@ public class CommonUserService {
     @Autowired
     private CommonUserLoginsRepository commonUserLoginsRepository;
 
-    public List<ChildrenInfoTwo> generateOthers(ChildrenInfo currentChild,List<ChildrenInfoTwo> except)
-    {
-        //查询所得结果
-        ChildrenInfoCriteria criteria = new ChildrenInfoCriteria();
-        criteria.setNum(197);
-        criteria.setBornLocation(currentChild.getBornLocation());
-        criteria.setCurrentLocation(currentChild.getCurrentLocation());
-        criteria.setGender(DictInfoUtil.getOppositeSex(DictInfoUtil.getItemById(currentChild.getGender())));
-        criteria.setEducation(DictInfoUtil.getBiggerEducation(currentChild.getEducation()));
-        Long birthday = Long.parseLong(currentChild.getBirthday());
-        if("Male".equals(DictInfoUtil.getItemById(currentChild.getGender()).getDictValue()))
-        {
-            criteria.setStartBirthday(String.valueOf(birthday - 15));
-            criteria.setEndBirthday(String.valueOf(birthday + 8));
-        }
-        else
-        {
-            criteria.setStartBirthday(String.valueOf(birthday - 8));
-            criteria.setEndBirthday(String.valueOf(birthday + 15));
-        }
-        criteria.setExcept(except);
-        Pageable page = new PageRequest(0,197);
-        List<ChildrenInfoTwo> list = childrenInfoTwoRepository.findAll(new ChildrenInfoTwoSpecification(criteria),page).getContent();
-        return list;
-    }
-
     @Transactional
     public RequestResult login(CommonUser user, HttpServletRequest request,Boolean ifFirstLogin)
     {

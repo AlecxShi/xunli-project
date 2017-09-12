@@ -21,6 +21,7 @@ public enum ReturnCode {
 	AUTH_ACCOUNT_IS_NULL(16016,"Account is not exist","账号不存在"),
 	AUTH_ACCOUNT_CHILDREN_IS_NULL(16017,"User's children is not exist","用户子女信息不存在"),
 	AUTH_ACCOUNT_NOT_LOGIN(16018,"Account not login","账号未登录"),
+	AUTH_TARGET_CHILDREN_IS_NULL(16041,"Target children is null","目标用户子女信息为空"),
 	
 	//公用系列======================================================
 	PUBLIC_SUCCESS(16019,"Success","成功"),

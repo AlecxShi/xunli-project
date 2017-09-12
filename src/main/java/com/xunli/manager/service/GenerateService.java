@@ -14,10 +14,9 @@ import java.util.*;
 @Service("generateService")
 public class GenerateService {
 
-    private final static Integer YEAR = Calendar.getInstance().get(Calendar.YEAR);
-
-    private final static int ONE = 300;
-    private final static int TWO = 200;
+    private final static int ONE = 3000;
+    private final static int TWO = 2000;
+    private final static int THREE = 1000;
 
     public final static int getRandom(int base)
     {
@@ -40,16 +39,32 @@ public class GenerateService {
             for(DictInfo city : citys)
             {
                 List<DictInfo> states = DictInfoUtil.getByDictType(city.getDictValue());
-                if(checkIfOne(city))
+                if(states.isEmpty())
                 {
-                    number = ONE;
+                    if(checkIfOne(city))
+                    {
+                        number = ONE;
+                    }
+                    for(int i = 0; i < number;i++)
+                    {
+                        CommonUser user = new CommonUser();
+                        user.setUsertype(userType.getId());
+                        user.setLocation(province.getDictDesc() + "," + city.getDictDesc());
+                        list.add(user);
+                    }
                 }
-                for(int i = 0; i < number;i++)
+                else
                 {
-                    CommonUser user = new CommonUser();
-                    user.setUsertype(userType.getId());
-                    user.setLocation(province.getDictDesc() + "," + city.getDictDesc());
-                    list.add(user);
+                    for(DictInfo state : states)
+                    {
+                        for(int i = 0; i < THREE;i++)
+                        {
+                            CommonUser user = new CommonUser();
+                            user.setUsertype(userType.getId());
+                            user.setLocation(province.getDictDesc() + "," + city.getDictDesc());
+                            list.add(user);
+                        }
+                    }
                 }
             }
 
@@ -356,7 +371,7 @@ public class GenerateService {
                     score += 3;
             }
             //是否有车评分
-            if(child.getCar())
+            if(DictInfoUtil.getItemById(child.getCar()).getDictValue().equals("1"))
             {
                 score += 2;
             }
@@ -517,9 +532,10 @@ public class GenerateService {
      * 是否有车生成策略
      * @return
      */
-    private boolean createCar()
+    private Long createCar()
     {
-        return getRandom(100) < 30 ? false : true;
+        return getRandom(100) < 30 ? DictInfoUtil.getByDictTypeAndDictValue("Car","0").getId() :
+                DictInfoUtil.getByDictTypeAndDictValue("Car","1").getId();
     }
 
     /**

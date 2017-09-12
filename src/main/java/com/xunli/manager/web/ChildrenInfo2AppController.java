@@ -96,9 +96,9 @@ public class ChildrenInfo2AppController {
                 ch.setIncome(childrenInfo.getIncome());
                 ifReCreate = true;
             }
-            if(childrenInfo.getCar() != null && Boolean.parseBoolean(DictInfoUtil.getItemById(childrenInfo.getCar()).getDictValue()) != ch.getCar())
+            if(childrenInfo.getCar() != null && childrenInfo.getCar() != ch.getCar())
             {
-                ch.setCar(Boolean.parseBoolean(DictInfoUtil.getItemById(childrenInfo.getCar()).getDictValue()));
+                ch.setCar(childrenInfo.getCar());
                 ifReCreate = true;
             }
             if(childrenInfo.getSchoolType() != null && !childrenInfo.getSchoolType().equals(ch.getSchoolType()))
@@ -128,7 +128,7 @@ public class ChildrenInfo2AppController {
             info.setCompany(childrenInfo.getCompany());
             info.setProfession(childrenInfo.getProfession());
             info.setIncome(childrenInfo.getIncome());
-            info.setCar("true".equals(DictInfoUtil.getItemById(childrenInfo.getCar()).getDictValue()));
+            info.setCar(childrenInfo.getCar());
             info.setHouse(childrenInfo.getHouse());
 
             info.setEducation(childrenInfo.getEducation());

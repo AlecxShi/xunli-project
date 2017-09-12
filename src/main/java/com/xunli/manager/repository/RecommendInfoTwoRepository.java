@@ -12,4 +12,6 @@ import org.springframework.stereotype.Repository;
 public interface RecommendInfoTwoRepository extends JpaRepository<RecommendInfoTwo,Long>,JpaSpecificationExecutor<RecommendInfoTwo> {
 
     void deleteAllByChildrenId(Long id);
+
+    RecommendInfoTwo findOneByChildrenIdAndTargetChildrenId(Long childrenId,Long targetChildrenId);
 }

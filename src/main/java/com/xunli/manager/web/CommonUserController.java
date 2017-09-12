@@ -3,18 +3,13 @@ package com.xunli.manager.web;
 import com.xunli.manager.domain.criteria.CommonUserModel;
 import com.xunli.manager.enumeration.ReturnCode;
 import com.xunli.manager.model.*;
-import com.xunli.manager.repository.ChildrenInfoRepository;
-import com.xunli.manager.repository.CommonUserLoginsRepository;
-import com.xunli.manager.repository.CommonUserRepository;
-import com.xunli.manager.repository.DictInfoRepository;
+import com.xunli.manager.repository.*;
 import com.xunli.manager.service.CommonUserService;
 import com.xunli.manager.service.GenerateService;
 import com.xunli.manager.util.DictInfoUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,11 +17,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.swing.text.html.Option;
-import javax.validation.Valid;
 
 import java.util.Date;
-import java.util.Map;
 import java.util.Optional;
 
 import static com.xunli.manager.config.Constants.ROLE_ADMIN;
@@ -56,6 +48,9 @@ public class CommonUserController {
 
     @Autowired
     private CommonUserLoginsRepository commonUserLoginsRepository;
+
+    @Autowired
+    private RecommendInfoTwoRepository recommendInfoTwoRepository;
 
     /**
      * 验证手机号是否已被注册
@@ -92,20 +87,7 @@ public class CommonUserController {
 
     @RequestMapping(value = "/commonuser/getDetail",method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional(readOnly = true)
-    public RequestResult getDetail(HttpServletRequest request)
-    {
-        String targetUserId = request.getParameter("targetUserId");
-        if(targetUserId != null)
-        {
-            ChildrenInfo detail = childrenInfoRepository.findOneByParentId(Long.parseLong(targetUserId));
-            return new RequestResult(ReturnCode.PUBLIC_SUCCESS,detail);
-        }
-        return new RequestResult(ReturnCode.PUBLIC_OTHER_ERROR);
-    }
-
-    @RequestMapping(value = "/commonuser/getSelfDetail",method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_VALUE)
-    @Transactional(readOnly = true)
-    public RequestResult getSelfDetail(@RequestParam("token") String token)
+    public RequestResult getDetail(@RequestParam("token") String token,@RequestParam(name = "targetUserId",required = false) Long targetUserId)
     {
         if(token == null)
         {
@@ -117,9 +99,26 @@ public class CommonUserController {
             return new RequestResult(ReturnCode.AUTH_ACCOUNT_NOT_LOGIN);
         }
         return Optional.ofNullable(commonUserRepository.findOne(login.getUserId())).map(u -> {
-            ChildrenInfo detail = childrenInfoRepository.findOneByParentId(login.getUserId());
-            u.setChildren(detail);
-            return new RequestResult(ReturnCode.PUBLIC_SUCCESS,u);
+            return Optional.ofNullable(childrenInfoRepository.findOneByParentId(u.getId())).map(son -> {
+                if(targetUserId == null)
+                {
+                    u.setChildren(son);
+                    return new RequestResult(ReturnCode.PUBLIC_SUCCESS,u);
+                }
+                return Optional.ofNullable(childrenInfoRepository.findOneByParentId(targetUserId)).map(tar -> {
+                    return Optional.ofNullable(recommendInfoTwoRepository.findOneByChildrenIdAndTargetChildrenId(son.getId(),tar.getId())).map(ret -> {
+                        tar.setCollected(true);
+                        return new RequestResult(ReturnCode.PUBLIC_SUCCESS,tar);
+                    }).orElseGet(() -> {
+                        tar.setCollected(false);
+                        return new RequestResult(ReturnCode.PUBLIC_SUCCESS,tar);
+                    });
+                }).orElseGet(() -> {
+                    return new RequestResult(ReturnCode.AUTH_TARGET_CHILDREN_IS_NULL);
+                });
+            }).orElseGet(() -> {
+                return new RequestResult(ReturnCode.AUTH_ACCOUNT_CHILDREN_IS_NULL);
+            });
         }).orElseGet(() -> {
             return new RequestResult(ReturnCode.AUTH_ACCOUNT_IS_NULL);
         });

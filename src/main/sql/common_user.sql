@@ -17,14 +17,14 @@ CREATE TABLE children_info(
     gender BIGINT NOT NULL,                                  --性别
     bornLocation VARCHAR(255),                               --出生地
     currentLocation VARCHAR(255),                            --当前居住地
-    birthday VARCHAR(8),                                     --年龄
+    birthday VARCHAR(12),                                    --年龄
     height INT,                                              --身高
-    education BIGINT,                                        --教育程度
-    profession VARCHAR(255),                                 --职业信息
+    education BIGINT,                                        --教育程度,字典匹配
     company BIGINT,                                          --所在公司,字典匹配
+    profession VARCHAR(255),                                 --职业信息
     position    VARCHAR(255),                                --当前职位
     school_type BIGINT,                                      --学校类型,字典匹配
-    school  VARCHAR(255),                                    --毕业学校,
+    school  VARCHAR(255),                                    --毕业学校
     income BIGINT,                                           --收入情况,字典匹配
     car BIT,                                                 --是否有车
     house BIGINT,                                            --是否有房,字典匹配

@@ -56,30 +56,26 @@ public class GenerateRecommendInfoJob {
             {
                 ChildrenInfo childrenInfo = queue.poll();
                 //创建或重构推荐表时首先删除原来的数据
-                CommonUser user = commonUserRepository.findOne(childrenInfo.getParentId());
-                if("COMMON".equals(DictInfoUtil.getItemById(user.getUsertype()).getDictValue()))
+                recommendInfoTwoRepository.deleteAllByChildrenId(childrenInfo.getId());
+                List<ChildrenInfoTwo> top3 = generateTop3(childrenInfo);
+                List<ChildrenInfoTwo> others = generateOthers(childrenInfo,top3);
+                List<RecommendInfoTwo> data = new ArrayList();
+                for(ChildrenInfoTwo target : top3)
                 {
-                    recommendInfoTwoRepository.deleteAllByChildrenId(childrenInfo.getId());
-                    List<ChildrenInfoTwo> top3 = generateTop3(childrenInfo);
-                    List<ChildrenInfoTwo> others = generateOthers(childrenInfo,top3);
-                    List<RecommendInfoTwo> data = new ArrayList();
-                    for(ChildrenInfoTwo target : top3)
-                    {
-                        RecommendInfoTwo recommendInfo = new RecommendInfoTwo();
-                        recommendInfo.setChildrenId(childrenInfo.getId());
-                        recommendInfo.setTargetChildrenId(target.getId());
-                        data.add(recommendInfo);
-                    }
-                    for(ChildrenInfoTwo target : others)
-                    {
-                        RecommendInfoTwo recommendInfo = new RecommendInfoTwo();
-                        recommendInfo.setChildrenId(childrenInfo.getId());
-                        recommendInfo.setTargetChildrenId(target.getId());
-                        data.add(recommendInfo);
-                    }
-                    recommendInfoTwoRepository.save(data);
-                    recommendInfoTwoRepository.flush();
+                    RecommendInfoTwo recommendInfo = new RecommendInfoTwo();
+                    recommendInfo.setChildrenId(childrenInfo.getId());
+                    recommendInfo.setTargetChildrenId(target.getId());
+                    data.add(recommendInfo);
                 }
+                for(ChildrenInfoTwo target : others)
+                {
+                    RecommendInfoTwo recommendInfo = new RecommendInfoTwo();
+                    recommendInfo.setChildrenId(childrenInfo.getId());
+                    recommendInfo.setTargetChildrenId(target.getId());
+                    data.add(recommendInfo);
+                }
+                recommendInfoTwoRepository.save(data);
+                recommendInfoTwoRepository.flush();
             }
         }
     }

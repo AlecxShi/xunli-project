@@ -53,16 +53,9 @@ angular.module('app')
     });
 
     //是否有车
-    $scope.car = [
-        {
-            value:true,
-            desc:'是'
-        },
-        {
-            value:false,
-            desc:'否'
-        }
-    ];
+    DictInfo.getByDictType({dictType:'Car'}).$promise.then(function (data) {
+      $scope.car = data;
+    });
 
     //出生省份联动城市
     $scope.$watch('query.bornLocationProvince', function (newValue, oldValue) {

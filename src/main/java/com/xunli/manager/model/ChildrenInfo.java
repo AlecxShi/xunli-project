@@ -87,7 +87,7 @@ public class ChildrenInfo implements Serializable{
 
     @Column(name="car")
     @ColumnComment("是否有车")
-    private Boolean car;
+    private Long car;
 
     /*@JoinColumn(name="house",referencedColumnName = "id")
     @OneToOne*/
@@ -124,6 +124,9 @@ public class ChildrenInfo implements Serializable{
     @Column(name = "more_introduce")
     @ColumnComment("更多自我介绍")
     private String moreIntroduce;
+
+    @Transient
+    private Boolean isCollected;
 
     @Transient
     private CommonUser parent;
@@ -248,11 +251,11 @@ public class ChildrenInfo implements Serializable{
         this.income = income;
     }
 
-    public Boolean getCar() {
+    public Long getCar() {
         return car;
     }
 
-    public void setCar(Boolean car) {
+    public void setCar(Long car) {
         this.car = car;
     }
 
@@ -322,6 +325,14 @@ public class ChildrenInfo implements Serializable{
 
     public String getMoreIntroduce() {
         return moreIntroduce;
+    }
+
+    public Boolean getCollected() {
+        return isCollected;
+    }
+
+    public void setCollected(Boolean collected) {
+        isCollected = collected;
     }
 
     public void setMoreIntroduce(String moreIntroduce) {
