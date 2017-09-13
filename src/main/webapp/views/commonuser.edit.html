@@ -64,7 +64,7 @@
           </md-select>
         </md-input-container>
         <md-input-container flex ng-show="bornLocationState">
-          <label>家乡所在市</label>
+          <label>家乡所在区县</label>
           <md-select name="bornLocationState" ng-model="commonUser.locationState">
             <md-option ng-repeat="type in bornLocationState" value="{{type}}">
               {{type.dictDesc}}
@@ -113,7 +113,7 @@
           </md-select>
         </md-input-container>
         <md-input-container flex ng-show="childrenBornLocationState">
-          <label>出生地所在市</label>
+          <label>出生地所在区县</label>
           <md-select name="bornLocationState" ng-model="commonUser.children.bornLocationState">
             <md-option ng-repeat="type in childrenBornLocationState" value="{{type}}">
               {{type.dictDesc}}
@@ -204,8 +204,8 @@
         <md-input-container flex>
           <label>是否有车</label>
           <md-select name="car" ng-model="commonUser.children.car">
-            <md-option ng-repeat="type in car" value="{{type.value}}">
-              {{type.desc}}
+            <md-option ng-repeat="type in car" value="{{type.id}}">
+              {{type.dictDesc}}
             </md-option>
           </md-select>
         </md-input-container>
