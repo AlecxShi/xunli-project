@@ -10,6 +10,7 @@ import com.xunli.manager.repository.*;
 import com.xunli.manager.service.CommonUserService;
 import com.xunli.manager.service.GenerateService;
 import com.xunli.manager.util.DictInfoUtil;
+import com.xunli.manager.util.ImageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Isolation;
@@ -136,6 +137,7 @@ public class ChildrenInfo2AppController {
             info.setSchool(childrenInfo.getSchool());
             info.setHobby(childrenInfo.getHobby());
             info.setMoreIntroduce(childrenInfo.getMoreIntroduce());
+            info.setPhoto(ImageUtil.getAllPathByUserId(login.getId()));
 
             info.setLabel(childrenInfo.getLabel());
             info.setScore(GenerateService.createScore(info));

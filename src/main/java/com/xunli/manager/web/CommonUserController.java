@@ -3,10 +3,12 @@ package com.xunli.manager.web;
 import com.xunli.manager.domain.criteria.CommonUserModel;
 import com.xunli.manager.enumeration.ReturnCode;
 import com.xunli.manager.model.*;
+import com.xunli.manager.model.app.CommonUserWithChildrenDetail;
 import com.xunli.manager.repository.*;
 import com.xunli.manager.service.CommonUserService;
 import com.xunli.manager.service.GenerateService;
 import com.xunli.manager.util.DictInfoUtil;
+import com.xunli.manager.util.ImageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.annotation.Secured;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Optional;
 
@@ -103,15 +106,15 @@ public class CommonUserController {
                 if(targetUserId == null)
                 {
                     u.setChildren(son);
-                    return new RequestResult(ReturnCode.PUBLIC_SUCCESS,u);
+                    return new RequestResult(ReturnCode.PUBLIC_SUCCESS,transferToReturn(token,son));
                 }
                 return Optional.ofNullable(childrenInfoRepository.findOneByParentId(targetUserId)).map(tar -> {
                     return Optional.ofNullable(recommendInfoTwoRepository.findOneByChildrenIdAndTargetChildrenId(son.getId(),tar.getId())).map(ret -> {
                         tar.setCollected(true);
-                        return new RequestResult(ReturnCode.PUBLIC_SUCCESS,tar);
+                        return new RequestResult(ReturnCode.PUBLIC_SUCCESS,transferToReturn(token,tar));
                     }).orElseGet(() -> {
                         tar.setCollected(false);
-                        return new RequestResult(ReturnCode.PUBLIC_SUCCESS,tar);
+                        return new RequestResult(ReturnCode.PUBLIC_SUCCESS,transferToReturn(token,tar));
                     });
                 }).orElseGet(() -> {
                     return new RequestResult(ReturnCode.AUTH_TARGET_CHILDREN_IS_NULL);
@@ -158,5 +161,40 @@ public class CommonUserController {
         }).orElseGet(() -> {
             return new RequestResult(ReturnCode.AUTH_ACCOUNT_IS_NULL);
         });
+    }
+
+    private CommonUserWithChildrenDetail transferToReturn(String token,ChildrenInfo childrenInfo)
+    {
+        CommonUserWithChildrenDetail ret = new CommonUserWithChildrenDetail();
+        ret.setToken(token);
+        ret.setId(childrenInfo.getId());
+        ret.setName(childrenInfo.getName());
+        ret.setGender(childrenInfo.getGender());
+        ret.setBirthday(childrenInfo.getBirthday());
+        ret.setHeight(childrenInfo.getHeight());
+        ret.setBornLocation(childrenInfo.getBornLocation());
+        ret.setCurrentLocation(childrenInfo.getCurrentLocation());
+
+        ret.setSchoolType(childrenInfo.getSchoolType());
+        ret.setSchool(childrenInfo.getSchool());
+        ret.setEducation(childrenInfo.getEducation());
+
+        ret.setParentId(childrenInfo.getParentId());
+
+        ret.setProfession(childrenInfo.getProfession());
+        ret.setCompany(childrenInfo.getCompany());
+        ret.setPosition(childrenInfo.getPosition());
+
+        ret.setCar(childrenInfo.getCar());
+        ret.setHouse(childrenInfo.getHouse());
+
+        ret.setUserImage(ImageUtil.getUserIconByUserId(childrenInfo.getParentId()));
+        ret.setPhoto(childrenInfo.getPhoto() == null ? null : Arrays.asList(childrenInfo.getPhoto()));
+
+        ret.setHobby(childrenInfo.getHobby());
+        ret.setScore(childrenInfo.getScore());
+        ret.setLabel(DictInfoUtil.autoAssembleLabelColor(childrenInfo.getLabel().split(",")));
+        ret.setCollected(childrenInfo.getCollected());
+        return ret;
     }
 }
