@@ -163,4 +163,16 @@ public class DictInfoUtil {
         }
         return tags;
     }
+
+    public static List<DictInfo> getRegionsFromCitys(List<DictInfo> states) {
+        List<DictInfo> list = new ArrayList<>();
+        for(DictInfo state : states)
+        {
+            if(state.getDictDesc().endsWith("区"))
+            {
+                list.add(state);
+            }
+        }
+        return list;
+    }
 }

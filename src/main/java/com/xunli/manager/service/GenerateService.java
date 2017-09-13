@@ -31,41 +31,34 @@ public class GenerateService {
     {
         List<CommonUser> list = new ArrayList();
         DictInfo userType = DictInfoUtil.getByDictTypeAndDictValue("USER_TYPE","ROBOT");
-        List<DictInfo> home = DictInfoUtil.getByDictType("Province");
-        for(DictInfo province : home)
+        List<DictInfo> provinces = DictInfoUtil.getByDictType("Province");
+        //查出省份
+        for(DictInfo province : provinces)
         {
+            //查出城市
             List<DictInfo> citys = DictInfoUtil.getByDictType(province.getDictValue());
             int number = TWO;
             for(DictInfo city : citys)
             {
+                //查出区县
                 List<DictInfo> states = DictInfoUtil.getByDictType(city.getDictValue());
-                if(states.isEmpty())
+                if(checkIfOne(city))
                 {
-                    if(checkIfOne(city))
-                    {
-                        number = ONE;
-                    }
+                    number = ONE;
+                }
+                List<DictInfo> regions = DictInfoUtil.getRegionsFromCitys(states);
+                for(DictInfo state : states)
+                {
+                    number = regions.contains(state) ? number / regions.size() : THREE;
                     for(int i = 0; i < number;i++)
                     {
                         CommonUser user = new CommonUser();
                         user.setUsertype(userType.getId());
-                        user.setLocation(province.getDictDesc() + "," + city.getDictDesc());
+                        user.setLocation(province.getDictDesc() + "-" + city.getDictDesc() + "-" +state.getDictDesc());
                         list.add(user);
                     }
                 }
-                else
-                {
-                    for(DictInfo state : states)
-                    {
-                        for(int i = 0; i < THREE;i++)
-                        {
-                            CommonUser user = new CommonUser();
-                            user.setUsertype(userType.getId());
-                            user.setLocation(province.getDictDesc() + "," + city.getDictDesc());
-                            list.add(user);
-                        }
-                    }
-                }
+
             }
 
         }
