@@ -241,11 +241,11 @@ public class CommonUserWithChildrenDetail {
         this.label = label;
     }
 
-    public Boolean getCollected() {
+    public Boolean getIsCollected() {
         return isCollected;
     }
 
-    public void setCollected(Boolean collected) {
+    public void setIsCollected(Boolean collected) {
         isCollected = collected;
     }
 

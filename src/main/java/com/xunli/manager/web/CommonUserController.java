@@ -194,7 +194,7 @@ public class CommonUserController {
         ret.setHobby(childrenInfo.getHobby());
         ret.setScore(childrenInfo.getScore());
         ret.setLabel(DictInfoUtil.autoAssembleLabelColor(childrenInfo.getLabel().split(",")));
-        ret.setCollected(childrenInfo.getCollected());
+        ret.setIsCollected(childrenInfo.getCollected());
         return ret;
     }
 }

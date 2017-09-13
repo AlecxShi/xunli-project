@@ -8,6 +8,7 @@ import com.xunli.manager.model.UserCollectInfo;
 import com.xunli.manager.repository.ChildrenInfoRepository;
 import com.xunli.manager.repository.CommonUserLoginsRepository;
 import com.xunli.manager.repository.UserCollectInfoRepository;
+import com.xunli.manager.util.DictInfoUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,15 +47,18 @@ public class CollectInfoController {
         {
             return new RequestResult(ReturnCode.PUBLIC_TOKEN_IS_INVALID);
         }
+        Map<String,Boolean> ret = new HashMap<>();
         return Optional.ofNullable(userCollectInfoRepository.findOneByUserIdAndTargetUserId(login.getUserId(),targetUserId)).map(c -> {
             userCollectInfoRepository.delete(c.getId());
-            return new RequestResult(ReturnCode.PUBLIC_SUCCESS);
+            ret.put("ifAdd",false);
+            return new RequestResult(ReturnCode.PUBLIC_SUCCESS,ret);
         }).orElseGet(()->{
             UserCollectInfo collectInfo = new UserCollectInfo();
             collectInfo.setUserId(login.getUserId());
             collectInfo.setTargetUserId(targetUserId);
             userCollectInfoRepository.save(collectInfo);
-            return new RequestResult(ReturnCode.PUBLIC_SUCCESS);
+            ret.put("ifAdd",true);
+            return new RequestResult(ReturnCode.PUBLIC_SUCCESS,ret);
         });
     }
 
@@ -88,7 +92,7 @@ public class CollectInfoController {
                 data.put("currentLocation",info.getCurrentLocation());
                 data.put("birthday",info.getBirthday());
                 data.put("education",info.getEducation());
-                data.put("label",info.getLabel());
+                data.put("label", DictInfoUtil.autoAssembleLabelColor(info.getLabel().split(",")));
                 list.add(data);
             }
         }
