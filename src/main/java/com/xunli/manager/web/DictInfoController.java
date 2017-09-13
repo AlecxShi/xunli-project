@@ -99,7 +99,7 @@ public class DictInfoController {
     }
 
     //导省市县字典专用
-    //@RequestMapping(value = "/dictinfo/import",method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/dictinfo/import",method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
     public void importFromFile() throws Exception
     {
         File file = new File("C:\\Users\\shihj\\Desktop\\dict.txt");
@@ -126,17 +126,25 @@ public class DictInfoController {
             d1.setDictValue(province.getId());
             d1.setDictDesc(province.getName());
             result.add(d1);
+            boolean flag = false;
+            //港澳台id要变
+            if("999077".equals(d1.getId()) ||
+                    "999078".equals(d1.getId()) ||
+                    "999079".equals(d1.getId()))
+                flag = true;
+            int c = 1;
             for(ObjectData city : province.getCityList())
             {
                 DictInfo d2 = new DictInfo();
-                d2.setDictType(d1.getDictValue());
+                d2.setDictType(flag ? d1.getDictValue() + (c >= 10 ? c : "0" + (c++)) : d1.getDictValue());
                 d2.setDictValue(city.getId());
                 d2.setDictDesc(city.getName());
                 result.add(d2);
+                int s = 1;
                 for(ObjectData state : city.getCityList())
                 {
                     DictInfo d3 = new DictInfo();
-                    d3.setDictType(d2.getDictValue());
+                    d3.setDictType(flag ? d2.getDictValue()+ (s >= 10 ? s : "0" + (s++)) : d2.getDictValue());
                     d3.setDictValue(state.getId());
                     d3.setDictDesc(state.getName());
                     result.add(d3);
