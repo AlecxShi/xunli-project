@@ -6,6 +6,7 @@ import com.xunli.manager.domain.specification.DictInfoSpecification;
 import com.xunli.manager.model.DictInfo;
 import com.xunli.manager.repository.DictInfoRepository;
 import com.xunli.manager.util.HeaderUtil;
+import com.xunli.manager.util.JSONUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -20,9 +21,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -94,5 +96,53 @@ public class DictInfoController {
     public List<DictInfo> getAllByDictType(String dictType)
     {
         return dictInfoRepository.findAllByDictType(dictType);
+    }
+
+    //导省市县字典专用
+    //@RequestMapping(value = "/dictinfo/import",method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
+    public void importFromFile() throws Exception
+    {
+        File file = new File("C:\\Users\\shihj\\Desktop\\dict.txt");
+        StringBuffer sb = new StringBuffer();
+        try(BufferedReader  input = new BufferedReader(new FileReader(file)))
+        {
+            String s = null;
+            while((s = input.readLine()) != null)
+            {
+                sb.append(s);
+            }
+        }
+        catch(Exception ex)
+        {
+            ex.printStackTrace();
+        }
+        List<ObjectData> ret = JSONUtils.json2list(sb.toString(),ObjectData.class);
+        List<DictInfo> result = new ArrayList<>();
+        for(ObjectData province : ret)
+        {
+
+            DictInfo d1 = new DictInfo();
+            d1.setDictType("Province");
+            d1.setDictValue(province.getId());
+            d1.setDictDesc(province.getName());
+            result.add(d1);
+            for(ObjectData city : province.getCityList())
+            {
+                DictInfo d2 = new DictInfo();
+                d2.setDictType(d1.getDictValue());
+                d2.setDictValue(city.getId());
+                d2.setDictDesc(city.getName());
+                result.add(d2);
+                for(ObjectData state : city.getCityList())
+                {
+                    DictInfo d3 = new DictInfo();
+                    d3.setDictType(d2.getDictValue());
+                    d3.setDictValue(state.getId());
+                    d3.setDictDesc(state.getName());
+                    result.add(d3);
+                }
+            }
+        }
+        dictInfoRepository.save(result);
     }
 }
