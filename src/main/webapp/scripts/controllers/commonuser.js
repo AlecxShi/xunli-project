@@ -315,6 +315,16 @@ angular.module('app')
       }
     });
 
+    //出生城市联动区县
+    $scope.$watch('commonUser.locationCity', function (newValue, oldValue) {
+      if (newValue && newValue !== oldValue) {
+        var dict = angular.fromJson(newValue);
+        DictInfo.getByDictType({dictType:dict.dictValue}).$promise.then(function (data) {
+          $scope.bornLocationState = data;
+        });
+      }
+    });
+
     //子女省份联动城市
     $scope.$watch('commonUser.children.bornLocationProvince', function (newValue, oldValue) {
       if (newValue && newValue !== oldValue) {
@@ -325,7 +335,7 @@ angular.module('app')
       }
     });
 
-    //子女省份联动城市
+    //子女城市联动区县
     $scope.$watch('commonUser.children.bornLocationCity', function (newValue, oldValue) {
       if (newValue && newValue !== oldValue) {
         var dict = angular.fromJson(newValue);
@@ -334,6 +344,7 @@ angular.module('app')
         });
       }
     });
+
     //当前所在省份联动城市
     $scope.$watch('commonUser.children.currentLocationProvince', function (newValue, oldValue) {
       if (newValue && newValue !== oldValue) {
@@ -367,10 +378,14 @@ angular.module('app')
         field.$setTouched();
       });
 
+      $scope.commonUser.location = angular.fromJson($scope.commonUser.locationProvince ? $scope.commonUser.locationProvince : '{"dictDesc":""}')['dictDesc'] + "-"
+                                   + angular.fromJson($scope.commonUser.locationCity ? $scope.commonUser.locationCity : '{"dictDesc":""}')['dictDesc'] + '-'
+                                   + angular.fromJson($scope.commonUser.locationState ? $scope.commonUser.locationState : '{"dictDesc":""}')['dictDesc'];
+      $scope.commonUser.children.bornLocation = angular.fromJson($scope.commonUser.children.bornLocationProvince ? $scope.commonUser.children.bornLocationProvince : '{"dictDesc":""}')['dictDesc'] + "-"
+                                                + angular.fromJson($scope.commonUser.children.bornLocationCity ? $scope.commonUser.children.bornLocationCity : '{"dictDesc":""}')['dictDesc'] + '-'
+                                                + angular.fromJson($scope.commonUser.children.bornLocationState ? $scope.commonUser.children.bornLocationState : '{"dictDesc":""}')['dictDesc'];
+      $scope.commonUser.children.currentLocation = angular.fromJson($scope.commonUser.children.currentLocationProvince ? $scope.commonUser.children.currentLocationProvince : '{"dictDesc":""}')['dictDesc'] + "-" + angular.fromJson($scope.commonUser.children.currentLocationCity ? $scope.commonUser.children.currentLocationCity : '{"dictDesc":""}')['dictDesc'];
 
-      $scope.commonUser.location = angular.fromJson($scope.commonUser.locationProvince ? $scope.commonUser.locationProvince : '{"dictDesc":""}')['dictDesc'] + "," + angular.fromJson($scope.commonUser.locationCity ? $scope.commonUser.locationCity : '{"dictDesc":""}')['dictDesc'];
-      $scope.commonUser.children.bornLocation = angular.fromJson($scope.commonUser.children.bornLocationProvince ? $scope.commonUser.children.bornLocationProvince : '{"dictDesc":""}')['dictDesc'] + "," + angular.fromJson($scope.commonUser.children.bornLocationCity ? $scope.commonUser.children.bornLocationCity : '{"dictDesc":""}')['dictDesc'];
-      $scope.commonUser.children.currentLocation = angular.fromJson($scope.commonUser.children.currentLocationProvince ? $scope.commonUser.children.currentLocationProvince : '{"dictDesc":""}')['dictDesc'] + "," + angular.fromJson($scope.commonUser.children.currentLocationCity ? $scope.commonUser.children.currentLocationCity : '{"dictDesc":""}')['dictDesc'];
       if ($scope.form.$valid) {
         CommonUserInfo.save($scope.commonUser).$promise.then(
           function(result, responseHeaders){
