@@ -136,16 +136,16 @@ public class DictInfoController {
             for(ObjectData city : province.getCityList())
             {
                 DictInfo d2 = new DictInfo();
-                d2.setDictType(flag ? d1.getDictValue() + (c >= 10 ? c : "0" + (c++)) : d1.getDictValue());
-                d2.setDictValue(city.getId());
+                d2.setDictType(d1.getDictValue());
+                d2.setDictValue(flag ? d1.getDictValue() + (c >= 10 ? c++ : "0" + (c++)) : city.getId());
                 d2.setDictDesc(city.getName());
                 result.add(d2);
                 int s = 1;
                 for(ObjectData state : city.getCityList())
                 {
                     DictInfo d3 = new DictInfo();
-                    d3.setDictType(flag ? d2.getDictValue()+ (s >= 10 ? s : "0" + (s++)) : d2.getDictValue());
-                    d3.setDictValue(state.getId());
+                    d3.setDictType(d2.getDictValue());
+                    d3.setDictValue(flag ? d2.getDictValue() + (s >= 10 ? s++ : "0" + (s++)) : state.getId());
                     d3.setDictDesc(state.getName());
                     result.add(d3);
                 }
