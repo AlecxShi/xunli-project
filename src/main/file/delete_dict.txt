@@ -1,0 +1,10 @@
+DELETE FROM dict_info WHERE dict_type IN
+	(
+		SELECT dict_value FROM
+		(
+			SELECT dict_value FROM dict_info WHERE dict_type IN
+			(
+				SELECT dict_value FROM dict_info WHERE dict_type = 'Province'
+			)
+		)
+	)
