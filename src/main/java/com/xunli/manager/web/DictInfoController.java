@@ -128,9 +128,9 @@ public class DictInfoController {
             result.add(d1);
             boolean flag = false;
             //港澳台id要变
-            if("999077".equals(d1.getId()) ||
-                    "999078".equals(d1.getId()) ||
-                    "999079".equals(d1.getId()))
+            if("999077".equals(province.getId()) ||
+                    "999078".equals(province.getId()) ||
+                    "999079".equals(province.getId()))
                 flag = true;
             int c = 1;
             for(ObjectData city : province.getCityList())

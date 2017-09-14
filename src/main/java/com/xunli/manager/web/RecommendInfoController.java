@@ -59,7 +59,7 @@ public class RecommendInfoController {
         CommonUserLogins login = commonUserLoginsRepository.getByToken(token.toString());
         if(login == null || login.getExpireTime().compareTo(new Date()) <= 0)
         {
-            return new RequestResult(ReturnCode.AUTH_ACCOUNT_NOT_LOGIN);
+            return new RequestResult(ReturnCode.PUBLIC_USER_INFORMATION_IS_INCORRECT_OR_NO_LOGIN);
         }
         CommonUser user = commonUserRepository.findOne(login.getUserId());
         if(user == null)

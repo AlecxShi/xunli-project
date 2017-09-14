@@ -99,7 +99,7 @@ public class CommonUserController {
         CommonUserLogins login = commonUserLoginsRepository.getByToken(token);
         if(login == null || login.getExpireTime().compareTo(new Date()) <= 0)
         {
-            return new RequestResult(ReturnCode.AUTH_ACCOUNT_NOT_LOGIN);
+            return new RequestResult(ReturnCode.PUBLIC_USER_INFORMATION_IS_INCORRECT_OR_NO_LOGIN);
         }
         return Optional.ofNullable(commonUserRepository.findOne(login.getUserId())).map(u -> {
             return Optional.ofNullable(childrenInfoRepository.findOneByParentId(u.getId())).map(son -> {
