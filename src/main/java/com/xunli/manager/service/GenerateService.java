@@ -16,7 +16,7 @@ public class GenerateService {
 
     private final static int ONE = 3000;
     private final static int TWO = 2000;
-    private final static int THREE = 1000;
+    private final static int THREE = 200;
 
     public final static int getRandom(int base)
     {

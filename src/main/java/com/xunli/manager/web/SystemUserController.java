@@ -122,7 +122,10 @@ public class SystemUserController {
     public ResponseEntity<Void> quickGenerate()
     {
         List<CommonUser> users = commonUserRepository.save(generateService.generateRobotUser());
+        System.out.println(users.size());
+        commonUserRepository.flush();
         List<ChildrenInfo> childrens = childrenInfoRepository.save(generateService.generateChildrenInfo(users));
+        childrenInfoRepository.flush();
         return ResponseEntity.ok().build();
     }
 

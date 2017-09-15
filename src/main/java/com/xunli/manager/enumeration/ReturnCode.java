@@ -13,14 +13,14 @@ public enum ReturnCode {
 	AUTH_MOBILE_PHONE_NUMBER_HAS_BEEN_USED(1215,"Mobile phone number has been used","手机号码已使用"),
 	AUTH_LOGIN_FAILURE(1217,"Login failure","登录失败"),
 	AUTH_ACCOUNT_IS_NULL(1219,"Account is not exist","账号不存在"),
-	AUTH_ACCOUNT_CHILDREN_IS_NULL(1221,"User's children is not exist","用户子女信息不存在"),
+	AUTH_ACCOUNT_CHILDREN_IS_NULL(1221,"User children is not exist","用户子女信息不存在"),
 	AUTH_TARGET_CHILDREN_IS_NULL(1223,"Target children is null","目标用户子女信息为空"),
 	
 	//公用系列======================================================
 	PUBLIC_SUCCESS(0,"Success","成功"),
 	PUBLIC_PARAMETER_MISSING(1001,"Parameter missing","参数丢失"),
 	PUBLIC_OTHER_ERROR(1003,"Other error","其他错误"),
-	PUBLIC_NO_DATA(1005,"No data","数据库中没有相应的数据"),
+	PUBLIC_NO_DATA(1005,"No data","没有数据"),
 	PUBLIC_PARAMETER_ERROR(1007,"Parameter error","参数错误"),
 	PUBLIC_TOKEN_MISSING(1009,"Token missing","Token缺失"),//
 	PUBLIC_TOKEN_IS_INVALID(1011,"Token is invalid","Token无效"),
