@@ -6,6 +6,7 @@ package com.xunli.manager.web;
 
 import com.xunli.manager.config.Constants;
 import com.xunli.manager.enumeration.ReturnCode;
+import com.xunli.manager.exception.ImageUploadException;
 import com.xunli.manager.model.CommonUserLogins;
 import com.xunli.manager.model.RequestResult;
 import com.xunli.manager.repository.CommonUserLoginsRepository;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -46,9 +48,13 @@ public class CommonUserImageUploadController {
                         !filename.toLowerCase().endsWith("png") &&
                         !filename.toLowerCase().endsWith("jpeg")))
                 {
-                    throw new Exception("Cannot store file with relative path outside current directory or not a image file "+ filename);
+                    throw new ImageUploadException(3,"Cannot store file with relative path outside current directory or not a image file "+ filename);
                 }
                 Files.copy(image.getInputStream(), createImageName(login.getUserId(),filename.substring(filename.lastIndexOf("."))),StandardCopyOption.REPLACE_EXISTING);
+            }
+            catch(ImageUploadException ex)
+            {
+                return new RequestResult(ex.getReturnCode());
             }
             catch (Exception ex)
             {
@@ -102,7 +108,7 @@ public class CommonUserImageUploadController {
      * @return
      * @throws Exception
      */
-    private Path createImageName(Long userId,String fileType) throws Exception
+    private Path createImageName(Long userId,String fileType) throws Exception,ImageUploadException
     {
         File path = new File(Constants.IMAGE_ROOT_DIR + "/" +userId);
         if(!path.exists())
@@ -116,7 +122,7 @@ public class CommonUserImageUploadController {
             next = path.listFiles().length + 1;
             if(next > 8)
             {
-                throw  new Exception("Only upload 8 pitcures");
+                throw  new ImageUploadException(2,"Only upload 8 pitcures");
             }
             filename = userId + "_" + next + fileType;
         }
