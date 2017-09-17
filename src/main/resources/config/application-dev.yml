@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://119.23.220.163:3316/XunLiManager?characterEncoding=utf8&autoReconnect=true&rewriteBatchedStatements=true
+    url: jdbc:mysql://localhost:3306/XunLiManager?characterEncoding=utf8&autoReconnect=true&rewriteBatchedStatements=true
     username: root
     password: xunli@123456
     max-active: 10
