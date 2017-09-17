@@ -4,10 +4,7 @@ import com.xunli.manager.domain.criteria.ChildrenInfoCriteria;
 import com.xunli.manager.domain.specification.ChildrenInfoTwoSpecification;
 import com.xunli.manager.enumeration.ReturnCode;
 import com.xunli.manager.model.*;
-import com.xunli.manager.repository.ChildrenInfoTwoRepository;
-import com.xunli.manager.repository.CommonUserLoginsRepository;
-import com.xunli.manager.repository.CommonUserRepository;
-import com.xunli.manager.repository.RecommendInfoTwoRepository;
+import com.xunli.manager.repository.*;
 import com.xunli.manager.util.DictInfoUtil;
 import com.xunli.manager.util.RandomUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,15 +31,19 @@ public class CommonUserService {
     private ChildrenInfoTwoRepository childrenInfoTwoRepository;
 
     @Autowired
+    private ChildrenInfoRepository childrenInfoRepository;
+
+    @Autowired
     private RecommendInfoTwoRepository recommendInfoTwoRepository;
 
     @Autowired
     private CommonUserLoginsRepository commonUserLoginsRepository;
 
     @Transactional
-    public RequestResult login(CommonUser user, HttpServletRequest request,Boolean ifFirstLogin)
+    public RequestResult login(CommonUser user, HttpServletRequest request)
     {
         CommonUserLogins login = commonUserLoginsRepository.findOneByUserId(user.getId());
+        Boolean ifFirstLogin = false;
         if(login == null)
         {
             login = new CommonUserLogins();
@@ -73,6 +74,12 @@ public class CommonUserService {
             login.setUserAgent(request.getHeader("User-Agent"));
             login.setLastUsed(new Date());
             commonUserLoginsRepository.save(login);
+        }
+
+        ChildrenInfo childrenInfo = childrenInfoRepository.findOneByParentId(login.getUserId());
+        if(childrenInfo == null || childrenInfo.getName() == null || childrenInfo.getBirthday() == null || childrenInfo.getEducation() == null)
+        {
+            ifFirstLogin = true;
         }
         Map<String,Object> result = new HashMap();
         result.put("token",login.getToken());

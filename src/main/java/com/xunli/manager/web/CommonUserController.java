@@ -74,8 +74,8 @@ public class CommonUserController {
     public RequestResult commonUserLogin(@RequestParam("phone") String phone, HttpServletRequest request)
     {
         return commonUserRepository.findOneByPhone(phone).map(u -> {
-            return commonUserService.login(u,request,false);
-        }).orElseGet(() -> commonUserService.login(createUserByPhone(phone),request,true));
+            return commonUserService.login(u,request);
+        }).orElseGet(() -> commonUserService.login(createUserByPhone(phone),request));
     }
 
     @Transactional
