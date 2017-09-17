@@ -27,6 +27,9 @@ public enum ReturnCode {
 	PUBLIC_MODIFY_FAILURE(1013,"Modify failure","操作失败"),
 	PUBLIC_USER_INFORMATION_IS_INCORRECT_OR_NO_LOGIN(1015,"User not login","用户没有登录或登录信息过期"),
 	PUBLIC_UPLOAD_IMAGE_FAIL(1017,"Upload image Fail","图片上传失败"),
+	PUBLIC_UPLOAD_IMAGE_FULL(1019,"Only upload 8 iages","最多允许上传8张图片"),
+	PUBLIC_UPLOAD_IMAGE_TOO_LARGE(1021,"Image too large","图片过大"),
+	PUBLIC_UPLOAD_IMAGE_PATTERN_ERROR(1023,"Image pattern error","图片格式不支持"),
 
 	// 系统
 	SYSTEM_SYSTEM_ERROR(1101,"System error","系统错误")
