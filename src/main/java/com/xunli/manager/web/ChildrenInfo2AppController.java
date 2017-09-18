@@ -117,6 +117,14 @@ public class ChildrenInfo2AppController {
             }
             return new RequestResult(ReturnCode.PUBLIC_SUCCESS);
         }).orElseGet(() -> {
+            if(childrenInfo.getGender() == null ||
+                    childrenInfo.getBornLocation() == null ||
+                    childrenInfo.getCurrentLocation() == null ||
+                    childrenInfo.getEducation() == null ||
+                    childrenInfo.getBirthday() == null)
+            {
+                return new RequestResult(ReturnCode.PUBLIC_MISS_NECESSARY_INFO);
+            }
             ChildrenInfo info = new ChildrenInfo();
             info.setName(childrenInfo.getName());
             info.setGender(childrenInfo.getGender());

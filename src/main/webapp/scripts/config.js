@@ -243,8 +243,7 @@ angular.module('app').config(function($stateProvider, $urlRouterProvider) {
         data: {
           authorities: ['ROLE_ADMIN'],
           title: '权限',
-        },
-        templateUrl: 'views/authority.html'
+        }
     }).state('commonuser.list', {
         url : '',
         data : {
@@ -285,6 +284,42 @@ angular.module('app').config(function($stateProvider, $urlRouterProvider) {
         },
         templateUrl : 'views/children.list.html',
         controller : 'ChildrenInfoCtrl'
+    }).state('discover', {
+        url : '/discover',
+        abstract : true,
+        templateUrl: 'views/authority.html'
+    }).state('discover.list', {
+          url : '',
+          data : {
+              authorities : ['ROLE_ADMIN'],
+              title : '软文管理',
+          },
+          templateUrl : 'views/discover.list.html',
+          controller : 'DiscoverController'
+    }).state('discover.edit', {
+        url : '/{id}',
+        data : {
+            authorities : ['ROLE_ADMIN'],
+            title : '软文修改',
+        },
+        templateUrl : 'views/discover.edit.html',
+        controller : 'DiscoverEditController',
+        resolve : {
+             article : function($stateParams, Discover) {
+                 console.log('config',$stateParams.id);
+                 if ($stateParams.id === 'new') {
+                      return {
+                          article:{
+
+                          }
+                      };
+                 }else {
+                      return Discover.getById({
+                          id : $stateParams.id
+                      }).$promise;
+                 }
+             }
+        }
     })
 }).config(function($mdThemingProvider) {
 			$mdThemingProvider.theme('default').primaryPalette('blue')

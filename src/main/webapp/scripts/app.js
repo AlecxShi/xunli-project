@@ -14,7 +14,6 @@ angular
     'ui.router',
     'ui.validate',
     'ui.tree',
-    'ui.codemirror',
     'angularMoment',
     'chart.js',
     'angular-loading-bar',

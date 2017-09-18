@@ -341,7 +341,9 @@ public class GenerateService {
         {
             if("Male".equals(DictInfoUtil.getItemById(child.getGender()).getDictValue()))
             {
-                if(child.getHeight() < 170)
+                if(child.getHeight() == null)
+                    score += 0;
+                else if(child.getHeight() < 170)
                     score += 1;
                 else if(child.getHeight() >= 170 && child.getHeight() <= 175)
                     score += 2;
@@ -352,7 +354,9 @@ public class GenerateService {
             }
             else
             {
-                if(child.getHeight() < 155)
+                if(child.getHeight() == null)
+                    score += 0;
+                else if(child.getHeight() < 155)
                     score += 1;
                 else if(child.getHeight() >= 155 && child.getHeight() <= 160)
                     score += 2;
@@ -364,82 +368,117 @@ public class GenerateService {
                     score += 3;
             }
             //是否有车评分
-            if(DictInfoUtil.getItemById(child.getCar()).getDictValue().equals("1"))
+            if(child.getCar() == null || DictInfoUtil.getItemById(child.getCar()) == null)
             {
-                score += 2;
+                score += 0;
             }
             else
             {
-                score += 1;
+                if("1".equals(DictInfoUtil.getItemById(child.getCar()).getDictValue()))
+                {
+                    score += 2;
+                }
+                else
+                {
+                    score += 1;
+                }
             }
             //是否有房评分
-            if("1".equals(DictInfoUtil.getItemById(child.getHouse()).getDictValue()))
+            if(child.getHouse() == null || DictInfoUtil.getItemById(child.getHouse()) == null)
             {
-                score += 1;
+                score += 0;
             }
-            else if("2".equals(DictInfoUtil.getItemById(child.getHouse()).getDictValue()))
+            else
             {
-                score += 3;
-            }
-            else if("3".equals(DictInfoUtil.getItemById(child.getHouse()).getDictValue()))
-            {
-                score += 5;
+                if("1".equals(DictInfoUtil.getItemById(child.getHouse()).getDictValue()))
+                {
+                    score += 1;
+                }
+                else if("2".equals(DictInfoUtil.getItemById(child.getHouse()).getDictValue()))
+                {
+                    score += 3;
+                }
+                else if("3".equals(DictInfoUtil.getItemById(child.getHouse()).getDictValue()))
+                {
+                    score += 5;
+                }
             }
             //工作单位评分
-            if(DictInfoUtil.getItemById(child.getCompany()).getDictDesc().contains("政府"))
+            if(child.getCompany() == null || DictInfoUtil.getItemById(child.getCompany()) == null)
             {
-                score += 3;
-            }
-            else if(DictInfoUtil.getItemById(child.getCompany()).getDictDesc().contains("事业单位"))
-            {
-                score += 2;
-            }
-            else if(DictInfoUtil.getItemById(child.getCompany()).getDictDesc().contains("国企"))
-            {
-                score += 2;
-            }
-            else if(DictInfoUtil.getItemById(child.getCompany()).getDictDesc().contains("外企"))
-            {
-                score += 3;
+                score += 0;
             }
             else
             {
-                score += 1;
+                if(DictInfoUtil.getItemById(child.getCompany()).getDictDesc().contains("政府"))
+                {
+                    score += 3;
+                }
+                else if(DictInfoUtil.getItemById(child.getCompany()).getDictDesc().contains("事业单位"))
+                {
+                    score += 2;
+                }
+                else if(DictInfoUtil.getItemById(child.getCompany()).getDictDesc().contains("国企"))
+                {
+                    score += 2;
+                }
+                else if(DictInfoUtil.getItemById(child.getCompany()).getDictDesc().contains("外企"))
+                {
+                    score += 3;
+                }
+                else
+                {
+                    score += 1;
+                }
             }
             //收入评分
-            if("1".equals(DictInfoUtil.getItemById(child.getIncome()).getDictValue()))
+            if(child.getIncome() == null ||  DictInfoUtil.getItemById(child.getIncome()) == null)
             {
-                score += 1;
-            }
-            else if("2".equals(DictInfoUtil.getItemById(child.getIncome()).getDictValue()))
-            {
-                score += 2;
-            }
-            else if("3".equals(DictInfoUtil.getItemById(child.getIncome()).getDictValue()))
-            {
-                score += 3;
-            }
-            else if("4".equals(DictInfoUtil.getItemById(child.getIncome()).getDictValue()))
-            {
-                score += 4;
-            }
-            else if("5".equals(DictInfoUtil.getItemById(child.getIncome()).getDictValue()))
-            {
-                score += 5;
-            }
-            //爱好评分
-            String[] hobby = child.getHobby().split(",");
-            if(hobby.length <= 2)
-            {
-                score += 1;
-            }
-            else if(hobby.length >2 && hobby.length <=4)
-            {
-                score += 2;
+                score += 0;
             }
             else
             {
-                score += 3;
+                if("1".equals(DictInfoUtil.getItemById(child.getIncome()).getDictValue()))
+                {
+                    score += 1;
+                }
+                else if("2".equals(DictInfoUtil.getItemById(child.getIncome()).getDictValue()))
+                {
+                    score += 2;
+                }
+                else if("3".equals(DictInfoUtil.getItemById(child.getIncome()).getDictValue()))
+                {
+                    score += 3;
+                }
+                else if("4".equals(DictInfoUtil.getItemById(child.getIncome()).getDictValue()))
+                {
+                    score += 4;
+                }
+                else if("5".equals(DictInfoUtil.getItemById(child.getIncome()).getDictValue()))
+                {
+                    score += 5;
+                }
+            }
+            //爱好评分
+            if(child.getHobby() == null)
+            {
+                score += 0;
+            }
+            else
+            {
+                String[] hobby = child.getHobby().split(",");
+                if(hobby.length <= 2)
+                {
+                    score += 1;
+                }
+                else if(hobby.length >2 && hobby.length <=4)
+                {
+                    score += 2;
+                }
+                else
+                {
+                    score += 3;
+                }
             }
 
         }
