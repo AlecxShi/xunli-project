@@ -1,6 +1,7 @@
 package com.xunli.manager.web;
 
 import com.xunli.manager.config.Constants;
+import com.xunli.manager.domain.specification.ArticleInfoSpecification;
 import com.xunli.manager.enumeration.ReturnCode;
 import com.xunli.manager.model.ArticleInfo;
 import com.xunli.manager.model.CommonUserLogins;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
@@ -40,7 +42,7 @@ public class ArticleInfoController {
     @Transactional(readOnly = true)
     public Page<ArticleInfo> query(@PageableDefault Pageable pageable)
     {
-        return articleInfoRepository.findAll(null,pageable);
+        return articleInfoRepository.findAll(new ArticleInfoSpecification(null), pageable);
     }
 
     @RequestMapping(value = "/article/save",method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_VALUE)
@@ -72,7 +74,7 @@ public class ArticleInfoController {
     }
 
     @RequestMapping(value = "/article/upload",method = RequestMethod.POST)
-    public RequestResult uploadIcon(@RequestParam("icon")MultipartFile icon,@RequestParam("id") Long id)
+    public ResponseEntity<String> uploadIcon(@RequestParam("icon")MultipartFile icon,@RequestParam("id") Long id)
     {
         if(!icon.isEmpty())
         {
@@ -92,10 +94,10 @@ public class ArticleInfoController {
             catch (Exception ex)
             {
                 ex.printStackTrace();
-                return new RequestResult(ReturnCode.PUBLIC_UPLOAD_IMAGE_FAIL);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
             }
-            return new RequestResult(ReturnCode.PUBLIC_SUCCESS,String.format(Constants.HTTP_ICON_PATH,filename));
+            return ResponseEntity.ok(filename);
         }
-        return new RequestResult(ReturnCode.PUBLIC_UPLOAD_IMAGE_FAIL);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
     }
 }

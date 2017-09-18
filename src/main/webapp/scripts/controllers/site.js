@@ -28,6 +28,11 @@ angular.module('app')
       icon: 'assignment_ind',
       authorities: 'ROLE_ADMIN'
     },{
+      state: 'discover.list',
+      title: '软文管理',
+      icon: 'assignment_ind',
+      authorities: 'ROLE_ADMIN'
+    },{
       title: '系统用户设置',
       authorities: 'ROLE_USER'
     }, {

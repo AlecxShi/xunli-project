@@ -18,15 +18,13 @@
   <link rel="stylesheet" href="bower_components/angular-chart.js/dist/angular-chart.css" />
   <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css" />
   <link rel="stylesheet" href="bower_components/angular-ui-tree/dist/angular-ui-tree.css" />
-  <link rel="stylesheet" href="bower_components/angular-tree-control/css/tree-control-attribute.css">
-  <link rel="stylesheet" href="bower_components/angular-tree-control/css/tree-control.css">
   <link rel="stylesheet" href="bower_components/ng-dialog/css/ngDialog.css">
   <link rel="stylesheet" href="bower_components/ng-dialog/css/ngDialog-theme-default.css">
   <link rel="stylesheet" href="bower_components/angular-dialog-service/dist/dialogs.css">
   <link rel="stylesheet" href="bower_components/angular-growl-v2/build/angular-growl.css">
   <link rel="stylesheet" href="bower_components/katex/dist/katex.min.css" />
-  <link rel="stylesheet" href="bower_components/editor.md/css/editormd.min.css" />
-  <link rel="stylesheet" href="bower_components/editor.md/lib/codemirror/codemirror.min.css" />
+  <link rel="stylesheet" href="bower_components/umeditor/themes/default/_css/umeditor.css">
+
 
   <!-- endbower -->
   <!-- endbuild -->
@@ -98,9 +96,9 @@
   </main>
   <!-- build:js scripts/vendor.js -->
 
-  <!-- bower:js -->
-   <script src="bower_components/jquery/dist/jquery.js"></script>
-   <script src="bower_components/angular/angular.js"></script>
+    <!-- bower:js -->
+    <script src="bower_components/jquery/dist/jquery.js"></script>
+    <script src="bower_components/angular/angular.js"></script>
 	<script src="bower_components/angular-resource/angular-resource.js"></script>
 	<script src="bower_components/angular-cookies/angular-cookies.js"></script>
 	<script src="bower_components/angular-messages/angular-messages.js"></script>
@@ -111,8 +109,6 @@
 	<script src="bower_components/angular-material/angular-material.js"></script>
 	<script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
 	<script src="bower_components/angular-ui-validate/dist/validate.js"></script>
-	<script src="bower_components/codemirror/lib/codemirror.js"></script>
-	<script src="bower_components/angular-ui-codemirror/ui-codemirror.js"></script>
 	<script src="bower_components/angular-loading-bar/build/loading-bar.js"></script>
 	<script src="bower_components/angular-local-storage/dist/angular-local-storage.js"></script>
 	<script src="bower_components/moment/moment.js"></script>
@@ -124,36 +120,6 @@
 	<script src="bower_components/angular-material-data-table/dist/md-data-table.js"></script>
 	<script src="bower_components/bootstrap/dist/js/bootstrap.js"></script>
 
-	<!-- 解析markdown所需的插件 -->
-    <script src="bower_components/katex/dist/katex.min.js"></script>
-    <script src="bower_components/editor.md/editormd.min.js"></script>
-    <script src="bower_components/angular-i18n/angular-locale_zh-cn.js"></script>
-    <script src="bower_components/moment/locale/zh-cn.js"></script>
-    <script src="bower_components/editor.md/lib/marked.min.js"></script>
-    <script src="bower_components/editor.md/lib/prettify.min.js"></script>
-    <script src="bower_components/editor.md/lib/raphael.min.js"></script>
-    <script src="bower_components/editor.md/lib/underscore.min.js"></script>
-    <script src="bower_components/editor.md/lib/sequence-diagram.min.js"></script>
-    <script src="bower_components/editor.md/lib/flowchart.min.js"></script>
-    <script src="bower_components/editor.md/lib/jquery.flowchart.min.js"></script>
-    <script src="bower_components/editor.md/lib/codemirror/addons.min.js"></script>
-    <script src="bower_components/editor.md/lib/codemirror/codemirror.min.js"></script>
-   <!--  <script src="bower_components/editor.md/lib/codemirror/modes.min.js"></script>  -->
-    <script src="bower_components/editor.md/plugins/code-block-dialog/code-block-dialog.js"></script>
-    <script src="bower_components/editor.md/plugins/emoji-dialog/emoji-dialog.js"></script>
-    <script src="bower_components/editor.md/plugins/goto-line-dialog/goto-line-dialog.js"></script>
-    <script src="bower_components/editor.md/plugins/help-dialog/help-dialog.js"></script>
-    <script src="bower_components/editor.md/plugins/html-entities-dialog/html-entities-dialog.js"></script>
-    <script src="bower_components/editor.md/plugins/image-dialog/image-dialog.js"></script>
-    <script src="bower_components/editor.md/plugins/link-dialog/link-dialog.js"></script>
-    <script src="bower_components/editor.md/plugins/preformatted-text-dialog/preformatted-text-dialog.js"></script>
-    <script src="bower_components/editor.md/plugins/reference-link-dialog/reference-link-dialog.js"></script>
-    <script src="bower_components/editor.md/plugins/table-dialog/table-dialog.js"></script>
-    <script src="bower_components/editor.md/plugins/test-plugin/test-plugin.js"></script>
-
-
-
-
     <script src="bower_components/angular-ui-tree/dist/angular-ui-tree.js"></script>
     <script src="bower_components/ng-dialog/js/ngDialog.js"></script>
     <script src="bower_components/angular-translate/angular-translate.js"></script>
@@ -163,63 +129,63 @@
     <script src="bower_components/angular-growl-v2/build/angular-growl.js"></script>
     <script src="bower_components/angular-utils-pagination/dirPagination.js"></script>
 
-    <script src="bower_components/codemirror/mode/yaml/yaml.js"></script>
     <script src="bower_components/angular-cookies/angular-cookies.min.js"></script>
     <script src="bower_components/file-saver/FileSaver.js"></script>
+    <!-- umeditor -->
+    <script src="bower_components/umeditor/umeditor.config.js"></script>
+    <script src="bower_components/umeditor/_src/editor.js"></script>
+    <script src="bower_components/umeditor/_src/core/Editor.js"></script>
+    <script src="bower_components/umeditor/_src/core/utils.js"></script>
+    <script src="bower_components/umeditor/lang/zh-cn/zh-cn.js"></script>
+
+    <!-- endbower -->
+    <!-- endbuild -->
+    <!-- build:js scripts/scripts.js -->
+    <script src="scripts/app.js"></script>
+    <script src="scripts/constants.js"></script>
+    <script src="scripts/config.js"></script>
+    <script src="bower_components/requirejs/require.js"></script>
+    <script src="scripts/directives/confirm.js"></script>
+    <script src="scripts/directives/authority.js"></script>
+    <script src="scripts/directives/containerDirectives.js"></script>
+    <script src="scripts/directives/myMarkDown.js"></script>
+    <script src="scripts/directives/loader.directive.js"></script>
+    <script src="scripts/filters/filters.js"></script>
+    <script src="scripts/filters/truncate.filter.js"></script>
+    <script src="scripts/filters/expireType.filter.js"></script>
+    <script src="scripts/services/interceptors.js"></script>
+    <script src="scripts/services/validate.js"></script>
+    <script src="scripts/services/register.js"></script>
+    <script src="scripts/services/activate.js"></script>
+    <script src="scripts/services/reset.js"></script>
+    <script src="scripts/services/account.js"></script>
+    <script src="scripts/services/password.js"></script>
+    <script src="scripts/services/session.js"></script>
+    <script src="scripts/services/auth.js"></script>
+    <script src="scripts/services/principal.js"></script>
+    <script src="scripts/services/user.js"></script>
+    <script src="scripts/services/authority.js"></script>
+    <script src="scripts/services/role.js"></script>
+    <script src="scripts/services/dictinfo.js"></script>
+    <script src="scripts/services/commonuser.js"></script>
+    <script src="scripts/services/children.js"></script>
+    <script src="scripts/services/discover.js"></script>
 
 
 
-
-
-
-  <!-- endbower -->
-  <!-- endbuild -->
-  <!-- build:js scripts/scripts.js -->
-  <script src="scripts/app.js"></script>
-  <script src="scripts/constants.js"></script>
-  <script src="scripts/config.js"></script>
-  <script src="bower_components/requirejs/require.js"></script>
-  <script src="scripts/directives/confirm.js"></script>
-  <script src="scripts/directives/authority.js"></script>
-  <script src="scripts/directives/containerDirectives.js"></script>
-  <script src="scripts/directives/myMarkDown.js"></script>
-  <script src="scripts/directives/loader.directive.js"></script>
-  <script src="scripts/filters/filters.js"></script>
-  <script src="scripts/filters/truncate.filter.js"></script>
-  <script src="scripts/filters/expireType.filter.js"></script>
-  <script src="scripts/services/interceptors.js"></script>
-  <script src="scripts/services/validate.js"></script>
-  <script src="scripts/services/register.js"></script>
-  <script src="scripts/services/activate.js"></script>
-  <script src="scripts/services/reset.js"></script>
-  <script src="scripts/services/account.js"></script>
-  <script src="scripts/services/password.js"></script>
-  <script src="scripts/services/session.js"></script>
-  <script src="scripts/services/auth.js"></script>
-  <script src="scripts/services/principal.js"></script>
-  <script src="scripts/services/user.js"></script>
-  <script src="scripts/services/authority.js"></script>
-  <script src="scripts/services/role.js"></script>
-  <script src="scripts/services/dictinfo.js"></script>
-  <script src="scripts/services/commonuser.js"></script>
-  <script src="scripts/services/children.js"></script>
-
-
-
-
-  <!-- controllers -->
-  <script src="scripts/controllers/site.js"></script>
-  <script src="scripts/controllers/login.js"></script>
-  <script src="scripts/controllers/password.js"></script>
-  <script src="scripts/controllers/dashboard.js"></script>
-  <script src="scripts/controllers/profile.js"></script>
-  <script src="scripts/controllers/sysuser.js"></script>
-  <script src="scripts/controllers/role.js"></script>
-  <script src="scripts/controllers/authority.js"></script>
-  <script src="scripts/controllers/dictinfo.js"></script>
-  <script src="scripts/controllers/commonuser.js"></script>
-  <script src="scripts/controllers/children.js"></script>
-
+    <!-- controllers -->
+    <script src="scripts/controllers/site.js"></script>
+    <script src="scripts/controllers/login.js"></script>
+    <script src="scripts/controllers/password.js"></script>
+    <script src="scripts/controllers/dashboard.js"></script>
+    <script src="scripts/controllers/profile.js"></script>
+    <script src="scripts/controllers/sysuser.js"></script>
+    <script src="scripts/controllers/role.js"></script>
+    <script src="scripts/controllers/authority.js"></script>
+    <script src="scripts/controllers/dictinfo.js"></script>
+    <script src="scripts/controllers/commonuser.js"></script>
+    <script src="scripts/controllers/children.js"></script>
+    <script src="scripts/controllers/discover.js"></script>
   <!-- endbuild -->
 </body>
 

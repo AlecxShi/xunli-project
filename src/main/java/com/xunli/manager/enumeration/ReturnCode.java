@@ -30,6 +30,7 @@ public enum ReturnCode {
 	PUBLIC_UPLOAD_IMAGE_FULL(1019,"Only upload 8 iages","最多允许上传8张图片"),
 	PUBLIC_UPLOAD_IMAGE_TOO_LARGE(1021,"Image too large","图片过大"),
 	PUBLIC_UPLOAD_IMAGE_PATTERN_ERROR(1023,"Image pattern error","图片格式不支持"),
+	PUBLIC_MISS_NECESSARY_INFO(1025,"Miss necessary param","缺少必要信息"),
 
 	// 系统
 	SYSTEM_SYSTEM_ERROR(1101,"System error","系统错误")
