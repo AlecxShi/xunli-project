@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.thymeleaf.util.StringUtils;
 
 import javax.annotation.Resource;
+import java.beans.Transient;
 import java.util.Date;
 import java.util.Optional;
 
@@ -46,7 +47,6 @@ public class ChildrenInfo2AppController {
     private GenerateRecommendInfoJob generateRecommendInfoJob;
 
     @RequestMapping(value = "/children/save",method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_VALUE)
-    @Transactional(propagation = Propagation.REQUIRED,isolation = Isolation.READ_COMMITTED)
     public RequestResult saveOrEdit(@ModelAttribute ChildrenInfoModel childrenInfo)
     {
         if(childrenInfo.getToken() == null)
@@ -117,40 +117,57 @@ public class ChildrenInfo2AppController {
             }
             return new RequestResult(ReturnCode.PUBLIC_SUCCESS);
         }).orElseGet(() -> {
-            if(childrenInfo.getGender() == null ||
-                    childrenInfo.getBornLocation() == null ||
-                    childrenInfo.getCurrentLocation() == null ||
-                    childrenInfo.getEducation() == null ||
-                    childrenInfo.getBirthday() == null)
+            ChildrenInfo info = null;
+            try
+            {
+                info = saveChildrenInfo(childrenInfo,login.getUserId());
+            }
+            catch (Exception ex)
             {
                 return new RequestResult(ReturnCode.PUBLIC_MISS_NECESSARY_INFO);
             }
-            ChildrenInfo info = new ChildrenInfo();
-            info.setName(childrenInfo.getName());
-            info.setGender(childrenInfo.getGender());
-            info.setBirthday(childrenInfo.getBirthday());
-            info.setHeight(childrenInfo.getHeight());
-
-            info.setBornLocation(childrenInfo.getBornLocation());
-            info.setCurrentLocation(childrenInfo.getCurrentLocation());
-            info.setParentId(login.getId());
-            info.setCompany(childrenInfo.getCompany());
-            info.setProfession(childrenInfo.getProfession());
-            info.setIncome(childrenInfo.getIncome());
-            info.setCar(childrenInfo.getCar());
-            info.setHouse(childrenInfo.getHouse());
-
-            info.setEducation(childrenInfo.getEducation());
-            info.setSchoolType(childrenInfo.getSchoolType());
-            info.setSchool(childrenInfo.getSchool());
-            info.setHobby(childrenInfo.getHobby());
-            info.setMoreIntroduce(childrenInfo.getMoreIntroduce());
-            info.setPhoto(ImageUtil.getAllPathByUserId(login.getId()));
-
-            info.setLabel(childrenInfo.getLabel());
-            info.setScore(GenerateService.createScore(info));
             generateRecommendInfoJob.push(childrenInfoRepository.save(info));
             return new RequestResult(ReturnCode.PUBLIC_SUCCESS);
         });
+    }
+
+    @Transactional
+    private ChildrenInfo saveChildrenInfo(ChildrenInfoModel childrenInfo,Long userId) throws Exception
+    {
+        if(childrenInfo.getGender() == null ||
+                childrenInfo.getBornLocation() == null ||
+                childrenInfo.getCurrentLocation() == null ||
+                childrenInfo.getEducation() == null ||
+                childrenInfo.getBirthday() == null)
+        {
+            throw new Exception("缺少必要信息");
+
+        }
+        ChildrenInfo info = new ChildrenInfo();
+        info.setName(childrenInfo.getName());
+        info.setGender(childrenInfo.getGender());
+        info.setBirthday(childrenInfo.getBirthday());
+        info.setHeight(childrenInfo.getHeight());
+
+        info.setBornLocation(childrenInfo.getBornLocation());
+        info.setCurrentLocation(childrenInfo.getCurrentLocation());
+        info.setParentId(userId);
+        info.setCompany(childrenInfo.getCompany());
+        info.setProfession(childrenInfo.getProfession());
+        info.setIncome(childrenInfo.getIncome());
+        info.setCar(childrenInfo.getCar());
+        info.setHouse(childrenInfo.getHouse());
+
+        info.setEducation(childrenInfo.getEducation());
+        info.setSchoolType(childrenInfo.getSchoolType());
+        info.setSchool(childrenInfo.getSchool());
+        info.setHobby(childrenInfo.getHobby());
+        info.setMoreIntroduce(childrenInfo.getMoreIntroduce());
+        info.setPhoto(ImageUtil.getAllPathByUserId(userId));
+
+        info.setLabel(childrenInfo.getLabel());
+        info.setScore(GenerateService.createScore(info));
+        childrenInfoRepository.save(info);
+        return info;
     }
 }
