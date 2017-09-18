@@ -51,7 +51,7 @@ public class DictInfoUtil {
                         city.getDictDesc().contains("上海") ||
                         city.getDictDesc().contains("深圳") ||
                         city.getDictDesc().contains("广州"))
-                    res.add(province.getDictDesc() + "," + city.getDictDesc());
+                    res.add(province.getDictDesc() + "-" + city.getDictDesc());
             }
         }
         return res;
@@ -68,7 +68,7 @@ public class DictInfoUtil {
                         city.getDictDesc().contains("上海") ||
                         city.getDictDesc().contains("深圳") ||
                         city.getDictDesc().contains("广州")) && (!except.contains(city.getDictDesc())))
-                    res.add(province.getDictDesc() + "," + city.getDictDesc());
+                    res.add(province.getDictDesc() + "-" + city.getDictDesc());
             }
         }
         return res;
@@ -85,7 +85,7 @@ public class DictInfoUtil {
                         !city.getDictDesc().contains("上海") &&
                         !city.getDictDesc().contains("深圳") &&
                         !city.getDictDesc().contains("广州")))
-                    res.add(province.getDictDesc() + "," + city.getDictDesc());
+                    res.add(province.getDictDesc() + "-" + city.getDictDesc());
             }
         }
         return res;
@@ -96,7 +96,7 @@ public class DictInfoUtil {
         DictInfo ret = null;
         for(DictInfo dict : DictInfoCache.dictInfos)
         {
-            if(id.equals(dict.getId()))
+            if(dict.getId().equals(id))
             {
                 ret =  dict;
                 break;
