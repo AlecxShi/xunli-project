@@ -96,7 +96,7 @@ public class DictInfoUtil {
         DictInfo ret = null;
         for(DictInfo dict : DictInfoCache.dictInfos)
         {
-            if(id.equals(dict.getId()))
+            if(dict.getId().equals(id))
             {
                 ret =  dict;
                 break;
