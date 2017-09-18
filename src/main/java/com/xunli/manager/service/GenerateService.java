@@ -434,6 +434,10 @@ public class GenerateService {
             //收入评分
             if(child.getIncome() == null ||  DictInfoUtil.getItemById(child.getIncome()) == null)
             {
+                score += 0;
+            }
+            else
+            {
                 if("1".equals(DictInfoUtil.getItemById(child.getIncome()).getDictValue()))
                 {
                     score += 1;
