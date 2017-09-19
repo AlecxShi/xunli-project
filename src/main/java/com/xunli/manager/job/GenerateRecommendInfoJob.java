@@ -50,34 +50,37 @@ public class GenerateRecommendInfoJob {
     @Scheduled(cron = "* * * * * ?")
     public void generate()
     {
-        while (true)
+        while (!queue.isEmpty())
         {
-            while (!queue.isEmpty())
-            {
-                ChildrenInfo childrenInfo = queue.poll();
-                //创建或重构推荐表时首先删除原来的数据
-                recommendInfoTwoRepository.deleteAllByChildrenId(childrenInfo.getId());
-                List<ChildrenInfoTwo> top3 = generateTop3(childrenInfo);
-                List<ChildrenInfoTwo> others = generateOthers(childrenInfo,top3);
-                List<RecommendInfoTwo> data = new ArrayList();
-                for(ChildrenInfoTwo target : top3)
-                {
-                    RecommendInfoTwo recommendInfo = new RecommendInfoTwo();
-                    recommendInfo.setChildrenId(childrenInfo.getId());
-                    recommendInfo.setTargetChildrenId(target.getId());
-                    data.add(recommendInfo);
-                }
-                for(ChildrenInfoTwo target : others)
-                {
-                    RecommendInfoTwo recommendInfo = new RecommendInfoTwo();
-                    recommendInfo.setChildrenId(childrenInfo.getId());
-                    recommendInfo.setTargetChildrenId(target.getId());
-                    data.add(recommendInfo);
-                }
-                recommendInfoTwoRepository.save(data);
-                recommendInfoTwoRepository.flush();
-            }
+            ChildrenInfo childrenInfo = queue.poll();
+            createRecommendInfo(childrenInfo);
         }
+    }
+
+    @Transactional
+    public void createRecommendInfo(ChildrenInfo childrenInfo)
+    {
+        //创建或重构推荐表时首先删除原来的数据
+        recommendInfoTwoRepository.deleteAllByChildrenId(childrenInfo.getId());
+        List<ChildrenInfoTwo> top3 = generateTop3(childrenInfo);
+        List<ChildrenInfoTwo> others = generateOthers(childrenInfo,top3);
+        List<RecommendInfoTwo> data = new ArrayList();
+        for(ChildrenInfoTwo target : top3)
+        {
+            RecommendInfoTwo recommendInfo = new RecommendInfoTwo();
+            recommendInfo.setChildrenId(childrenInfo.getId());
+            recommendInfo.setTargetChildrenId(target.getId());
+            data.add(recommendInfo);
+        }
+        for(ChildrenInfoTwo target : others)
+        {
+            RecommendInfoTwo recommendInfo = new RecommendInfoTwo();
+            recommendInfo.setChildrenId(childrenInfo.getId());
+            recommendInfo.setTargetChildrenId(target.getId());
+            data.add(recommendInfo);
+        }
+        recommendInfoTwoRepository.save(data);
+        recommendInfoTwoRepository.flush();
     }
 
     @Transactional(readOnly = true)
@@ -134,5 +137,10 @@ public class GenerateRecommendInfoJob {
     public Boolean push(ChildrenInfo childrenInfo)
     {
         return queue.offer(childrenInfo);
+    }
+
+    public BlockingQueue getQueue()
+    {
+        return this.queue;
     }
 }
