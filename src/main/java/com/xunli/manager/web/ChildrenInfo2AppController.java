@@ -117,6 +117,7 @@ public class ChildrenInfo2AppController {
             }
             return new RequestResult(ReturnCode.PUBLIC_SUCCESS);
         }).orElseGet(() -> {
+            System.out.println(childrenInfo.toString());
             ChildrenInfo info = null;
             try
             {
@@ -124,6 +125,7 @@ public class ChildrenInfo2AppController {
             }
             catch (Exception ex)
             {
+                ex.printStackTrace();
                 return new RequestResult(ReturnCode.PUBLIC_MISS_NECESSARY_INFO);
             }
             generateRecommendInfoJob.push(childrenInfoRepository.save(info));

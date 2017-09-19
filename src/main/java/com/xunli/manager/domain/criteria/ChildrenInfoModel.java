@@ -91,6 +91,12 @@ public class ChildrenInfoModel implements Serializable{
     @ColumnComment("更多自我介绍")
     private String moreIntroduce;
 
+    public String toString()
+    {
+        return String.format("{token = %s,name = %s,birthday = %s,gender = %s,education = %s,bornLocation = %s,currentLocation = %s}",
+                token,name,birthday,gender,education,bornLocation,currentLocation);
+    }
+
     public String getToken() {
         return token;
     }

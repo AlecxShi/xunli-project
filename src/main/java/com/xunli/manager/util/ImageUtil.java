@@ -18,7 +18,7 @@ public class ImageUtil {
             File[] files = path.listFiles();
             for(File file : files)
             {
-                sb.append(String.format(Constants.HTTP_IMAGE_PATH,file.getName())).append(Constants.SPERATOR);
+                sb.append(String.format(Constants.HTTP_IMAGE_PATH,userId,file.getName())).append(Constants.SPERATOR);
             }
             if(sb.length() != 0 && sb.lastIndexOf(Constants.SPERATOR) == (sb.length() - 1))
             {
