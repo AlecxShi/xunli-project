@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>APIManager</title>
+  <title>Manager</title>
   <meta name="description" content="">
   <meta name="Keywords" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
@@ -22,18 +22,12 @@
   <link rel="stylesheet" href="bower_components/ng-dialog/css/ngDialog-theme-default.css">
   <link rel="stylesheet" href="bower_components/angular-dialog-service/dist/dialogs.css">
   <link rel="stylesheet" href="bower_components/angular-growl-v2/build/angular-growl.css">
-  <link rel="stylesheet" href="bower_components/katex/dist/katex.min.css" />
-  <link rel="stylesheet" href="bower_components/umeditor/themes/default/_css/umeditor.css">
-
-
   <!-- endbower -->
   <!-- endbuild -->
   <!-- build:css styles/main.css -->
   <link rel="stylesheet" href="styles/main.css">
   <!-- endbuild -->
 </head>
-
-
 <body ng-app="app" ng-controller="SiteCtrl" layout="column" layout-fill ng-cloak>
   <!--[if lt IE 10]>
     <p class="browsehappy">您使用的浏览器<strong>版本过低</strong>。请<a href="http://browsehappy.com/">升级您的浏览器</a>以获得更加的良好浏览体验。</p>
@@ -95,7 +89,6 @@
     <article ui-view flex layout="column" role="main"></article>
   </main>
   <!-- build:js scripts/vendor.js -->
-
     <!-- bower:js -->
     <script src="bower_components/jquery/dist/jquery.js"></script>
     <script src="bower_components/angular/angular.js"></script>
@@ -132,11 +125,9 @@
     <script src="bower_components/angular-cookies/angular-cookies.min.js"></script>
     <script src="bower_components/file-saver/FileSaver.js"></script>
     <!-- umeditor -->
-    <script src="bower_components/umeditor/umeditor.config.js"></script>
-    <script src="bower_components/umeditor/_src/editor.js"></script>
-    <script src="bower_components/umeditor/_src/core/Editor.js"></script>
-    <script src="bower_components/umeditor/_src/core/utils.js"></script>
-    <script src="bower_components/umeditor/lang/zh-cn/zh-cn.js"></script>
+    <script src="scripts/directives/ueditor-ng/ueditor/ueditor.all.min.js"></script>
+    <script src="scripts/directives/ueditor-ng/ueditor/ueditor.config.js"></script>
+    <script src="scripts/directives/ueditor-ng/ueditor/lang/zh-cn/zh-cn.js"></script>
 
     <!-- endbower -->
     <!-- endbuild -->
@@ -150,6 +141,7 @@
     <script src="scripts/directives/containerDirectives.js"></script>
     <script src="scripts/directives/myMarkDown.js"></script>
     <script src="scripts/directives/loader.directive.js"></script>
+    <script src="scripts/directives/ueditor-ng/ueditorDirective.js"></script>
     <script src="scripts/filters/filters.js"></script>
     <script src="scripts/filters/truncate.filter.js"></script>
     <script src="scripts/filters/expireType.filter.js"></script>

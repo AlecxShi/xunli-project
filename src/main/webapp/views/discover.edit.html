@@ -30,9 +30,10 @@
 		<md-content  layout="column" style="overflow: hidden" ng-disabled="ifPublicExpression">
 			  <label>详细内容</label>
 
-			   <div id="container" flex data-ng-init="setValue()">
+			   <!--<div id="container" flex data-ng-init="setValue()">
 				  <textarea  ng-model="upgradeInfo.upgradeText" style="display:none"></textarea>
-			  </div>
+			  </div>-->
+			  <ueditor ng-model="content"></ueditor>
 				<!-- <my-mark-down  ng-model="upgradeInfo.upgradeText"></my-mark-down>   -->
 		</md-content>
   </md-card-content>

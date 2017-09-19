@@ -130,16 +130,11 @@ angular.module('app')
       $scope.refresh();
     });
 })
-.controller('DiscoverEditController',function($scope, $mdToast,$mdDialog,DictInfo,article,UM) {
+.controller('DiscoverEditController',function($scope, $mdToast,$mdDialog,DictInfo,article) {
 
 	  $scope.dict = article;
 	  $scope.error = "";
 	  $scope.title = article.id === 'new' ? "添加新字典" : "修改字典";
-
-      window.um = UM.getEditor('container', {
-        	/* 传入配置参数,可配参数列表看umeditor.config.js */
-            toolbar: ['undo redo | bold italic underline']
-      });
 	  $scope.hide = function() {
 	     $mdDialog.hide();
 	  };
