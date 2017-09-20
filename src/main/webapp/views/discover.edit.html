@@ -9,37 +9,44 @@
     </md-card-title> 
     
     <md-card-content>
-		<md-input-container>
-			<label>升级时间</label>
-			<md-datepicker ng-disabled="ifPublicExpression" ng-model="upgradeInfo.upgradeDate"  name="upgradeDateCtl" md-placeholder="升级时间" required></md-datepicker>
-			<div  class="validation-messages"  ng-messages="form.upgradeDateCtl.$error">
-				<div ng-message="valid">The entered value is not a date!</div>
-				<div ng-message="required">升级时间不能为空!</div>
+
+		<md-input-container class="md-block">
+			<label>文章标题</label>
+			<textarea ng-disabled="ifPublicExpression" name="title"  placeholder="文章标题" ng-model="article.title" required md-select-on-focus></textarea>
+			<div class="hint" ng-if="form.title.$untouched">必输项，文章标题</div>
+			<div ng-messages="form.title.$error">
+				<div ng-message="required">文章标题</div>
 			</div>
 		</md-input-container>
-			      
-		<md-input-container class="md-block">
-			 <label>升级简要</label>
-			 <textarea ng-disabled="ifPublicExpression" id="upgradeInfo" name="upgradeInfo"  placeholder="升级简要" ng-model="upgradeInfo.upgradeInfo" required  md-select-on-focus></textarea>
-			 <div class="hint" ng-if="form.upgradeInfo.$untouched">必输项，升级简要</div>
-				<div ng-messages="form.upgradeInfo.$error">
-				<div ng-message="required">升级内容</div>
-			 </div>
-		</md-input-container>
-       			   
-		<md-content  layout="column" style="overflow: hidden" ng-disabled="ifPublicExpression">
-			  <label>详细内容</label>
 
-			   <!--<div id="container" flex data-ng-init="setValue()">
-				  <textarea  ng-model="upgradeInfo.upgradeText" style="display:none"></textarea>
-			  </div>-->
-			  <ueditor ng-model="content"></ueditor>
-				<!-- <my-mark-down  ng-model="upgradeInfo.upgradeText"></my-mark-down>   -->
+		<md-input-container class="md-block">
+			<label>文章图片</label>
+			<textarea ng-disabled="ifPublicExpression" name="icon"  placeholder="文章简要" ng-model="article.brief" required  md-select-on-focus></textarea>
+			<div class="hint" ng-if="form.brief.$untouched">必输项，升级简要</div>
+			<div ng-messages="form.brief.$error">
+				<div ng-message="required">升级内容</div>
+			</div>
+		</md-input-container>
+
+		<md-input-container class="md-block">
+			<label>文章缩略图</label>
+			<div>
+				<input type="file" file-model="articleIcon"/>
+				<div class="col-md-12">
+					<img ng-src="{{imageSrc}}" style="max-width:300px;max-height:300px;margin:0 auto;display:block;" />
+				</div>
+			</div>
+		</md-input-container>
+
+		<md-content  layout="column" style="overflow: hidden" ng-disabled="ifPublicExpression">
+			<label>详细内容</label>
+			<div class="ueditor" ng-model="article.content" config="config" style="margin-top:10px" ></div>
 		</md-content>
   </md-card-content>
 
     <md-card-actions layout="row" layout-padding layout-align="center center"> <span flex></span>
-		<md-button ng-disabled="ifPublicExpression" type="submit" class="md-raised md-primary" ng-click="save($event)"> 保存 </md-button> 
+		<md-button ng-disabled="ifPublicExpression" type="submit" class="md-raised md-primary" ng-click="save($event)"> 保存 </md-button>
+		<md-button ng-disabled="ifPublicExpression" type="submit" class="md-raised md-primary" ng-click="publish($event)"> 发布 </md-button>
 		<md-button ng-click="cancel($event)" class="md-raised md-primary" ng-click="cancel()"> 取消</md-button>
 	</md-card-actions> 
   </md-card>

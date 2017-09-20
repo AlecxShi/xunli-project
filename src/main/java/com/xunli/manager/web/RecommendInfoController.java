@@ -71,7 +71,7 @@ public class RecommendInfoController {
         {
             return new RequestResult(ReturnCode.AUTH_ACCOUNT_CHILDREN_IS_NULL);
         }
-        PageRequest pageable = new PageRequest(Integer.parseInt(page.toString()) <= 0 ? 0 : Integer.parseInt(page.toString()) - 1,10);
+        PageRequest pageable = new PageRequest(Integer.parseInt(page.toString()) <= 0 ? 0 : Integer.parseInt(page.toString()),10);
         Page<RecommendInfo> result = recommendInfoRepository.findAll(new RecommendInfoSpecification(new RecommendInfoCriteria(childrenInfo.getId())),pageable);
         List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
         for(RecommendInfo info : result.getContent())
@@ -83,7 +83,8 @@ public class RecommendInfoController {
             data.put("currentLocation",info.getTargetChildrenId().getCurrentLocation());
             data.put("birthday",info.getTargetChildrenId().getBirthday());
             data.put("education",info.getTargetChildrenId().getEducation());
-            data.put("label",DictInfoUtil.autoAssembleLabelColor(info.getTargetChildrenId().getLabel().split(",")));
+            String label = info.getTargetChildrenId().getLabel() != null ? info.getTargetChildrenId().getLabel() : "";
+            data.put("label",DictInfoUtil.autoAssembleLabelColor(label.split(",")));
             list.add(data);
         }
         return new RequestResult(ReturnCode.PUBLIC_SUCCESS,list);
@@ -114,7 +115,7 @@ public class RecommendInfoController {
         criteria.setBornLocation(location.toString());
         criteria.setCurrentLocation(currentLocation.toString());
         criteria.setGender(DictInfoUtil.getOppositeSex(DictInfoUtil.getItemById(Long.parseLong(gender.toString()))));
-        Pageable pageable = new PageRequest(Integer.parseInt(page.toString()) <= 0 ? 0 : Integer.parseInt(page.toString()) - 1,10);
+        Pageable pageable = new PageRequest(Integer.parseInt(page.toString()) <= 0 ? 0 : Integer.parseInt(page.toString()),10);
         Page<ChildrenInfo> result = childrenInfoRepository.findAll(new ChildrenInfoThreeSpecification(criteria),pageable);
         List<Map<String,Object>> list = new ArrayList<Map<String,Object>>();
         for(ChildrenInfo info : result.getContent())
@@ -126,7 +127,8 @@ public class RecommendInfoController {
             data.put("currentLocation",info.getCurrentLocation());
             data.put("birthday",info.getBirthday());
             data.put("education",info.getEducation());
-            data.put("label",DictInfoUtil.autoAssembleLabelColor(info.getLabel().split(",")));
+            String label = info.getLabel() != null ? info.getLabel() : "";
+            data.put("label",DictInfoUtil.autoAssembleLabelColor(label.split(",")));
             list.add(data);
         }
         return new RequestResult(ReturnCode.PUBLIC_SUCCESS,list);
