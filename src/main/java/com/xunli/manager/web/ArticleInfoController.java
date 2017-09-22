@@ -7,6 +7,7 @@ import com.xunli.manager.model.ArticleInfo;
 import com.xunli.manager.model.CommonUserLogins;
 import com.xunli.manager.model.RequestResult;
 import com.xunli.manager.repository.ArticleInfoRepository;
+import com.xunli.manager.security.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +24,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -38,6 +41,8 @@ public class ArticleInfoController {
     @Autowired
     private ArticleInfoRepository articleInfoRepository;
 
+    private static final DateFormat FORMAT = new SimpleDateFormat("yyyyMMddhhmmssSSS");
+
     @RequestMapping(value = "/article/query",method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional(readOnly = true)
     public Page<ArticleInfo> query(@PageableDefault Pageable pageable)
@@ -50,14 +55,16 @@ public class ArticleInfoController {
     @Secured(ROLE_ADMIN)
     public ResponseEntity<ArticleInfo> addOrEdit(@ModelAttribute ArticleInfo articleInfo)
     {
-        if(articleInfo.getId() != null)
+        articleInfo.setLastModified(new Date());
+        if(articleInfo.getArticleId() == null)
         {
-
+            articleInfo.setCreateUser(SecurityUtils.getCurrentUsername());
         }
-        else
+        if(articleInfo.getImage() == null || (articleInfo.getImage() != null && articleInfo.getIconName() != null && !String.format(Constants.HTTP_DISCOVER_ICON_PATH,articleInfo.getIconName()).equals(articleInfo.getImage())))
         {
-
+            articleInfo.setImage(String.format(Constants.HTTP_DISCOVER_ICON_PATH,articleInfo.getIconName()));
         }
+        articleInfoRepository.save(articleInfo);
         return ResponseEntity.ok(articleInfo);
     }
 
@@ -74,7 +81,7 @@ public class ArticleInfoController {
     }
 
     @RequestMapping(value = "/article/upload",method = RequestMethod.POST)
-    public ResponseEntity<String> uploadIcon(@RequestParam("icon")MultipartFile icon,@RequestParam("id") Long id)
+    public ResponseEntity<String> uploadIcon(MultipartFile icon)
     {
         if(!icon.isEmpty())
         {
@@ -88,7 +95,7 @@ public class ArticleInfoController {
                 {
                     throw new Exception("Cannot store file with relative path outside current directory or not a image file "+ filename);
                 }
-                filename = "discover_"+ id +"_icon" + filename.substring(filename.lastIndexOf("."));
+                filename = "discover_"+ FORMAT.format(new Date()) +"_icon" + filename.substring(filename.lastIndexOf("."));
                 Files.copy(icon.getInputStream(), Paths.get(Constants.ICON_DISCOVER_ROOT_DIR,filename), StandardCopyOption.REPLACE_EXISTING);
             }
             catch (Exception ex)

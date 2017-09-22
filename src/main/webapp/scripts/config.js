@@ -262,7 +262,6 @@ angular.module('app').config(function($stateProvider, $urlRouterProvider) {
         controller : 'CommonUserInfoEditCtrl',
         resolve : {
              commonUser : function($stateParams, CommonUserInfo) {
-                 console.log('config',$stateParams.id);
                  if ($stateParams.id === 'new') {
                       return {
                           children:{
@@ -306,13 +305,8 @@ angular.module('app').config(function($stateProvider, $urlRouterProvider) {
         controller : 'DiscoverEditController',
         resolve : {
              article : function($stateParams, Discover) {
-                 console.log('config',$stateParams.id);
                  if ($stateParams.id === 'new') {
-                      return {
-                          article:{
-
-                          }
-                      };
+                      return {};
                  }else {
                       return Discover.getById({
                           id : $stateParams.id

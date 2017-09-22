@@ -20,7 +20,8 @@ angular.module('app')
       },
       upload: {
         url: 'system/article/upload',
-        method: 'POST'
+        method: 'POST',
+        headers:{'Content-Type': undefined}
       },
       getById: {
         url: 'system/article/query',

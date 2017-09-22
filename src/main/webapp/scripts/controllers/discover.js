@@ -15,7 +15,7 @@ angular.module('app')
 
     $scope.query = {
       filter: '',
-      order: '-id',
+      order: '-articleId',
       page: 1,
       size: 10
     };
@@ -130,11 +130,11 @@ angular.module('app')
       $scope.refresh();
     });
 })
-.controller('DiscoverEditController',function($q,$state,$scope, $mdToast,$mdDialog,DictInfo,article,Discover) {
-	  $scope.article = article || {};
+.controller('DiscoverEditController',function($http,$q,$state,$scope, $mdToast,$mdDialog,DictInfo,article,Discover) {
+	  $scope.article = article;
 	  $scope.error = "";
-	  $scope.article.content = "shihuijiang";
-	  $scope.title = article.id === 'new' ? "添加新字典" : "修改字典";
+	  $scope.title = article.id === 'new' ? "添加文章" : "修改文章";
+	  $scope.image = 'http://119.23.220.163:8080/image/53006/53006_3.jpg';
 	  $scope.config =
 	  {
             //是否聚焦 focus默认为false
@@ -146,7 +146,7 @@ angular.module('app')
             //初始化编辑器高度,默认320
             initialFrameHeight:550,
             //编辑器初始化结束后,编辑区域是否是只读的，默认是false
-            readonly : false ,
+            readonly : article.ifPublish == 'Y' ? true : false ,
             //启用自动保存
             enableAutoSave: false,
             //自动保存间隔时间， 单位ms
@@ -160,45 +160,33 @@ angular.module('app')
             //额外功能添加
             functions :['map','insertimage','insertvideo','attachment','insertcode','webapp','template','background','wordimage']
       };
+
 	  $scope.hide = function() {
 	     $mdDialog.hide();
 	  };
 
+
       $scope.getFile = function () {
-          $scope.readAsDataURL($scope.articleIcon, $scope)
-            .then(function(result) {
-                $scope.imageSrc = result;
-            });
-      };
-
-      $scope.onLoad = function(reader, deferred, scope) {
-         return function () {
-             scope.$apply(function () {
-                 deferred.resolve(reader.result);
-             });
-         };
-      };
-
-      $scope.onError = function (reader, deferred, scope) {
-         return function () {
-             scope.$apply(function () {
-                 deferred.reject(reader.result);
-             });
-         };
-      };
-
-      $scope.getReader = function(deferred, scope) {
+          //文件读取对象
           var reader = new FileReader();
-          reader.onload = $scope.onLoad(reader, deferred, scope);
-          reader.onerror = $scope.onError(reader, deferred, scope);
-          return reader;
-      };
+          var defer = $q.defer();
+          reader.onload = function () {
+            $scope.$apply(function () {
+               defer.resolve(reader.result);
+            })
+          };
 
-      $scope.readAsDataURL = function (file, scope) {
-          var deferred = $q.defer();
-          var reader = $scope.getReader(deferred, scope);
-          reader.readAsDataURL(file);
-          return deferred.promise;
+          reader.onerror = function () {
+            $scope.$apply(function () {
+                defer.reject(reader.result);
+            });
+          };
+
+          reader.readAsDataURL($scope.articleIcon);
+
+          defer.promise.then(function(result) {
+            $scope.image = result;
+          });
       };
 
 	  $scope.cancel = function() {
@@ -206,7 +194,6 @@ angular.module('app')
 	  };
 
 	  $scope.save = function(ev){
-	      console.log($scope.article);
 		  $scope.error = "";
 		  event.preventDefault();
 	      angular.forEach($scope.form.$error.required, function(field) {
@@ -215,7 +202,11 @@ angular.module('app')
 
 	      if ($scope.form.$valid)
           {
-             Discover.save($scope.dict).$promise.then(
+             $scope.upload();
+             Discover.upload({
+                icon:$scope.image
+             });
+             Discover.save($scope.article).$promise.then(
                     function(result, responseHeaders) {
                         $scope.error = null;
                         $scope.success = 'OK';
@@ -240,6 +231,31 @@ angular.module('app')
              $mdDialog.hide();
           }
 	  };
+
+	  $scope.upload = function()
+	  {
+	    $http.post({
+          method:'POST',
+          url: '/system/article/upload',
+          headers: {
+            'Content-Type': undefined
+          },
+          data: {
+            icon:$scope.image
+          },
+          transformRequest: (data, headersGetter) => {
+            let formData = new FormData();
+            angular.forEach(data, function (value, key) {
+              formData.append(key, value);
+            });
+            return formData;
+           }
+        }).success(function() {
+          alert('Upload Successfully');
+        }).error(function() {
+          alert('Fail to upload, please upload again');
+        });
+	  }
 
 	  $scope.cancel = function()
 	  {

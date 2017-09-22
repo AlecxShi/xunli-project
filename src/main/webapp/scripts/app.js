@@ -24,7 +24,7 @@ angular
     'dialogs.main',
     'pascalprecht.translate',
     'dialogs.default-translations',
-    'ngCookies'
+    'ngCookies',
   ])
   .config(['$httpProvider',function($httpProvider)
   {

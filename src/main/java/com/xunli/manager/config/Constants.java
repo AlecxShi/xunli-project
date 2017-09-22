@@ -25,6 +25,7 @@ public final class Constants
 
 	public final static String HTTP_IMAGE_PATH = "/image/%s/%s";
 	public final static String HTTP_ICON_PATH = "/icon/%s";
+	public final static String HTTP_DISCOVER_ICON_PATH = "/discover/%s";
 
 	public final static String SPERATOR = ",";
 
