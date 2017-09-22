@@ -203,9 +203,6 @@ angular.module('app')
 	      if ($scope.form.$valid)
           {
              $scope.upload();
-             Discover.upload({
-                icon:$scope.image
-             });
              Discover.save($scope.article).$promise.then(
                     function(result, responseHeaders) {
                         $scope.error = null;
@@ -234,7 +231,7 @@ angular.module('app')
 
 	  $scope.upload = function()
 	  {
-	    $http.post({
+	    $http({
           method:'POST',
           url: '/system/article/upload',
           headers: {

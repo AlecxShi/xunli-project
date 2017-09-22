@@ -20,13 +20,16 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import javax.servlet.http.HttpServletRequest;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 import static com.xunli.manager.config.Constants.ROLE_ADMIN;
@@ -53,7 +56,7 @@ public class ArticleInfoController {
     @RequestMapping(value = "/article/save",method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
     @Secured(ROLE_ADMIN)
-    public ResponseEntity<ArticleInfo> addOrEdit(@ModelAttribute ArticleInfo articleInfo)
+    public ResponseEntity<ArticleInfo> addOrEdit(@RequestBody ArticleInfo articleInfo)
     {
         articleInfo.setLastModified(new Date());
         if(articleInfo.getArticleId() == null)
@@ -80,30 +83,36 @@ public class ArticleInfoController {
         return ResponseEntity.ok().build();
     }
 
-    @RequestMapping(value = "/article/upload",method = RequestMethod.POST)
-    public ResponseEntity<String> uploadIcon(MultipartFile icon)
+    @RequestMapping(value = "/article/upload",method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> uploadIcon(HttpServletRequest request)
     {
-        if(!icon.isEmpty())
+        MultipartHttpServletRequest mRequest = (MultipartHttpServletRequest) request;
+        Iterator<String> itr;
+        while((itr = mRequest.getFileNames()).hasNext())
         {
-            String filename = StringUtils.cleanPath(icon.getOriginalFilename());
-            try
+            MultipartFile icon = mRequest.getFile(itr.next());
+            if(!icon.isEmpty())
             {
-                if (filename.contains("..") ||
-                        (!filename.toLowerCase().endsWith("jpg") &&
-                                !filename.toLowerCase().endsWith("png") &&
-                                !filename.toLowerCase().endsWith("jpeg")))
+                String filename = StringUtils.cleanPath(icon.getOriginalFilename());
+                try
                 {
-                    throw new Exception("Cannot store file with relative path outside current directory or not a image file "+ filename);
+                    if (filename.contains("..") ||
+                            (!filename.toLowerCase().endsWith("jpg") &&
+                                    !filename.toLowerCase().endsWith("png") &&
+                                    !filename.toLowerCase().endsWith("jpeg")))
+                    {
+                        throw new Exception("Cannot store file with relative path outside current directory or not a image file "+ filename);
+                    }
+                    filename = "discover_"+ FORMAT.format(new Date()) +"_icon" + filename.substring(filename.lastIndexOf("."));
+                    Files.copy(icon.getInputStream(), Paths.get(Constants.ICON_DISCOVER_ROOT_DIR,filename), StandardCopyOption.REPLACE_EXISTING);
                 }
-                filename = "discover_"+ FORMAT.format(new Date()) +"_icon" + filename.substring(filename.lastIndexOf("."));
-                Files.copy(icon.getInputStream(), Paths.get(Constants.ICON_DISCOVER_ROOT_DIR,filename), StandardCopyOption.REPLACE_EXISTING);
+                catch (Exception ex)
+                {
+                    ex.printStackTrace();
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+                }
+                return ResponseEntity.ok(filename);
             }
-            catch (Exception ex)
-            {
-                ex.printStackTrace();
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-            }
-            return ResponseEntity.ok(filename);
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
     }

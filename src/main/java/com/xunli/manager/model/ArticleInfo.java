@@ -19,7 +19,7 @@ public class ArticleInfo implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     @ColumnComment("id")
-    private Long id;
+    private Long articleId;
 
     @Column(name = "title")
     @ColumnComment("文章标题")
@@ -27,23 +27,27 @@ public class ArticleInfo implements Serializable{
 
     @Column(name = "icon_path")
     @ColumnComment("图标路径")
-    private String iconPath;
+    private String image;
 
-    @Column(name = "content")
+    @Column(name = "brief")
     @ColumnComment("正文内容")
     private String content;
 
+    @Column(name = "content")
+    @ColumnComment("正文内容")
+    private String contentUrl;
+
     @Column(name = "if_publish")
     @ColumnComment("是否发布")
-    private String ifPublish;
+    private String ifPublish = "N";
 
     @Column(name = "read_count")
     @ColumnComment("阅读数")
-    private Integer readCount;
+    private Integer readCount = 0;
 
     @Column(name = "share_count")
     @ColumnComment("分享数")
-    private Integer shareCount;
+    private Integer shareCount = 0;
 
     @Column(name = "create_user")
     @ColumnComment("创建人")
@@ -51,14 +55,25 @@ public class ArticleInfo implements Serializable{
 
     @Column(name = "last_modified")
     @ColumnComment("最后修改日期")
-    private Date lastModified;
+    private Date lastModified = new Date();
 
-    public Long getId() {
-        return id;
+    @Transient
+    private String iconName;
+
+    public Long getArticleId() {
+        return articleId;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setArticleId(Long articleId) {
+        this.articleId = articleId;
+    }
+
+    public String getContentUrl() {
+        return contentUrl;
+    }
+
+    public void setContentUrl(String contentUrl) {
+        this.contentUrl = contentUrl;
     }
 
     public String getTitle() {
@@ -69,12 +84,12 @@ public class ArticleInfo implements Serializable{
         this.title = title;
     }
 
-    public String getIconPath() {
-        return iconPath;
+    public String getImage() {
+        return image;
     }
 
-    public void setIconPath(String iconPath) {
-        this.iconPath = iconPath;
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public String getContent() {
@@ -123,5 +138,13 @@ public class ArticleInfo implements Serializable{
 
     public void setLastModified(Date lastModified) {
         this.lastModified = lastModified;
+    }
+
+    public String getIconName() {
+        return iconName;
+    }
+
+    public void setIconName(String iconName) {
+        this.iconName = iconName;
     }
 }

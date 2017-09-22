@@ -4,7 +4,7 @@
  <md-card class="md-whiteframe-z1">
     <md-card-title>
       <md-card-title-text>
-        <span class="md-title">文章编辑</span>
+        <span class="md-title">{{title}}</span>
       </md-card-title-text>
     </md-card-title> 
     
@@ -12,7 +12,7 @@
 
 		<md-input-container class="md-block">
 			<label>文章标题</label>
-			<textarea ng-disabled="ifPublicExpression" name="title"  placeholder="文章标题" ng-model="article.title" required md-select-on-focus></textarea>
+			<textarea ng-disabled="ifPublicExpression" name="title"  placeholder="文章标题" ng-model="article.title" required md-select-on-focus ng-disabled="article.ifPublish == 'Y'"></textarea>
 			<div class="hint" ng-if="form.title.$untouched">必输项，文章标题</div>
 			<div ng-messages="form.title.$error">
 				<div ng-message="required">文章标题</div>
@@ -20,33 +20,33 @@
 		</md-input-container>
 
 		<md-input-container class="md-block">
-			<label>文章图片</label>
-			<textarea ng-disabled="ifPublicExpression" name="icon"  placeholder="文章简要" ng-model="article.brief" required  md-select-on-focus></textarea>
-			<div class="hint" ng-if="form.brief.$untouched">必输项，升级简要</div>
-			<div ng-messages="form.brief.$error">
-				<div ng-message="required">升级内容</div>
+			<label>文章简略</label>
+			<textarea ng-disabled="ifPublicExpression" name="content"  placeholder="文章简要" ng-model="article.content" required  md-select-on-focus ng-disabled="article.ifPublish == 'Y'"></textarea>
+			<div class="hint" ng-if="form.content.$untouched">必输项，文章简要</div>
+			<div ng-messages="form.content.$error">
+				<div ng-message="required">文章简要</div>
 			</div>
 		</md-input-container>
 
 		<md-input-container class="md-block">
 			<label>文章缩略图</label>
 			<div>
-				<input type="file" file-model="articleIcon"/>
+				<input type="file" file-model="articleIcon" md-select-on-focus/>
 				<div class="col-md-12">
-					<img ng-src="{{imageSrc}}" style="max-width:300px;max-height:300px;margin:0 auto;display:block;" />
+					<img ng-src="{{image}}" style="max-width:300px;max-height:300px;margin:0 auto;display:block;float:left" />
 				</div>
 			</div>
 		</md-input-container>
 
-		<md-content  layout="column" style="overflow: hidden" ng-disabled="ifPublicExpression">
+		<md-content  layout="column" style="overflow: hidden" ng-disabled="article.ifPublish == 'Y'">
 			<label>详细内容</label>
-			<div class="ueditor" ng-model="article.content" config="config" style="margin-top:10px" ></div>
+			<div class="ueditor" ng-model="article.contentUrl" config="config" style="margin-top:10px"></div>
 		</md-content>
   </md-card-content>
 
     <md-card-actions layout="row" layout-padding layout-align="center center"> <span flex></span>
-		<md-button ng-disabled="ifPublicExpression" type="submit" class="md-raised md-primary" ng-click="save($event)"> 保存 </md-button>
-		<md-button ng-disabled="ifPublicExpression" type="submit" class="md-raised md-primary" ng-click="publish($event)"> 发布 </md-button>
+		<md-button ng-disabled="article.ifPublish == 'Y'" type="submit" class="md-raised md-primary" ng-click="save($event)"> 保存 </md-button>
+		<md-button ng-disabled="article.ifPublish == 'Y'" type="submit" class="md-raised md-primary" ng-click="publish($event)"> 发布 </md-button>
 		<md-button ng-click="cancel($event)" class="md-raised md-primary" ng-click="cancel()"> 取消</md-button>
 	</md-card-actions> 
   </md-card>
