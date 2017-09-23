@@ -24,8 +24,12 @@ angular.module('app')
         headers:{'Content-Type': undefined}
       },
       getById: {
-        url: 'system/article/query',
+        url: 'system/article/get',
         method: 'GET'
+      },
+      publish: {
+        url: 'system/article/publish',
+        method: 'POST'
       }
     });
   });

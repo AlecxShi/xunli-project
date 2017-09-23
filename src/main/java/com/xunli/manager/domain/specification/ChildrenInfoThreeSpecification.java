@@ -36,7 +36,7 @@ public class ChildrenInfoThreeSpecification extends AbstractSpecification<Childr
 
         if(isNotBlank(criteria.getCurrentLocation()))
         {
-            expressions.add(cb.equal(root.get(ChildrenInfo_.currentLocation),criteria.getCurrentLocation()));
+            expressions.add(cb.equal(root.get(ChildrenInfo_.currentLocation),criteria.getCurrentLocation().substring(0,criteria.getCurrentLocation().lastIndexOf("-"))));
         }
 
         criteriaQuery.orderBy(cb.desc(root.get(ChildrenInfo_.score)));

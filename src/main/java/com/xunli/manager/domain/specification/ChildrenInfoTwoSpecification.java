@@ -38,7 +38,7 @@ public class ChildrenInfoTwoSpecification extends AbstractSpecification<Children
 
         if(isNotBlank(criteria.getCurrentLocation()))
         {
-            expressions.add(cb.equal(root.get(ChildrenInfoTwo_.currentLocation),criteria.getCurrentLocation()));
+            expressions.add(cb.equal(root.get(ChildrenInfoTwo_.currentLocation),criteria.getCurrentLocation().substring(0,criteria.getCurrentLocation().lastIndexOf("-"))));
         }
 
         if(criteria.getEducation() != null && !criteria.getEducation().isEmpty())

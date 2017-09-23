@@ -70,13 +70,14 @@ angular.module('app')
         $state.go('^.edit',{id: 'new'});
     };
 
-    $scope.delete = function(ev) {
+    $scope.delete = function(item) {
     	  var ids = [];
-	      $scope.selected.forEach(function(item, index) {
-	    	  ids.push(item.id);
-	      });
-	      Discover.remove({
-	    	  id: ids.join(',')
+    	  if(item != undefined)
+    	  {
+    	    ids.push(item.articleId);
+    	  }
+	      Discover.delete({
+	    	  ids : ids.join(',')
 	      }).$promise.then(function(value, responseHeaders){
 	    	  $scope.selected = [];
 	          $mdToast.show(
@@ -89,29 +90,32 @@ angular.module('app')
           }).then(function() {
               $scope.refresh();
 	      });
-
-
     };
 
-    $scope.edit = function(item) {
-    	$mdDialog.show({
-    	      controller: DictInfoAddOrEditController,
-    	      templateUrl: 'dictinfo_add.html',
-    	      parent: angular.element(document.body),
-    	      clickOutsideToClose:true,
-    	      resolve : {
-    	    	  dict : function($stateParams) {
-    					    return angular.copy(item);
-    				     },
-       	          isNew: function() {
-         					  return false;
-         				 }
-    		  }
-    	    }).then(function() {
-    	    	$scope.promise = $scope.refresh();
-    	    }, function() {
+    $scope.publish = function()
+    {
+        var ids = [];
+        $scope.selected.forEach(function(item, index) {
+           ids.push(item.articleId);
+        });
+        Discover.publish({
+           ids : ids.join(',')
+        }).$promise.then(function(value, responseHeaders){
+           $scope.selected = [];
+           $mdToast.show(
+             $mdToast.simple().content("发布成功").hideDelay(3000).theme('success')
+          );
+        }).catch(function(httpResponse) {
+           $mdToast.show(
+             $mdToast.simple().content('发布失败。').hideDelay(3000).theme('error')
+           );
+        }).then(function() {
+           $scope.refresh();
+        });
+    }
 
-    	    });
+    $scope.edit = function(item) {
+        $state.go('^.edit',{id: item.articleId});
     };
 
 
@@ -131,10 +135,11 @@ angular.module('app')
     });
 })
 .controller('DiscoverEditController',function($http,$q,$state,$scope, $mdToast,$mdDialog,DictInfo,article,Discover) {
+	  $scope.server = "http://119.23.220.163:8080";
 	  $scope.article = article;
 	  $scope.error = "";
-	  $scope.title = article.id === 'new' ? "添加文章" : "修改文章";
-	  $scope.image = 'http://119.23.220.163:8080/image/53006/53006_3.jpg';
+	  $scope.title = article.articleId === 'new' ? "添加文章" : "修改文章";
+	  $scope.image = article.image ? $scope.server + article.image : article.image;
 	  $scope.config =
 	  {
             //是否聚焦 focus默认为false
@@ -202,57 +207,60 @@ angular.module('app')
 
 	      if ($scope.form.$valid)
           {
-             $scope.upload();
-             Discover.save($scope.article).$promise.then(
-                    function(result, responseHeaders) {
-                        $scope.error = null;
-                        $scope.success = 'OK';
-                        $mdToast.show(
-                          $mdToast.simple()
-                          .content('保存成功。')
-                          .hideDelay(3000)
-                          .theme('success')
-                        );
-                        $mdDialog.hide();
-                      }
-                    ).catch(function(httpResponse) {
-                      $scope.error = 'ERROR';
-                      $scope.success = null;
-                      $mdToast.show(
-                        $mdToast.simple()
-                        .content('保存失败。')
-                        .hideDelay(3000)
-                        .theme('error')
-                      );
-                    });
-             $mdDialog.hide();
+             $http({
+               method:'POST',
+               url: '/system/article/upload',
+               headers: {
+                 'Content-Type': undefined
+               },
+               data: {
+                 icon:$scope.articleIcon
+               },
+               transformRequest: function(data, headersGetter){
+                 var formData = new FormData();
+                 angular.forEach(data, function (value, key) {
+                   formData.append(key, value);
+                 });
+                 return formData;
+                }
+             }).success(function(value) {
+               console.log(value);
+               $mdToast.show(
+                 $mdToast.simple().content("图标上传成功").hideDelay(3000).theme('success')
+               );
+               if(value.fileName != null)
+               {
+                   article.iconName = value.fileName;
+                   Discover.save($scope.article).$promise.then(
+                       function(result, responseHeaders) {
+                           $scope.error = null;
+                           $scope.success = 'OK';
+                           $mdToast.show(
+                             $mdToast.simple()
+                             .content('保存成功。')
+                             .hideDelay(3000)
+                             .theme('success')
+                           );
+                           $mdDialog.hide();
+                         }
+                       ).catch(function(httpResponse) {
+                         $scope.error = 'ERROR';
+                         $scope.success = null;
+                         $mdToast.show(
+                           $mdToast.simple()
+                           .content('保存失败。')
+                           .hideDelay(3000)
+                           .theme('error')
+                         );
+                   });
+               }
+             }).error(function() {
+               $mdToast.show(
+                   $mdToast.simple().content("图标上传失败").hideDelay(3000).theme('error')
+               );
+             });
           }
 	  };
-
-	  $scope.upload = function()
-	  {
-	    $http({
-          method:'POST',
-          url: '/system/article/upload',
-          headers: {
-            'Content-Type': undefined
-          },
-          data: {
-            icon:$scope.image
-          },
-          transformRequest: (data, headersGetter) => {
-            let formData = new FormData();
-            angular.forEach(data, function (value, key) {
-              formData.append(key, value);
-            });
-            return formData;
-           }
-        }).success(function() {
-          alert('Upload Successfully');
-        }).error(function() {
-          alert('Fail to upload, please upload again');
-        });
-	  }
 
 	  $scope.cancel = function()
 	  {

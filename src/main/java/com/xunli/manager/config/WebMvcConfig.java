@@ -27,12 +27,13 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry)
 	{
+		String system = "";
 		registry.addResourceHandler("/image/**/*")
-				.addResourceLocations("file:/alidata/image/photos/");
+				.addResourceLocations(String.format("file:%s/alidata/image/photos/",system));
 		registry.addResourceHandler("/icon/**")
-				.addResourceLocations("file:/alidata/image/icons/private/")
-				.addResourceLocations("file:/alidata/image/icons/public/");
+				.addResourceLocations(String.format("file:%s/alidata/image/icons/private/",system))
+				.addResourceLocations(String.format("file:%s/alidata/image/icons/public/",system));
 		registry.addResourceHandler("/discover/**")
-				.addResourceLocations("file:/alidata/image/icons/discover/");
+				.addResourceLocations(String.format("file:%s/alidata/image/icons/discover/",system));
 	}
 }

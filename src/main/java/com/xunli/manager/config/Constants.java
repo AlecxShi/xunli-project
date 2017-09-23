@@ -27,6 +27,8 @@ public final class Constants
 	public final static String HTTP_ICON_PATH = "/icon/%s";
 	public final static String HTTP_DISCOVER_ICON_PATH = "/discover/%s";
 
+	public final static String WINDOWS_ROOT_IMAGE_PATH = "E:";
+
 	public final static String SPERATOR = ",";
 
 	public final static DateTimeFormatter DATE_PATH_FORMATTER = DateTimeFormatter.ofPattern("yyyy/MM/dd");

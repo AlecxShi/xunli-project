@@ -15,20 +15,20 @@
     </div>
   </md-toolbar> 
   
-  <md-toolbar class="md-table-toolbar md-default">
+<!--  <md-toolbar class="md-table-toolbar md-default">
     <div class="md-toolbar-tools">
       <md-icon>search</md-icon>
       <form flex name="filter.form">
         <input type="text" ng-model="query.filter" ng-model-options="filter.options" placeholder="搜索">
       </form>
     </div>
-  </md-toolbar>
+  </md-toolbar>-->
   
    <md-toolbar class="md-table-toolbar alternate" ng-show="selected.length"  >
     <div class="md-toolbar-tools">
       <div>选中 {{selected.length}} 行</div>
       <div flex></div>
-      <md-button has-authority="ROLE_ADMIN" class="md-icon-button" ng-click="redisAPISysUpgradeInfo(item)" confirm = "确认发布该条信息？">
+      <md-button has-authority="ROLE_ADMIN" class="md-icon-button" ng-click="publish(item)" confirm = "确认发布该文章？">
         <md-tooltip>信息发布</md-tooltip>
         <md-icon>input</md-icon>
       </md-button>
@@ -41,20 +41,28 @@
           <th md-column>文章编号</th>
           <th md-column>标题</th>
           <th md-column>是否已发布</th>
+          <th md-column>阅读数</th>
+          <th md-column>分享数</th>
+          <th md-column>创建人</th>
+          <th md-column>最后修改时间</th>
           <th md-column>操作</th>
         </tr>
       </thead>
       <tbody md-body>
-        <tr md-row md-select="item" md-select-id="{{item.id}}" ng-repeat="item in data.content">
-          <td md-cell>{{item.id}}</td>
-          <td md-cell style="width:130px">{{item.upgradeDate}}</td>
+        <tr md-row md-select="item" md-select-id="{{item.articleId}}" ng-repeat="item in data.content">
+          <td md-cell>{{item.articleId}}</td>
+          <td md-cell style="width:130px">{{item.title}}</td>
           <td md-cell>{{item.ifPublish}}</td>
+          <td md-cell>{{item.readCount}}</td>
+          <td md-cell>{{item.shareCount}}</td>
+          <td md-cell>{{item.createUser}}</td>
+          <td md-cell>{{item.lastModified | date:'yyyy-MM-dd HH:mm:ss'}}</td>
           <td md-cell nowrap>
 	          	<md-button class="md-icon-button" ng-click="edit(item)" aria-label="修改">
 		           	<md-icon>edit</md-icon>
 	      	  		<md-tooltip>修改</md-tooltip>
 	           </md-button>
-	           <md-button class="md-icon-button" ng-click="delete(item)" confirm = "确认删除该条系统升级信息吗？" aria-label="删除">
+	           <md-button class="md-icon-button" ng-click="delete(item)" confirm = "确认删除该文章吗？" aria-label="删除">
 		           	<md-icon>delete</md-icon>
 	      	  		<md-tooltip>删除</md-tooltip>
 	           </md-button>
