@@ -1,7 +1,7 @@
 spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/XunLiManager?characterEncoding=utf8&autoReconnect=true&rewriteBatchedStatements=true
+    url: jdbc:mysql://localhost:3316/XunLiManager?characterEncoding=utf8&autoReconnect=true&rewriteBatchedStatements=true
     username: root
     password: xunli@123456
     max-active: 10
@@ -40,3 +40,9 @@ logging:
 context:
   listener:
     classes: com.xunli.manager.listener.ApplicationStartupListener
+api:
+  manager:
+    im:
+      url: https://eco.taobao.com/router/rest
+      appKey: 24634078
+      appSecret: f0a06afbc8f284d8c28abd5429114c4d

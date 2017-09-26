@@ -1,21 +1,15 @@
 package com.xunli.manager.service;
 
-import com.xunli.manager.domain.criteria.ChildrenInfoCriteria;
-import com.xunli.manager.domain.specification.ChildrenInfoTwoSpecification;
+import com.xunli.manager.codec.EncrypAES;
 import com.xunli.manager.enumeration.ReturnCode;
 import com.xunli.manager.model.*;
 import com.xunli.manager.repository.*;
-import com.xunli.manager.util.DictInfoUtil;
 import com.xunli.manager.util.RandomUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.convert.converter.Converter;
-import org.springframework.data.domain.*;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
-import java.lang.reflect.Constructor;
 import java.util.*;
 
 /**
@@ -38,6 +32,9 @@ public class CommonUserService {
 
     @Autowired
     private CommonUserLoginsRepository commonUserLoginsRepository;
+
+    @Autowired
+    private TaobaoIMService taobaoIMService;
 
     @Transactional
     public RequestResult login(CommonUser user, HttpServletRequest request)
@@ -84,6 +81,22 @@ public class CommonUserService {
         Map<String,Object> result = new HashMap();
         result.put("token",login.getToken());
         result.put("ifFirstLogin",ifFirstLogin);
+        if(taobaoIMService.registerUser2TaobaoIM(user))
+        {
+            try
+            {
+                EncrypAES encrypAES = new EncrypAES();
+                result.put("userId",encrypAES.Encrytor(String.valueOf(user.getId())));
+                result.put("password",user.getPassword());
+            }
+            catch (Exception ex)
+            {
+                ex.printStackTrace();
+                return new RequestResult(ReturnCode.PUBLIC_ENCRYP_FAIL);
+            }
+        }
         return new RequestResult(ReturnCode.PUBLIC_SUCCESS,result);
     }
+
+
 }

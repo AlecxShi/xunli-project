@@ -5,6 +5,7 @@ import com.xunli.manager.domain.specification.CommonUserSpecification;
 import com.xunli.manager.model.*;
 import com.xunli.manager.repository.*;
 import com.xunli.manager.service.GenerateService;
+import com.xunli.manager.util.CommonUtil;
 import com.xunli.manager.util.HeaderUtil;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -56,7 +57,10 @@ public class SystemUserController {
     @RequestMapping(value = "/user",method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
     public Page<CommonUser> query(@ModelAttribute CommonUserCriteria criteria, @PageableDefault Pageable page)
     {
-        return commonUserRepository.findAll(new CommonUserSpecification(criteria),page);
+        Long t1 = System.currentTimeMillis();
+        Page<CommonUser> result = commonUserRepository.findAll(new CommonUserSpecification(criteria),page);
+        System.out.println("Page Query CommonUser Cost Time is:[ " + (System.currentTimeMillis() - t1) + " ]millSeconds");
+        return result;
     }
 
     @RequestMapping(value = "/user/{id}",method = RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
@@ -77,6 +81,7 @@ public class SystemUserController {
         {
             return update(user);
         }
+        CommonUtil.encrypPassword(user);
         CommonUser sa = commonUserRepository.save(user);
         if(sa.getChildren() != null)
         {

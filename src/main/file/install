@@ -1,1 +1,1 @@
-mvn install:install-file -DgroupId=com.aliyun -DartifactId=api -Dversion=1.0.0 -Dpackaging=jar -Dfile=C:\Users\shihj\Desktop\taobao-sdk-java-auto_1502463858297-20170904.jar
+mvn install:install-file -DgroupId=com.aliyun -DartifactId=api -Dversion=1.0.0 -Dpackaging=jar -Dfile=C:\Users\shihj\Desktop\taobao-sdk-java-auto_1502463858297-20170926.jar

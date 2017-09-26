@@ -135,6 +135,12 @@
         </dependency>
         <!-- Apache Commons -->
         <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <!-- Remember to update the version in default.properties as well -->
+            <version>1.10</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>${commons-lang3.version}</version>

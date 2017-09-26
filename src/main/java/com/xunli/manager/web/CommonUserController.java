@@ -1,5 +1,6 @@
 package com.xunli.manager.web;
 
+import com.xunli.manager.codec.EncrypAES;
 import com.xunli.manager.domain.criteria.CommonUserModel;
 import com.xunli.manager.enumeration.ReturnCode;
 import com.xunli.manager.model.*;
@@ -7,8 +8,10 @@ import com.xunli.manager.model.app.CommonUserWithChildrenDetail;
 import com.xunli.manager.repository.*;
 import com.xunli.manager.service.CommonUserService;
 import com.xunli.manager.service.GenerateService;
+import com.xunli.manager.util.CommonUtil;
 import com.xunli.manager.util.DictInfoUtil;
 import com.xunli.manager.util.ImageUtil;
+import com.xunli.manager.util.RandomUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.annotation.Secured;
@@ -85,6 +88,7 @@ public class CommonUserController {
         user.setPhone(phone);
         user.setUsertype(DictInfoUtil.getByDictTypeAndDictValue("USER_TYPE","COMMON").getId());
         user.setUsername("");
+        CommonUtil.encrypPassword(user);
         return commonUserRepository.save(user);
     }
 
