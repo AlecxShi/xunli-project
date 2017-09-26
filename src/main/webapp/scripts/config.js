@@ -241,9 +241,9 @@ angular.module('app').config(function($stateProvider, $urlRouterProvider) {
         url: '/commonuser',
         abstract: true,
         data: {
-          authorities: ['ROLE_ADMIN'],
-          title: '权限',
-        }
+          authorities: ['ROLE_ADMIN']
+        },
+        templateUrl: 'views/authority.html'
     }).state('commonuser.list', {
         url : '',
         data : {
@@ -286,6 +286,9 @@ angular.module('app').config(function($stateProvider, $urlRouterProvider) {
     }).state('discover', {
         url : '/discover',
         abstract : true,
+        data: {
+            authorities: ['ROLE_ADMIN']
+        },
         templateUrl: 'views/authority.html'
     }).state('discover.list', {
           url : '',
