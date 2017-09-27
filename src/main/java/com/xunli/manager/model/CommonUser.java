@@ -22,8 +22,6 @@ public class CommonUser implements Serializable{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /*@OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="usertype", referencedColumnName="id")*/
     @Column(name="usertype")
     private Long usertype;
 
@@ -38,6 +36,9 @@ public class CommonUser implements Serializable{
 
     @Column(name = "phone")
     private String phone;
+
+    @Column(name = "if_register")
+    private String ifRegister;
 
     @Column(name = "excit")
     private Integer excit;
@@ -148,5 +149,13 @@ public class CommonUser implements Serializable{
 
     public void setChildrenInfoTwo(ChildrenInfoTwo childrenInfoTwo) {
         this.childrenInfoTwo = childrenInfoTwo;
+    }
+
+    public String getIfRegister() {
+        return ifRegister;
+    }
+
+    public void setIfRegister(String ifRegister) {
+        this.ifRegister = ifRegister;
     }
 }

@@ -1,8 +1,10 @@
 package com.xunli.manager.service;
 
+import com.xunli.manager.codec.EncrypAES;
 import com.xunli.manager.model.*;
 import com.xunli.manager.util.ConstantValueUtil;
 import com.xunli.manager.util.DictInfoUtil;
+import com.xunli.manager.util.RandomUtil;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.stereotype.Service;
 
@@ -54,6 +56,15 @@ public class GenerateService {
                     {
                         CommonUser user = new CommonUser();
                         user.setUsertype(userType.getId());
+                        try
+                        {
+                            EncrypAES encrypAES = new EncrypAES();
+                            user.setPassword(encrypAES.Encrytor(RandomUtil.generatePassword()));
+                        }
+                        catch(Exception ex)
+                        {
+                            ex.printStackTrace();
+                        }
                         user.setLocation(province.getDictDesc() + "-" + city.getDictDesc() + "-" +state.getDictDesc());
                         list.add(user);
                     }

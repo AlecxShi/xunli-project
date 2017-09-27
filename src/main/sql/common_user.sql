@@ -5,6 +5,7 @@ CREATE TABLE common_user_info(
     password VARCHAR(32),                                    --登录密码
     location    VARCHAR(255),                                --当前所在地,获取地理信息而得
     username    VARCHAR(255),                                --用户名称
+    if_register CHAR(1) DEFAULT 'N',                         --是否已注册到淘宝IM
     excit   INT DEFAULT 0,                                   --激励标记
     create_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,         --创建日期
     last_modified    TIMESTAMP DEFAULT CURRENT_TIMESTAMP     --最后修改时间

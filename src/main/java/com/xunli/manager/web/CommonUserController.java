@@ -3,6 +3,7 @@ package com.xunli.manager.web;
 import com.xunli.manager.codec.EncrypAES;
 import com.xunli.manager.domain.criteria.CommonUserModel;
 import com.xunli.manager.enumeration.ReturnCode;
+import com.xunli.manager.job.Register2TaobaoIMJob;
 import com.xunli.manager.model.*;
 import com.xunli.manager.model.app.CommonUserWithChildrenDetail;
 import com.xunli.manager.repository.*;
@@ -58,6 +59,9 @@ public class CommonUserController {
     @Autowired
     private RecommendInfoTwoRepository recommendInfoTwoRepository;
 
+    @Autowired
+    private Register2TaobaoIMJob register2TaobaoIMJob;
+
     /**
      * 验证手机号是否已被注册
      * @param validation
@@ -81,7 +85,6 @@ public class CommonUserController {
         }).orElseGet(() -> commonUserService.login(createUserByPhone(phone),request));
     }
 
-    @Transactional
     private CommonUser createUserByPhone(String phone)
     {
         CommonUser user = new CommonUser();
@@ -89,7 +92,10 @@ public class CommonUserController {
         user.setUsertype(DictInfoUtil.getByDictTypeAndDictValue("USER_TYPE","COMMON").getId());
         user.setUsername("");
         CommonUtil.encrypPassword(user);
-        return commonUserRepository.save(user);
+        commonUserRepository.saveAndFlush(user);
+        System.out.println(user.getId());
+        register2TaobaoIMJob.push(user);
+        return user;
     }
 
     @RequestMapping(value = "/commonuser/getDetail",method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_VALUE)
@@ -154,11 +160,20 @@ public class CommonUserController {
             {
                 u.setLocation(model.getLocation());
             }
-
-            if(model.getPassword() != null && !model.getPassword().equals(u.getPassword()))
+            //密码加密
+            try
             {
-                u.setPassword(model.getPassword());
+                EncrypAES encrypAES = new EncrypAES();
+                if(model.getPassword() != null && !encrypAES.Encrytor(model.getPassword()).equals(u.getPassword()))
+                {
+                    u.setPassword(encrypAES.Encrytor(model.getPassword()));
+                }
             }
+            catch (Exception ex)
+            {
+                ex.printStackTrace();
+            }
+
             u.setLastmodified(new Date());
             commonUserRepository.save(u);
             return new RequestResult(ReturnCode.PUBLIC_SUCCESS);

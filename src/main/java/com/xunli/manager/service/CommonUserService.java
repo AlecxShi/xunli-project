@@ -4,6 +4,7 @@ import com.xunli.manager.codec.EncrypAES;
 import com.xunli.manager.enumeration.ReturnCode;
 import com.xunli.manager.model.*;
 import com.xunli.manager.repository.*;
+import com.xunli.manager.util.MD5Util;
 import com.xunli.manager.util.RandomUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -81,20 +82,8 @@ public class CommonUserService {
         Map<String,Object> result = new HashMap();
         result.put("token",login.getToken());
         result.put("ifFirstLogin",ifFirstLogin);
-        if(taobaoIMService.registerUser2TaobaoIM(user))
-        {
-            try
-            {
-                EncrypAES encrypAES = new EncrypAES();
-                result.put("userId",encrypAES.Encrytor(String.valueOf(user.getId())));
-                result.put("password",user.getPassword());
-            }
-            catch (Exception ex)
-            {
-                ex.printStackTrace();
-                return new RequestResult(ReturnCode.PUBLIC_ENCRYP_FAIL);
-            }
-        }
+        result.put("userId", MD5Util.Encode(String.valueOf(user.getId())));
+        result.put("password",user.getPassword());
         return new RequestResult(ReturnCode.PUBLIC_SUCCESS,result);
     }
 

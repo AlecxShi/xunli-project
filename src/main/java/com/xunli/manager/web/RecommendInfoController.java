@@ -9,6 +9,7 @@ import com.xunli.manager.enumeration.ReturnCode;
 import com.xunli.manager.model.*;
 import com.xunli.manager.repository.*;
 import com.xunli.manager.util.DictInfoUtil;
+import com.xunli.manager.util.MD5Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -77,7 +78,7 @@ public class RecommendInfoController {
         for(RecommendInfo info : result.getContent())
         {
             Map<String,Object> data = new HashMap();
-            data.put("userId",info.getTargetChildrenId().getParentId());
+            data.put("userId", MD5Util.Encode(info.getTargetChildrenId().getParentId()));
             data.put("name",info.getTargetChildrenId().getName());
             data.put("bornLocation",info.getTargetChildrenId().getBornLocation());
             data.put("currentLocation",info.getTargetChildrenId().getCurrentLocation());
@@ -121,7 +122,7 @@ public class RecommendInfoController {
         for(ChildrenInfo info : result.getContent())
         {
             Map<String,Object> data = new HashMap();
-            data.put("userId",info.getParentId());
+            data.put("userId",MD5Util.Encode(info.getParentId()));
             data.put("name",info.getName());
             data.put("bornLocation",info.getBornLocation());
             data.put("currentLocation",info.getCurrentLocation());
