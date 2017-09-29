@@ -64,66 +64,69 @@ public class TaobaoIMService {
     public Boolean registerUser2TaobaoIM(CommonUser user)
     {
         Boolean flag = false;
-        try
+        if(user != null)
         {
-            TaobaoClient client = getClient();
-            OpenimUsersAddRequest req = new OpenimUsersAddRequest();
-            Userinfos info = new Userinfos();
-            //用户编号加密
-            info.setUserid(MD5Util.Encode(String.valueOf(user.getId())));
-            //用户密码默认已被加密
-            info.setPassword(user.getPassword());
-            req.setUserinfos(Arrays.asList(info));
-            OpenimUsersAddResponse rsp = client.execute(req);
-            if(rsp != null)
+            try
             {
-                System.out.println(rsp.getBody());
-                JSONObject jsonObject = new JSONObject(rsp.getBody());
-                JSONObject successResult;
-                if(jsonObject != null && jsonObject.has("openim_users_add_response") && (successResult = jsonObject.getJSONObject("openim_users_add_response")) != null)
+                TaobaoClient client = getClient();
+                OpenimUsersAddRequest req = new OpenimUsersAddRequest();
+                Userinfos info = new Userinfos();
+                //用户编号加密
+                info.setUserid(MD5Util.Encode(String.valueOf(user.getId())));
+                //用户密码默认已被加密
+                info.setPassword(user.getPassword());
+                req.setUserinfos(Arrays.asList(info));
+                OpenimUsersAddResponse rsp = client.execute(req);
+                if(rsp != null)
                 {
-                    JSONObject success;
-                    JSONObject fail;
-                    JSONObject failMsg;
-                    //解析成功注册的
-                    if ((success = successResult.getJSONObject("uid_succ")) != null && success.has("string"))
+                    System.out.println(rsp.getBody());
+                    JSONObject jsonObject = new JSONObject(rsp.getBody());
+                    JSONObject successResult;
+                    if(jsonObject != null && jsonObject.has("openim_users_add_response") && (successResult = jsonObject.getJSONObject("openim_users_add_response")) != null)
                     {
-                        JSONArray arr = success.getJSONArray("string");
-                        for (int i = 0; i < arr.length(); i++) {
-                            logger.info(String.format("[%s][%s][%s][%s]", "TaobaoIMService", "batchRegisterUser2TaobaoIM", arr.get(i), i));
-                            if ("N".equals(user.getIfRegister()) && String.valueOf(arr.get(i)).equals(MD5Util.Encode(user.getId()))) {
-                                user.setIfRegister("Y");
-                                commonUserRepository.save(user);
+                        JSONObject success;
+                        JSONObject fail;
+                        JSONObject failMsg;
+                        //解析成功注册的
+                        if ((success = successResult.getJSONObject("uid_succ")) != null && success.has("string"))
+                        {
+                            JSONArray arr = success.getJSONArray("string");
+                            for (int i = 0; i < arr.length(); i++) {
+                                logger.info(String.format("[%s][%s][%s][%s]", "TaobaoIMService", "batchRegisterUser2TaobaoIM", arr.get(i), i));
+                                if ("N".equals(user.getIfRegister()) && String.valueOf(arr.get(i)).equals(MD5Util.Encode(user.getId()))) {
+                                    user.setIfRegister("Y");
+                                    commonUserRepository.save(user);
+                                }
                             }
                         }
-                    }
-                    //解析注册失败的
-                    if (successResult.has("uid_fail") && (fail = successResult.getJSONObject("uid_fail")) != null
-                            && successResult.has("fail_msg") && (failMsg = successResult.getJSONObject("fail_msg")) != null)
-                    {
-                        JSONArray fail_arr;
-                        JSONArray failMsg_arr;
-                        if (fail.has("string") && (fail_arr = fail.getJSONArray("string")) != null &&
-                                failMsg.has("string") && (failMsg_arr = failMsg.getJSONArray("string")) != null &&
-                                fail_arr.length() == failMsg_arr.length()) {
-                            for (int i = 0; i < fail_arr.length(); i++) {
-                                if ("data exist".equals(String.valueOf(failMsg_arr.get(i)))) {
-                                    logger.info(String.format("[%s][%s][%s][%s]", "TaobaoIMService", "batchRegisterUser2TaobaoIM", fail_arr.get(i), i));
-                                    if ("N".equals(user.getIfRegister()) && String.valueOf(fail_arr.get(i)).equals(MD5Util.Encode(user.getId()))) {
-                                        user.setIfRegister("Y");
-                                        commonUserRepository.save(user);
+                        //解析注册失败的
+                        if (successResult.has("uid_fail") && (fail = successResult.getJSONObject("uid_fail")) != null
+                                && successResult.has("fail_msg") && (failMsg = successResult.getJSONObject("fail_msg")) != null)
+                        {
+                            JSONArray fail_arr;
+                            JSONArray failMsg_arr;
+                            if (fail.has("string") && (fail_arr = fail.getJSONArray("string")) != null &&
+                                    failMsg.has("string") && (failMsg_arr = failMsg.getJSONArray("string")) != null &&
+                                    fail_arr.length() == failMsg_arr.length()) {
+                                for (int i = 0; i < fail_arr.length(); i++) {
+                                    if ("data exist".equals(String.valueOf(failMsg_arr.get(i)))) {
+                                        logger.info(String.format("[%s][%s][%s][%s]", "TaobaoIMService", "batchRegisterUser2TaobaoIM", fail_arr.get(i), i));
+                                        if ("N".equals(user.getIfRegister()) && String.valueOf(fail_arr.get(i)).equals(MD5Util.Encode(user.getId()))) {
+                                            user.setIfRegister("Y");
+                                            commonUserRepository.save(user);
+                                        }
                                     }
                                 }
                             }
                         }
+                        flag = true;
                     }
-                    flag = true;
                 }
             }
-        }
-        catch (ApiException ex)
-        {
-            ex.printStackTrace();
+            catch (ApiException ex)
+            {
+                ex.printStackTrace();
+            }
         }
         return flag;
     }
@@ -136,82 +139,87 @@ public class TaobaoIMService {
     public Boolean batchRegisterUser2TaobaoIM(List<CommonUser> users)
     {
         Boolean flag = false;
-        try
+        if(users != null && !users.isEmpty())
         {
-            TaobaoClient client = getClient();
-            OpenimUsersAddRequest req = new OpenimUsersAddRequest();
-            List<Userinfos> infos = new ArrayList<>();
-            for(int i = 0; i < users.size();i++)
+            logger.info("Start to batch register Account to Taobao IM");
+            try
             {
-                CommonUser user = users.get(i);
-                Userinfos info = new Userinfos();
-                info.setUserid(MD5Util.Encode(String.valueOf(user.getId())));
-                info.setPassword(user.getPassword());
-                infos.add(info);
-            }
-            req.setUserinfos(infos);
-            OpenimUsersAddResponse rsp = client.execute(req);
-            if(rsp != null)
-            {
-                logger.info(rsp.getBody());
-                JSONObject jsonObject = new JSONObject(rsp.getBody());
-                JSONObject successResult;
-                if(jsonObject != null && jsonObject.has("openim_users_add_response") && (successResult = jsonObject.getJSONObject("openim_users_add_response")) != null)
+                TaobaoClient client = getClient();
+                OpenimUsersAddRequest req = new OpenimUsersAddRequest();
+                List<Userinfos> infos = new ArrayList<>();
+                for(int i = 0; i < users.size();i++)
                 {
-                    JSONObject success;
-                    JSONObject fail;
-                    JSONObject failMsg;
-                    //解析成功注册的
-                    if((success = successResult.getJSONObject("uid_succ")) != null && success.has("string"))
+                    CommonUser user = users.get(i);
+                    Userinfos info = new Userinfos();
+                    info.setUserid(MD5Util.Encode(String.valueOf(user.getId())));
+                    info.setPassword(user.getPassword());
+                    infos.add(info);
+                }
+                req.setUserinfos(infos);
+                OpenimUsersAddResponse rsp = client.execute(req);
+                if(rsp != null)
+                {
+                    logger.info(rsp.getBody());
+                    JSONObject jsonObject = new JSONObject(rsp.getBody());
+                    JSONObject successResult;
+                    if(jsonObject != null && jsonObject.has("openim_users_add_response") && (successResult = jsonObject.getJSONObject("openim_users_add_response")) != null)
                     {
-                        JSONArray arr = success.getJSONArray("string");
-                        for(int i = 0; i < arr.length();i++)
+                        JSONObject success;
+                        JSONObject fail;
+                        JSONObject failMsg;
+                        //解析成功注册的
+                        if((success = successResult.getJSONObject("uid_succ")) != null && success.has("string"))
                         {
-                            logger.info(String.format("[%s][%s][%s][%s]","TaobaoIMService","batchRegisterUser2TaobaoIM",arr.get(i),i));
-                            for(CommonUser user : users)
+                            JSONArray arr = success.getJSONArray("string");
+                            for(int i = 0; i < arr.length();i++)
                             {
-                                if("N".equals(user.getIfRegister()) && String.valueOf(arr.get(i)).equals(MD5Util.Encode(user.getId())))
+                                logger.info(String.format("[%s][%s][%s][%s]","TaobaoIMService","batchRegisterUser2TaobaoIM",arr.get(i),i));
+                                for(CommonUser user : users)
                                 {
-                                    user.setIfRegister("Y");
-                                    commonUserRepository.save(user);
+                                    if("N".equals(user.getIfRegister()) && String.valueOf(arr.get(i)).equals(MD5Util.Encode(user.getId())))
+                                    {
+                                        user.setIfRegister("Y");
+                                        commonUserRepository.save(user);
+                                    }
                                 }
                             }
                         }
-                    }
-                    //解析注册失败的
-                    if(successResult.has("uid_fail") && (fail = successResult.getJSONObject("uid_fail")) != null
-                            && successResult.has("fail_msg") && (failMsg = successResult.getJSONObject("fail_msg")) != null)
-                    {
-                        JSONArray fail_arr;
-                        JSONArray failMsg_arr;
-                        if(fail.has("string") && (fail_arr = fail.getJSONArray("string")) != null &&
-                                failMsg.has("string") && (failMsg_arr = failMsg.getJSONArray("string")) != null &&
-                                    fail_arr.length() == failMsg_arr.length())
+                        //解析注册失败的
+                        if(successResult.has("uid_fail") && (fail = successResult.getJSONObject("uid_fail")) != null
+                                && successResult.has("fail_msg") && (failMsg = successResult.getJSONObject("fail_msg")) != null)
                         {
-                            for(int i = 0; i < fail_arr.length();i++)
+                            JSONArray fail_arr;
+                            JSONArray failMsg_arr;
+                            if(fail.has("string") && (fail_arr = fail.getJSONArray("string")) != null &&
+                                    failMsg.has("string") && (failMsg_arr = failMsg.getJSONArray("string")) != null &&
+                                    fail_arr.length() == failMsg_arr.length())
                             {
-                                if("data exist".equals(String.valueOf(failMsg_arr.get(i))))
+                                for(int i = 0; i < fail_arr.length();i++)
                                 {
-                                    logger.info(String.format("[%s][%s][%s][%s]","TaobaoIMService","batchRegisterUser2TaobaoIM",fail_arr.get(i),i));
-                                    for(CommonUser user : users)
+                                    if("data exist".equals(String.valueOf(failMsg_arr.get(i))))
                                     {
-                                        if("N".equals(user.getIfRegister()) && String.valueOf(fail_arr.get(i)).equals(MD5Util.Encode(user.getId())))
+                                        logger.info(String.format("[%s][%s][%s][%s]","TaobaoIMService","batchRegisterUser2TaobaoIM",fail_arr.get(i),i));
+                                        for(CommonUser user : users)
                                         {
-                                            user.setIfRegister("Y");
-                                            commonUserRepository.save(user);
+                                            if("N".equals(user.getIfRegister()) && String.valueOf(fail_arr.get(i)).equals(MD5Util.Encode(user.getId())))
+                                            {
+                                                user.setIfRegister("Y");
+                                                commonUserRepository.save(user);
+                                            }
                                         }
                                     }
                                 }
                             }
                         }
+                        flag = true;
                     }
-                    flag = true;
                 }
             }
-        }
-        catch (ApiException ex)
-        {
-            ex.printStackTrace();
+            catch (ApiException ex)
+            {
+                ex.printStackTrace();
+            }
+            logger.info("End to batch register Account to Taobao IM");
         }
         return flag;
     }
