@@ -212,7 +212,7 @@ public class CommonUserController {
 
         ret.setHobby(childrenInfo.getHobby());
         ret.setScore(childrenInfo.getScore());
-        ret.setLabel(DictInfoUtil.autoAssembleLabelColor(childrenInfo.getLabel().split(",")));
+        ret.setLabel(DictInfoUtil.autoAssembleLabelColor(childrenInfo.getLabel() == null ? new String[]{""} : childrenInfo.getLabel().split(",")));
         ret.setIsCollected(childrenInfo.getCollected());
         return ret;
     }
