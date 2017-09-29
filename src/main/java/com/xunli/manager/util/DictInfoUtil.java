@@ -135,31 +135,34 @@ public class DictInfoUtil {
     public static List<Object> autoAssembleLabelColor(String[] labels)
     {
         List<Object> tags = new ArrayList<>();
-        for(String label : labels)
+        if(labels != null)
         {
-            TagString tag = new TagString();
-            tag.setText(label);
-            switch(label){
-                case "公务员":
-                    tag.setRgbValue(getByDictTypeAndDictValue("LabelColor","1").getDictDesc());
-                    break;
-                case "多金优质":
-                    tag.setRgbValue(getByDictTypeAndDictValue("LabelColor","2").getDictDesc());
-                    break;
-                case "坐拥多套房产":
-                    tag.setRgbValue(getByDictTypeAndDictValue("LabelColor","3").getDictDesc());
-                    break;
-                case "多才多艺":
-                    tag.setRgbValue(getByDictTypeAndDictValue("LabelColor","4").getDictDesc());
-                    break;
-                case "海外名企":
-                    tag.setRgbValue(getByDictTypeAndDictValue("LabelColor","5").getDictDesc());
-                    break;
-                default:
-                    tag.setRgbValue(getByDictTypeAndDictValue("LabelColor","0").getDictDesc());
-                    break;
+            for(String label : labels)
+            {
+                TagString tag = new TagString();
+                tag.setText(label);
+                switch(label){
+                    case "公务员":
+                        tag.setRgbValue(getByDictTypeAndDictValue("LabelColor","1").getDictDesc());
+                        break;
+                    case "多金优质":
+                        tag.setRgbValue(getByDictTypeAndDictValue("LabelColor","2").getDictDesc());
+                        break;
+                    case "坐拥多套房产":
+                        tag.setRgbValue(getByDictTypeAndDictValue("LabelColor","3").getDictDesc());
+                        break;
+                    case "多才多艺":
+                        tag.setRgbValue(getByDictTypeAndDictValue("LabelColor","4").getDictDesc());
+                        break;
+                    case "海外名企":
+                        tag.setRgbValue(getByDictTypeAndDictValue("LabelColor","5").getDictDesc());
+                        break;
+                    default:
+                        tag.setRgbValue(getByDictTypeAndDictValue("LabelColor","0").getDictDesc());
+                        break;
+                }
+                tags.add(tag);
             }
-            tags.add(tag);
         }
         return tags;
     }
