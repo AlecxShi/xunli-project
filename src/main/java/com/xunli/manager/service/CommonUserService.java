@@ -41,7 +41,7 @@ public class CommonUserService {
     public RequestResult login(CommonUser user, HttpServletRequest request)
     {
         CommonUserLogins login = commonUserLoginsRepository.findOneByUserId(user.getId());
-        Boolean ifFirstLogin = false;
+        Boolean ifFirstLogin = true;
         if(login == null)
         {
             login = new CommonUserLogins();
@@ -77,7 +77,7 @@ public class CommonUserService {
         ChildrenInfo childrenInfo = childrenInfoRepository.findOneByParentId(login.getUserId());
         if(childrenInfo == null || childrenInfo.getName() == null || childrenInfo.getBirthday() == null || childrenInfo.getEducation() == null)
         {
-            ifFirstLogin = true;
+            ifFirstLogin = false;
         }
         Map<String,Object> result = new HashMap();
         result.put("token",login.getToken());

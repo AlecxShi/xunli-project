@@ -51,7 +51,7 @@ public class Register2TaobaoIMJob {
 
     /**
      * 批量注册,扫描表中未注册到IM的用户进行注册
-     * 每隔3分钟执行1次
+     * 每隔10s钟执行1次
      */
     @Scheduled(cron = "0/10 * * * * ?")
     public void batchRegister()

@@ -5,7 +5,9 @@ import com.taobao.api.DefaultTaobaoClient;
 import com.taobao.api.TaobaoClient;
 import com.taobao.api.domain.Userinfos;
 import com.taobao.api.request.OpenimUsersAddRequest;
+import com.taobao.api.request.OpenimUsersUpdateRequest;
 import com.taobao.api.response.OpenimUsersAddResponse;
+import com.taobao.api.response.OpenimUsersUpdateResponse;
 import com.xunli.manager.codec.EncrypAES;
 import com.xunli.manager.model.CommonUser;
 import com.xunli.manager.repository.CommonUserRepository;
@@ -220,6 +222,63 @@ public class TaobaoIMService {
                 ex.printStackTrace();
             }
             logger.info("End to batch register Account to Taobao IM");
+        }
+        return flag;
+    }
+
+    public Boolean updateUserInfo2TaobaoIM(CommonUser user)
+    {
+        boolean flag = false;
+        if(user != null && user.getChildren() != null)
+        {
+            TaobaoClient client = getClient();
+            OpenimUsersUpdateRequest req = new OpenimUsersUpdateRequest();
+            Userinfos info = new Userinfos();
+            info.setUserid(MD5Util.Encode(user.getId()));
+            info.setName(user.getChildren().getName());
+            info.setNick(user.getChildren().getName());
+            //用户编号塞入扩展信息中以备后用
+            info.setExtra("{userId:"+user.getId()+"}");
+            req.setUserinfos(Arrays.asList(info));
+            try
+            {
+                OpenimUsersUpdateResponse rsp = client.execute(req);
+                if(rsp != null)
+                {
+                    logger.info(rsp.getBody());
+                    JSONObject jsonObject = new JSONObject(rsp.getBody());
+                    JSONObject successResult;
+                    if(jsonObject != null && jsonObject.has("openim_users_update_response") && (successResult = jsonObject.getJSONObject("openim_users_update_response")) != null)
+                    {
+                        JSONObject fail;
+                        JSONObject failMsg;
+                        //解析更新失败的
+                        if(successResult.has("uid_fail") && (fail = successResult.getJSONObject("uid_fail")) != null
+                                && successResult.has("fail_msg") && (failMsg = successResult.getJSONObject("fail_msg")) != null)
+                        {
+                            JSONArray fail_arr;
+                            JSONArray failMsg_arr;
+                            if(fail.has("string") && (fail_arr = fail.getJSONArray("string")) != null &&
+                                    failMsg.has("string") && (failMsg_arr = failMsg.getJSONArray("string")) != null &&
+                                    fail_arr.length() == failMsg_arr.length())
+                            {
+                                for(int i = 0; i < fail_arr.length();i++)
+                                {
+                                    if("data exist".equals(String.valueOf(failMsg_arr.get(i))))
+                                    {
+                                        logger.info(String.format("[%s][%s][%s][%s]","TaobaoIMService","batchRegisterUser2TaobaoIM",fail_arr.get(i),i));
+                                    }
+                                }
+                            }
+                        }
+                        flag = true;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.printStackTrace();
+            }
         }
         return flag;
     }
