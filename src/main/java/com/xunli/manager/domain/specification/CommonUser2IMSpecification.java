@@ -15,7 +15,7 @@ public class CommonUser2IMSpecification extends AbstractSpecification<CommonUser
     public Predicate toPredicate(Root<CommonUser> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder cb) {
         Predicate predicate = cb.conjunction();
         List<Expression<Boolean>> expressions = predicate.getExpressions();
-        expressions.add(cb.equal(root.get(CommonUser_.ifRegister),"N"));
+        expressions.add(cb.notEqual(root.get(CommonUser_.ifRegister),"Y"));
         return predicate;
     }
 }
