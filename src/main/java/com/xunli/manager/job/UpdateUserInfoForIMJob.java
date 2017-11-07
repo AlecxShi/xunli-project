@@ -36,7 +36,7 @@ public class UpdateUserInfoForIMJob {
     private ChildrenInfoRepository childrenInfoRepository;
 
     @Scheduled(cron = "* * * * * ?")
-    public void register()
+    public void update()
     {
         while (!queue.isEmpty())
         {
@@ -55,7 +55,7 @@ public class UpdateUserInfoForIMJob {
     }
 
     @Scheduled(cron = "0/10 * * * * ?")
-    public void batchRegister()
+    public void batchUpdate()
     {
         //每次注册100个账号
         Pageable page = new PageRequest(0,100);

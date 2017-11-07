@@ -62,7 +62,10 @@ public class Register2TaobaoIMJob {
         //每次注册100个账号
         Pageable page = new PageRequest(0,100);
         List<CommonUser> users = commonUserRepository.findAll(new CommonUser2IMSpecification(),page).getContent();
-        taobaoIMService.batchRegisterUser2TaobaoIM(users);
+        if(!users.isEmpty())
+        {
+            taobaoIMService.batchRegisterUser2TaobaoIM(users);
+        }
     }
 
 }
