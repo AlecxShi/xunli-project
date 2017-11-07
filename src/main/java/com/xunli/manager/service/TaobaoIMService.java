@@ -9,6 +9,7 @@ import com.taobao.api.request.OpenimUsersUpdateRequest;
 import com.taobao.api.response.OpenimUsersAddResponse;
 import com.taobao.api.response.OpenimUsersUpdateResponse;
 import com.xunli.manager.codec.EncrypAES;
+import com.xunli.manager.job.UpdateUserInfoForIMJob;
 import com.xunli.manager.model.CommonUser;
 import com.xunli.manager.repository.CommonUserRepository;
 import com.xunli.manager.util.JSONUtils;
@@ -250,29 +251,17 @@ public class TaobaoIMService {
                     JSONObject successResult;
                     if(jsonObject != null && jsonObject.has("openim_users_update_response") && (successResult = jsonObject.getJSONObject("openim_users_update_response")) != null)
                     {
-                        JSONObject fail;
-                        JSONObject failMsg;
                         //解析更新失败的
-                        if(successResult.has("uid_fail") && (fail = successResult.getJSONObject("uid_fail")) != null
-                                && successResult.has("fail_msg") && (failMsg = successResult.getJSONObject("fail_msg")) != null)
+                        if(successResult.has("uid_fail") && successResult.getJSONObject("uid_fail") != null)
                         {
-                            JSONArray fail_arr;
-                            JSONArray failMsg_arr;
-                            if(fail.has("string") && (fail_arr = fail.getJSONArray("string")) != null &&
-                                    failMsg.has("string") && (failMsg_arr = failMsg.getJSONArray("string")) != null &&
-                                    fail_arr.length() == failMsg_arr.length())
-                            {
-                                for(int i = 0; i < fail_arr.length();i++)
-                                {
-                                    if("data exist".equals(String.valueOf(failMsg_arr.get(i))))
-                                    {
-                                        logger.info(String.format("[%s][%s][%s][%s]","TaobaoIMService","batchRegisterUser2TaobaoIM",fail_arr.get(i),i));
-                                    }
-                                }
-                            }
+                            throw new Exception("更新失败,请重试");
                         }
                         flag = true;
                     }
+                }
+                else
+                {
+                    throw new Exception("更新失败,请重试");
                 }
             }
             catch (Exception ex)

@@ -45,7 +45,10 @@ public class Register2TaobaoIMJob {
         while (!queue.isEmpty())
         {
             CommonUser user = queue.poll();
-            taobaoIMService.registerUser2TaobaoIM(user);
+            if(!taobaoIMService.registerUser2TaobaoIM(user))
+            {
+                queue.offer(user);
+            }
         }
     }
 
