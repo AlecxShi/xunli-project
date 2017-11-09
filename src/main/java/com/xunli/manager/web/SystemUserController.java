@@ -82,6 +82,7 @@ public class SystemUserController {
             return update(user);
         }
         CommonUtil.encrypPassword(user);
+        user.setIfRegister("N");
         CommonUser sa = commonUserRepository.save(user);
         if(sa.getChildren() != null)
         {

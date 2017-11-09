@@ -47,7 +47,7 @@ public class Register2TaobaoIMJob {
             CommonUser user = queue.poll();
             if(!taobaoIMService.registerUser2TaobaoIM(user))
             {
-                queue.offer(user);
+                push(user);
             }
         }
     }
@@ -56,7 +56,7 @@ public class Register2TaobaoIMJob {
      * 批量注册,扫描表中未注册到IM的用户进行注册
      * 每隔10s钟执行1次
      */
-    @Scheduled(cron = "0/10 * * * * ?")
+    //@Scheduled(cron = "0/10 * * * * ?")
     public void batchRegister()
     {
         //每次注册100个账号

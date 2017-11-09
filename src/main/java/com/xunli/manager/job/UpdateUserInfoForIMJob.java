@@ -1,19 +1,25 @@
 package com.xunli.manager.job;
 
+import com.xunli.manager.domain.criteria.CommonUserCriteria;
 import com.xunli.manager.domain.specification.CommonUser2IMSpecification;
+import com.xunli.manager.domain.specification.CommonUserSpecification;
 import com.xunli.manager.model.ChildrenInfo;
 import com.xunli.manager.model.CommonUser;
 import com.xunli.manager.repository.ChildrenInfoRepository;
 import com.xunli.manager.repository.CommonUserRepository;
 import com.xunli.manager.service.TaobaoIMService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -26,6 +32,8 @@ public class UpdateUserInfoForIMJob {
 
     private BlockingQueue<CommonUser> queue = new LinkedBlockingQueue<>();
 
+    private static volatile int start_page = 0;
+
     @Autowired
     private TaobaoIMService taobaoIMService;
 
@@ -34,6 +42,32 @@ public class UpdateUserInfoForIMJob {
 
     @Autowired
     private ChildrenInfoRepository childrenInfoRepository;
+
+    //@Scheduled(cron = "0/10 * * * * ?")
+    public void batchUpdate()
+    {
+        Pageable page = new PageRequest(start_page,100);
+        List<CommonUser> users = commonUserRepository.findAll(new CommonUserSpecification(new CommonUserCriteria()),page).getContent();
+        List<Long> parentIds = new ArrayList<>();
+        for(CommonUser user : users)
+        {
+            parentIds.add(user.getId());
+        }
+        List<ChildrenInfo> childrenInfos = childrenInfoRepository.findAllByParentIdIn(parentIds);
+        for(CommonUser user : users)
+        {
+            for(ChildrenInfo childrenInfo : childrenInfos)
+            {
+                if(childrenInfo.getParentId().equals(user.getId()))
+                {
+                    user.setChildren(childrenInfo);
+                }
+            }
+        }
+        System.out.println(String.format("[page = %s,users size = %s]",start_page,users.size()));
+        taobaoIMService.batchUpdateUserInfo2TaobaoIM(users);
+        start_page++;
+    }
 
     @Scheduled(cron = "* * * * * ?")
     public void update()
@@ -52,15 +86,6 @@ public class UpdateUserInfoForIMJob {
                 queue.offer(user);
             }
         }
-    }
-
-    @Scheduled(cron = "0/10 * * * * ?")
-    public void batchUpdate()
-    {
-        //每次注册100个账号
-        Pageable page = new PageRequest(0,100);
-        List<CommonUser> users = commonUserRepository.findAll(new CommonUser2IMSpecification(),page).getContent();
-        taobaoIMService.batchRegisterUser2TaobaoIM(users);
     }
 
     public Boolean push(CommonUser commonUser)

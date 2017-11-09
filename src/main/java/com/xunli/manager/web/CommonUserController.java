@@ -91,9 +91,9 @@ public class CommonUserController {
         user.setPhone(phone);
         user.setUsertype(DictInfoUtil.getByDictTypeAndDictValue("USER_TYPE","COMMON").getId());
         user.setUsername("");
+        user.setIfRegister("N");
         CommonUtil.encrypPassword(user);
         commonUserRepository.saveAndFlush(user);
-        System.out.println(user.getId());
         register2TaobaoIMJob.push(user);
         return user;
     }

@@ -38,7 +38,7 @@ public class CommonUser implements Serializable{
     private String phone;
 
     @Column(name = "if_register")
-    private String ifRegister;
+    private String ifRegister = "N";
 
     @Column(name = "excit")
     private Integer excit;
