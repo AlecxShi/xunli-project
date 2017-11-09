@@ -7,6 +7,7 @@ import com.xunli.manager.model.RequestResult;
 import com.xunli.manager.model.RobotUserLogins;
 import com.xunli.manager.repository.CommonUserRepository;
 import com.xunli.manager.repository.RobotUserLoginRepository;
+import com.xunli.manager.util.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -48,7 +49,7 @@ public class RobotUserLoginController {
                 RobotUserLogins l = new RobotUserLogins();
                 l.setUserId(userId);
                 l.setMsgCount(1);
-                l.setHisMsgCount(0);
+                l.setHisMsgCount(1);
                 l.setLastModified(new Date());
                 robotUserLoginRepository.save(l);
                 return new RequestResult(ReturnCode.PUBLIC_SUCCESS);
@@ -60,13 +61,13 @@ public class RobotUserLoginController {
 
     @RequestMapping(value = "/fakeuser/query",method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional(readOnly = true)
-    public RequestResult query(@RequestParam(name ="startTime",required = true) Date startTime,
-                               @RequestParam(name ="endTime",required = true) Date endTime,
+    public RequestResult query(@RequestParam(name ="startTime",required = true) String startTime,
+                               @RequestParam(name ="endTime",required = true) String endTime,
                                @RequestParam(name ="page",required = true) Integer page)
     {
         RobotUserLoginCriteria criteria = new RobotUserLoginCriteria();
-        criteria.setStartTime(startTime);
-        criteria.setEndTime(endTime);
+        criteria.setStartTime(DateUtil.getDate(startTime));
+        criteria.setEndTime(DateUtil.getDate(endTime));
         Pageable p = new PageRequest(0,10);
         return new RequestResult(ReturnCode.PUBLIC_SUCCESS,robotUserLoginRepository.findAll(new RobotUserLoginSpecification(criteria),p).getContent());
     }
