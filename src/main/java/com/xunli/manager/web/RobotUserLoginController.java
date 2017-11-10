@@ -18,8 +18,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Optional;
-import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Created by shihj on 2017/11/9.
@@ -33,6 +34,8 @@ public class RobotUserLoginController {
 
     @Autowired
     private CommonUserRepository commonUserRepository;
+
+    private final static DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @RequestMapping(value = "/fakeuser/record",method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
@@ -68,7 +71,17 @@ public class RobotUserLoginController {
         RobotUserLoginCriteria criteria = new RobotUserLoginCriteria();
         criteria.setStartTime(DateUtil.getDate(startTime));
         criteria.setEndTime(DateUtil.getDate(endTime));
-        Pageable p = new PageRequest(0,10);
-        return new RequestResult(ReturnCode.PUBLIC_SUCCESS,robotUserLoginRepository.findAll(new RobotUserLoginSpecification(criteria),p).getContent());
+        Pageable p = new PageRequest(page <= 0 ? 0 : page,10);
+        List<Map<String,Object>> result = new ArrayList();
+        for(RobotUserLogins l : robotUserLoginRepository.findAll(new RobotUserLoginSpecification(criteria),p).getContent())
+        {
+            Map<String,Object> map = new HashMap();
+            map.put("userId",l.getUserId());
+            map.put("msgCount",l.getMsgCount());
+            map.put("hisMsgCount",l.getHisMsgCount());
+            map.put("lastModified",DATE_FORMAT.format(l.getLastModified()));
+            result.add(map);
+        }
+        return new RequestResult(ReturnCode.PUBLIC_SUCCESS,result);
     }
 }
