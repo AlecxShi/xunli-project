@@ -60,7 +60,7 @@ public class ChildrenInfo2AppController {
         }
         ChildrenInfo child = childrenInfoRepository.findOneByParentId(login.getUserId());
         return Optional.ofNullable(child).map( ch -> {
-            boolean ifReCreate = false;
+            boolean ifReCreate = false,ifUpdate2IM = false;
             if(!StringUtils.isEmpty(childrenInfo.getHobby()) && !childrenInfo.getHobby().equals(ch.getHobby()))
             {
                 ch.setHobby(childrenInfo.getHobby());
@@ -117,7 +117,6 @@ public class ChildrenInfo2AppController {
             }
             return new RequestResult(ReturnCode.PUBLIC_SUCCESS);
         }).orElseGet(() -> {
-            System.out.println(childrenInfo.toString());
             ChildrenInfo info = null;
             try
             {

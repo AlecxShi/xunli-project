@@ -8,6 +8,7 @@ import com.xunli.manager.model.RobotUserLogins;
 import com.xunli.manager.repository.CommonUserRepository;
 import com.xunli.manager.repository.RobotUserLoginRepository;
 import com.xunli.manager.util.DateUtil;
+import com.xunli.manager.util.DictInfoUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -42,6 +43,7 @@ public class RobotUserLoginController {
     public RequestResult record(@RequestParam(name = "userId",required = true) Long userId)
     {
         return Optional.ofNullable(robotUserLoginRepository.findOne(userId)).map(u -> {
+
             u.setMsgCount(u.getMsgCount() + 1);
             u.setHisMsgCount(u.getHisMsgCount() + 1);
             u.setLastModified(new Date());
@@ -49,12 +51,15 @@ public class RobotUserLoginController {
             return new RequestResult(ReturnCode.PUBLIC_SUCCESS);
         }).orElseGet(() -> {
             return Optional.ofNullable(commonUserRepository.findOne(userId)).map(cu -> {
-                RobotUserLogins l = new RobotUserLogins();
-                l.setUserId(userId);
-                l.setMsgCount(1);
-                l.setHisMsgCount(1);
-                l.setLastModified(new Date());
-                robotUserLoginRepository.save(l);
+                if(DictInfoUtil.isRobotUser(cu.getUsertype()))
+                {
+                    RobotUserLogins l = new RobotUserLogins();
+                    l.setUserId(userId);
+                    l.setMsgCount(1);
+                    l.setHisMsgCount(1);
+                    l.setLastModified(new Date());
+                    robotUserLoginRepository.save(l);
+                }
                 return new RequestResult(ReturnCode.PUBLIC_SUCCESS);
             }).orElseGet(() ->{
                 return new RequestResult(ReturnCode.PUBLIC_OTHER_ERROR);
