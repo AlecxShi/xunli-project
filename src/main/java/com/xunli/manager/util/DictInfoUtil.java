@@ -178,4 +178,18 @@ public class DictInfoUtil {
         }
         return list;
     }
+
+    public static boolean isRobotUser(Long usertype)
+    {
+        boolean flag = false;
+        for(DictInfo dictInfo : DictInfoCache.dictInfos)
+        {
+            if(dictInfo.getId().equals(usertype) && "ROBOT".equals(dictInfo.getDictValue()))
+            {
+                flag = true;
+                break;
+            }
+        }
+        return flag;
+    }
 }
