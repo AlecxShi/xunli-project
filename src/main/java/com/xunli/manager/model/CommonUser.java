@@ -37,6 +37,9 @@ public class CommonUser implements Serializable{
     @Column(name = "phone")
     private String phone;
 
+    @Column(name = "icon")
+    private String icon;
+
     @Column(name = "if_register")
     private String ifRegister = "N";
 
@@ -141,6 +144,14 @@ public class CommonUser implements Serializable{
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 
     public ChildrenInfoTwo getChildrenInfoTwo() {

@@ -192,4 +192,30 @@ public class DictInfoUtil {
         }
         return flag;
     }
+
+    public static Long getRobotUserType() {
+        Long id = null;
+        for(DictInfo dictInfo : DictInfoCache.dictInfos)
+        {
+            if("USER_TYPE".equals(dictInfo.getDictType()) && "ROBOT".equals(dictInfo.getDictValue()))
+            {
+                id = dictInfo.getId();
+                break;
+            }
+        }
+        return id;
+    }
+
+    public static boolean isMale(Long gender) {
+        boolean m = false;
+        for(DictInfo dictInfo : DictInfoCache.dictInfos)
+        {
+            if(dictInfo.getId().equals(gender) &&  "Male".equals(dictInfo.getDictValue()))
+            {
+                m = true;
+                break;
+            }
+        }
+        return m;
+    }
 }
