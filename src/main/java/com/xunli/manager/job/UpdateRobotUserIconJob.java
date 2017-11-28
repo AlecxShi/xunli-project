@@ -63,7 +63,7 @@ public class UpdateRobotUserIconJob
     private ChildrenInfoRepository childrenInfoRepository;
 
 
-    @Scheduled(cron = "0 0/1 * * * ?")
+    @Scheduled(cron = "0/20 * * * * ?")
     public void updateRobotUserIcon()
     {
         //按照用户类型和头像为空分页查出机器用户
@@ -96,11 +96,11 @@ public class UpdateRobotUserIconJob
         String iconName = "";
         if(childrenInfo != null && DictInfoUtil.isMale(childrenInfo.getGender()))
         {
-            iconName = String.format(path,"2" + String.valueOf(M_T) + fillNumber(getMale()) + ".jpg");
+            iconName = String.format(path,"2" + String.valueOf(M_T > 4 ? 4 : M_T) + fillNumber(getMale()) + ".jpg");
         }
         else
         {
-            iconName = String.format(path,"1"+ String.valueOf(F_T) + fillNumber(getFemale())+ ".jpg");
+            iconName = String.format(path,"1"+ String.valueOf(F_T > 4 ? 4 : F_T) + fillNumber(getFemale())+ ".jpg");
         }
         return iconName;
     }
