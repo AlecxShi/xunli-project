@@ -7,14 +7,19 @@ package com.xunli.manager.web;
 import com.xunli.manager.config.Constants;
 import com.xunli.manager.enumeration.ReturnCode;
 import com.xunli.manager.exception.ImageUploadException;
+import com.xunli.manager.model.ChildrenInfo;
+import com.xunli.manager.model.CommonUser;
 import com.xunli.manager.model.CommonUserLogins;
 import com.xunli.manager.model.RequestResult;
+import com.xunli.manager.repository.ChildrenInfoRepository;
 import com.xunli.manager.repository.CommonUserLoginsRepository;
+import com.xunli.manager.repository.CommonUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.swing.text.html.Option;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -22,6 +27,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Date;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api")
@@ -29,6 +35,12 @@ public class CommonUserImageUploadController {
 
     @Autowired
     private CommonUserLoginsRepository commonUserLoginsRepository;
+
+    @Autowired
+    private ChildrenInfoRepository childrenInfoRepository;
+
+    @Autowired
+    private CommonUserRepository commonUserRepository;
 
     @RequestMapping(value = "/upload/image",method = RequestMethod.POST)
     public RequestResult uploadImage(@RequestParam("image")MultipartFile image, @RequestParam("token") String token)
@@ -51,6 +63,22 @@ public class CommonUserImageUploadController {
                     throw new ImageUploadException(3,"Cannot store file with relative path outside current directory or not a image file "+ filename);
                 }
                 Files.copy(image.getInputStream(), createImageName(login.getUserId(),filename.substring(filename.lastIndexOf("."))),StandardCopyOption.REPLACE_EXISTING);
+                ChildrenInfo childrenInfo = childrenInfoRepository.findOneByParentId(login.getUserId());
+                if(childrenInfo != null)
+                {
+                    String photo = null;
+                    if(childrenInfo.getPhoto() != null)
+                    {
+                        photo = childrenInfo.getPhoto();
+                        photo = photo + "," + String.format("/image/%s",createImageName(login.getUserId(),filename.substring(filename.lastIndexOf("."))));
+                    }
+                    else
+                    {
+                        photo = String.format("/image/%s",createImageName(login.getUserId(),filename.substring(filename.lastIndexOf("."))));
+                    }
+                    childrenInfo.setPhoto(photo);
+                    childrenInfoRepository.saveAndFlush(childrenInfo);
+                }
             }
             catch(ImageUploadException ex)
             {
@@ -90,6 +118,18 @@ public class CommonUserImageUploadController {
                 //icon名称固定为用户编号 + _icon.icon
                 filename = login.getUserId()+"_icon.png";
                 Files.copy(icon.getInputStream(), Paths.get(Constants.ICON_ROOT_DIR,filename),StandardCopyOption.REPLACE_EXISTING);
+                CommonUser user = commonUserRepository.findOne(login.getUserId());
+                if(user != null)
+                {
+                    user.setIcon(String.format("/icon/%s",filename));
+                    commonUserRepository.saveAndFlush(user);
+                }
+                ChildrenInfo childrenInfo = childrenInfoRepository.findOneByParentId(login.getUserId());
+                if(childrenInfo != null)
+                {
+                    childrenInfo.setIcon(String.format("/icon/%s",filename));
+                    childrenInfoRepository.saveAndFlush(childrenInfo);
+                }
             }
             catch (Exception ex)
             {
