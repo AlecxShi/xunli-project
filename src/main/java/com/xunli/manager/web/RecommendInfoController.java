@@ -126,6 +126,7 @@ public class RecommendInfoController {
             data.put("userId",info.getParentId());
             data.put("im", MD5Util.Encode(info.getParentId()));
             data.put("name",info.getName());
+            data.put("icon",info.getIcon());
             data.put("bornLocation",info.getBornLocation());
             data.put("currentLocation",info.getCurrentLocation());
             data.put("birthday",info.getBirthday());
