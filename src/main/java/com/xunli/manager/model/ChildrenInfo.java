@@ -95,6 +95,10 @@ public class ChildrenInfo implements Serializable{
     @Column(name="house")
     private Long house;
 
+    @Column(name="icon")
+    @ColumnComment("头像存储路径")
+    private String icon;
+
     @Column(name="photo")
     @ColumnComment("照片存储路径")
     private String photo;
@@ -337,5 +341,13 @@ public class ChildrenInfo implements Serializable{
 
     public void setMoreIntroduce(String moreIntroduce) {
         this.moreIntroduce = moreIntroduce;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 }
