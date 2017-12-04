@@ -26,7 +26,6 @@ import java.util.List;
 public class UpdateRobotUserIconJob
 {
 
-    private static volatile int start_page = 0;
 
     private static volatile int M_T = 1;
 
@@ -63,11 +62,11 @@ public class UpdateRobotUserIconJob
     private ChildrenInfoRepository childrenInfoRepository;
 
 
-    @Scheduled(cron = "0/20 * * * * ?")
+    //@Scheduled(cron = "0/20 * * * * ?")
     public void updateRobotUserIcon()
     {
         //按照用户类型和头像为空分页查出机器用户
-        Pageable page = new PageRequest(start_page,1000);
+        Pageable page = new PageRequest(0,1000);
         List<CommonUser> users = commonUserRepository.findAll(new CommonUserUpdateIconSpecification(),page).getContent();
         if(users != null && !users.isEmpty())
         {
@@ -86,8 +85,7 @@ public class UpdateRobotUserIconJob
             });
             commonUserRepository.save(users);
         }
-        logger.info(String.format("[page = %s,users size = %s]",start_page,users.size()));
-        start_page++;
+        logger.info(String.format("[page = %s,users size = %s]",0,users.size()));
     }
 
     public static String getIconPath(ChildrenInfo childrenInfo)
