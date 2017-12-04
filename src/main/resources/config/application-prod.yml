@@ -46,3 +46,5 @@ api:
       url: https://eco.taobao.com/router/rest
       appKey: 24634078
       appSecret: f0a06afbc8f284d8c28abd5429114c4d
+    imageServer:
+      url: http://119.23.220.163:8080/

@@ -41,7 +41,7 @@ public class CommonUserService {
     public RequestResult login(CommonUser user, HttpServletRequest request)
     {
         CommonUserLogins login = commonUserLoginsRepository.findOneByUserId(user.getId());
-        Boolean ifFirstLogin = true;
+        Boolean ifFirstLogin = false;
         if(login == null)
         {
             login = new CommonUserLogins();
@@ -75,9 +75,11 @@ public class CommonUserService {
         }
 
         ChildrenInfo childrenInfo = childrenInfoRepository.findOneByParentId(login.getUserId());
+        //没有基本信息ifFirstLogin = true
+        //有的话则为false
         if(childrenInfo == null || childrenInfo.getName() == null || childrenInfo.getBirthday() == null || childrenInfo.getEducation() == null)
         {
-            ifFirstLogin = false;
+            ifFirstLogin = true;
         }
         Map<String,Object> result = new HashMap();
         result.put("token",login.getToken());

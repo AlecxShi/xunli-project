@@ -11,6 +11,7 @@ import com.xunli.manager.repository.*;
 import com.xunli.manager.util.DictInfoUtil;
 import com.xunli.manager.util.MD5Util;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -39,6 +40,9 @@ public class RecommendInfoController {
 
     @Autowired
     private ChildrenInfoRepository childrenInfoRepository;
+
+    @Value("${api.manager.imageServer.url}")
+    private String imageServer;
 
     /**
      * 登录之后的推荐信息查询
@@ -81,6 +85,10 @@ public class RecommendInfoController {
             data.put("userId", info.getTargetChildrenId().getParentId());
             data.put("im", MD5Util.Encode(info.getTargetChildrenId().getParentId()));
             data.put("name",info.getTargetChildrenId().getName());
+            if(info.getTargetChildrenId().getIcon() != null)
+            {
+                data.put("userImage",imageServer + info.getTargetChildrenId().getIcon());
+            }
             data.put("bornLocation",info.getTargetChildrenId().getBornLocation());
             data.put("currentLocation",info.getTargetChildrenId().getCurrentLocation());
             data.put("birthday",info.getTargetChildrenId().getBirthday());
@@ -126,7 +134,10 @@ public class RecommendInfoController {
             data.put("userId",info.getParentId());
             data.put("im", MD5Util.Encode(info.getParentId()));
             data.put("name",info.getName());
-            data.put("icon",info.getIcon());
+            if(info.getIcon() != null)
+            {
+                data.put("userImage",imageServer + info.getIcon());
+            }
             data.put("bornLocation",info.getBornLocation());
             data.put("currentLocation",info.getCurrentLocation());
             data.put("birthday",info.getBirthday());
