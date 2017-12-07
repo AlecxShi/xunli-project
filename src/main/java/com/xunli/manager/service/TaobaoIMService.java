@@ -9,11 +9,13 @@ import com.taobao.api.request.OpenimUsersUpdateRequest;
 import com.taobao.api.response.OpenimUsersAddResponse;
 import com.taobao.api.response.OpenimUsersUpdateResponse;
 import com.xunli.manager.codec.EncrypAES;
+import com.xunli.manager.common.Const;
 import com.xunli.manager.job.UpdateUserInfoForIMJob;
 import com.xunli.manager.model.ChildrenInfo;
 import com.xunli.manager.model.CommonUser;
 import com.xunli.manager.repository.ChildrenInfoRepository;
 import com.xunli.manager.repository.CommonUserRepository;
+import com.xunli.manager.util.DictInfoUtil;
 import com.xunli.manager.util.JSONUtils;
 import com.xunli.manager.util.MD5Util;
 import org.json.JSONArray;
@@ -51,6 +53,9 @@ public class TaobaoIMService {
 
     @Value("${api.manager.im.appSecret}")
     private String appSecret;
+
+    @Value("${api.manager.imageServer.url}")
+    private String imageServer;
 
     @Autowired
     private CommonUserRepository commonUserRepository;
@@ -260,6 +265,7 @@ public class TaobaoIMService {
             OpenimUsersUpdateRequest req = new OpenimUsersUpdateRequest();
             Userinfos info = new Userinfos();
             info.setUserid(MD5Util.Encode(user.getId()));
+            info.setPassword(user.getPassword());
             //放入一些信息
             ChildrenInfo childrenInfo = user.getChildren() == null ? childrenInfoRepository.findOneByParentId(user.getId()) : user.getChildren();
             if(childrenInfo != null)
@@ -268,6 +274,28 @@ public class TaobaoIMService {
                 info.setNick(childrenInfo.getName());
             }
             info.setExtra(user.getId().toString());
+            if(user.getIcon() != null)
+            {
+                info.setIconUrl(String.format("%s/%s",imageServer,user.getIcon()));
+            }
+            else if(user.getChildren() != null)
+            {
+                if(childrenInfo.getIcon() != null)
+                {
+                    info.setIconUrl(String.format("%s/%s",imageServer,childrenInfo.getIcon()));
+                }
+                else
+                {
+                    if(DictInfoUtil.isMale(childrenInfo.getGender()))
+                    {
+                        info.setIconUrl(String.format("%s/%s",imageServer, Const.DEFAULT_MALE_ICON));
+                    }
+                    else
+                    {
+                        info.setIconUrl(String.format("%s/%s",imageServer, Const.DEFAULT_FEMALE_ICON));
+                    }
+                }
+            }
             req.setUserinfos(Arrays.asList(info));
             try
             {

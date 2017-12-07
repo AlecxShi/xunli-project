@@ -9,11 +9,9 @@ import com.xunli.manager.model.app.CommonUserWithChildrenDetail;
 import com.xunli.manager.repository.*;
 import com.xunli.manager.service.CommonUserService;
 import com.xunli.manager.service.GenerateService;
-import com.xunli.manager.util.CommonUtil;
-import com.xunli.manager.util.DictInfoUtil;
-import com.xunli.manager.util.ImageUtil;
-import com.xunli.manager.util.RandomUtil;
+import com.xunli.manager.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.transaction.annotation.Isolation;
@@ -61,6 +59,9 @@ public class CommonUserController {
 
     @Autowired
     private Register2TaobaoIMJob register2TaobaoIMJob;
+
+    @Value("${api.manager.imageServer.url}")
+    private String imageServer;
 
     /**
      * 验证手机号是否已被注册

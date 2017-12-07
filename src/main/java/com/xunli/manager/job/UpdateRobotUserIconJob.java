@@ -1,5 +1,7 @@
 package com.xunli.manager.job;
 
+import com.xunli.manager.cache.ColleageCache;
+import com.xunli.manager.common.Const;
 import com.xunli.manager.domain.specification.CommonUserUpdateIconSpecification;
 import com.xunli.manager.model.ChildrenInfo;
 import com.xunli.manager.model.CommonUser;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by shihj on 2017/11/27.
@@ -26,6 +29,9 @@ import java.util.List;
 public class UpdateRobotUserIconJob
 {
 
+    private static volatile int start_page = 0;
+
+    private final static Random random = new Random();
 
     private static volatile int M_T = 1;
 
@@ -53,7 +59,7 @@ public class UpdateRobotUserIconJob
 
     private final static String path = "/icon/%s";
 
-    private Logger logger = LoggerFactory.getLogger(UpdateUserInfoForIMJob.class);
+    private Logger logger = LoggerFactory.getLogger(UpdateRobotUserIconJob.class);
 
     @Autowired
     private CommonUserRepository commonUserRepository;
@@ -86,6 +92,76 @@ public class UpdateRobotUserIconJob
             commonUserRepository.save(users);
         }
         logger.info(String.format("[page = %s,users size = %s]",0,users.size()));
+    }
+
+    @Scheduled(cron = "0/20 * * * * ?")
+    public void batchUpdateUserInfo()
+    {
+        //分页查找所有的用户信息
+
+        Pageable page = new PageRequest(start_page,1000);
+        List<CommonUser> users = commonUserRepository.findAll(page).getContent();
+        if(users != null && !users.isEmpty())
+        {
+            List<Long> parentIds = new ArrayList<>();
+            users.forEach(user ->
+            {
+                parentIds.add(user.getId());
+            });
+            childrenInfoRepository.findAllByParentIdIn(parentIds).forEach(childrenInfo ->
+            {
+                users.forEach(user -> {
+                    if(user.getId().equals(childrenInfo.getParentId()))
+                    {
+                        user.setChildren(childrenInfo);
+                    }
+                });
+            });
+            List<CommonUser> updateUserList = new ArrayList<>();
+            List<ChildrenInfo> updateChildList = new ArrayList<>();
+            for(CommonUser user : users)
+            {
+                if(user.getChildren() != null)
+                {
+                    switch (user.getUsertype().intValue())
+                    {
+                        case 1:
+                            boolean update = false;
+                            if(user.getIcon() == null || user.getChildren().getIcon() == null)
+                            {
+                                if(user.getChildren().getGender().equals(68))
+                                {
+                                    user.getChildren().setIcon(String.format(path,"10000.jpg"));
+                                    user.setIcon(String.format(path,"10000.jpg"));
+                                }
+                                else
+                                {
+                                    user.getChildren().setIcon(String.format(path,"20000.jpg"));
+                                    user.setIcon(String.format(path,"20000.jpg"));
+                                }
+                                update = true;
+                            }
+                            if(update)
+                            {
+                                updateUserList.add(user);
+                                updateChildList.add(user.getChildren());
+                            }
+                            break;
+                        case 80:
+                            boolean flag = checkAndUpdateColleage(user.getChildren());
+                            if(checkAndUpdateProfession(user.getChildren()) || flag)
+                            {
+                                updateChildList.add(user.getChildren());
+                            }
+                            break;
+                    }
+                }
+            }
+            commonUserRepository.save(updateUserList);
+            childrenInfoRepository.save(updateChildList);
+        }
+        start_page++;
+        logger.info(String.format("[page = %s,users size = %s]",start_page,users.size()));
     }
 
     public static String getIconPath(ChildrenInfo childrenInfo)
@@ -177,10 +253,104 @@ public class UpdateRobotUserIconJob
         return v;
     }
 
-/*    public static void main(String[] args)
+    private boolean checkAndUpdateColleage(ChildrenInfo childrenInfo)
     {
-        while(true)
-        System.out.println(getIconPath(null));
-    }*/
+        boolean flag = false;
+        if(childrenInfo.getSchool() == null || childrenInfo.getSchool().equals(""))
+        {
+            if(childrenInfo.getEducation().equals(73))
+            {
+                childrenInfo.setSchool(ColleageCache.commonCollege.get(random.nextInt(ColleageCache.commonCollege.size())));
+                flag = true;
+            }
+            else if(childrenInfo.getEducation().equals(74) || childrenInfo.getEducation().equals(75))
+            {
+                childrenInfo.setSchool(ColleageCache.goodCollege.get(random.nextInt(ColleageCache.goodCollege.size())));
+                flag = true;
+            }
+        }
+        return flag;
+    }
+
+    private boolean checkAndUpdateProfession(ChildrenInfo childrenInfo)
+    {
+        boolean flag = false;
+        String school = childrenInfo.getSchool();
+        if(school != null && (childrenInfo.getProfession() == null || childrenInfo.getProfession().equals("")))
+        {
+            switch(childrenInfo.getCompany().intValue())
+            {
+                case 86:
+                    childrenInfo.setProfession("公务员");
+                    flag = true;
+                    break;
+                case 87:
+                    if(school.contains("师范"))
+                    {
+                        childrenInfo.setProfession("教师");
+                        flag = true;
+                        break;
+                    }
+                    if(school.contains("医"))
+                    {
+                        childrenInfo.setProfession("医生");
+                        flag = true;
+                        break;
+                    }
+                    if(school.contains("政法"))
+                    {
+                        childrenInfo.setProfession("律师");
+                        flag = true;
+                        break;
+                    }
+                    break;
+                case 88:
+                    if(school.contains("财经"))
+                    {
+                        childrenInfo.setProfession("金融从业人员");
+                        flag = true;
+                        break;
+                    }
+                    break;
+                case 90:
+                    if(school.contains("技术") || school.contains("科技") || school.contains("理工"))
+                    {
+                        childrenInfo.setProfession("研发经理");
+                        flag = true;
+                        break;
+                    }
+                    break;
+            }
+        }
+
+        if(childrenInfo.getIncome() != null && (childrenInfo.getProfession() == null || childrenInfo.getProfession().equals("")))
+        {
+            switch(childrenInfo.getIncome().intValue())
+            {
+                case 85:
+                    if(childrenInfo.getCompany().equals(90))
+                    {
+                        childrenInfo.setProfession(Const.PROFESSION_1[random.nextInt(2)]);
+                        flag = true;
+                        break;
+                    }
+                    else
+                    {
+                        childrenInfo.setProfession("企业高管");
+                        flag = true;
+                        break;
+                    }
+                case 84:
+                    childrenInfo.setProfession(Const.PROFESSION_2[random.nextInt(3)]);
+                    flag = true;
+                    break;
+                case 83:
+                    childrenInfo.setProfession(Const.PROFESSION_3[random.nextInt(2)]);
+                    flag = true;
+                    break;
+            }
+        }
+        return flag;
+    }
 
 }

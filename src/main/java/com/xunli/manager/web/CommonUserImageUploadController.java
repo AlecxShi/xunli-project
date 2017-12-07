@@ -7,6 +7,7 @@ package com.xunli.manager.web;
 import com.xunli.manager.config.Constants;
 import com.xunli.manager.enumeration.ReturnCode;
 import com.xunli.manager.exception.ImageUploadException;
+import com.xunli.manager.job.UpdateUserInfoForIMJob;
 import com.xunli.manager.model.ChildrenInfo;
 import com.xunli.manager.model.CommonUser;
 import com.xunli.manager.model.CommonUserLogins;
@@ -41,6 +42,9 @@ public class CommonUserImageUploadController {
 
     @Autowired
     private CommonUserRepository commonUserRepository;
+
+    @Autowired
+    private UpdateUserInfoForIMJob updateUserInfoForIMJob;
 
     @RequestMapping(value = "/upload/image",method = RequestMethod.POST)
     public RequestResult uploadImage(@RequestParam("image")MultipartFile image, @RequestParam("token") String token)
@@ -123,6 +127,7 @@ public class CommonUserImageUploadController {
                 {
                     user.setIcon(String.format("/icon/%s",filename));
                     commonUserRepository.saveAndFlush(user);
+                    updateUserInfoForIMJob.push(user);
                 }
                 ChildrenInfo childrenInfo = childrenInfoRepository.findOneByParentId(login.getUserId());
                 if(childrenInfo != null)

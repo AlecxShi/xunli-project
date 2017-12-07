@@ -8,6 +8,7 @@ import com.xunli.manager.model.CommonUser;
 import com.xunli.manager.repository.ChildrenInfoRepository;
 import com.xunli.manager.repository.CommonUserRepository;
 import com.xunli.manager.service.TaobaoIMService;
+import com.xunli.manager.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.PageRequest;
@@ -67,6 +68,22 @@ public class UpdateUserInfoForIMJob {
         System.out.println(String.format("[page = %s,users size = %s]",start_page,users.size()));
         taobaoIMService.batchUpdateUserInfo2TaobaoIM(users);
         start_page++;
+    }
+
+    //@Scheduled(cron = "0/10 * * * * ?")
+    public void batchUpdateUserPassword()
+    {
+        List<CommonUser> users = commonUserRepository.findAllByUsertype(1L);
+        users.forEach(user ->
+        {
+            if(user.getPassword() == null)
+            {
+                CommonUtil.encrypPassword(user);
+                commonUserRepository.saveAndFlush(user);
+                System.out.println(user.getPassword());
+                push(user);
+            }
+        });
     }
 
     @Scheduled(cron = "* * * * * ?")

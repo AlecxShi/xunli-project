@@ -1,5 +1,6 @@
 package com.xunli.manager.web;
 
+import com.xunli.manager.common.Const;
 import com.xunli.manager.domain.criteria.ChildrenInfoModel;
 import com.xunli.manager.enumeration.ReturnCode;
 import com.xunli.manager.job.GenerateRecommendInfoJob;
@@ -60,7 +61,7 @@ public class ChildrenInfo2AppController {
         }
         ChildrenInfo child = childrenInfoRepository.findOneByParentId(login.getUserId());
         return Optional.ofNullable(child).map( ch -> {
-            boolean ifReCreate = false,ifUpdate2IM = false;
+            boolean ifReCreate = false;
             if(!StringUtils.isEmpty(childrenInfo.getHobby()) && !childrenInfo.getHobby().equals(ch.getHobby()))
             {
                 ch.setHobby(childrenInfo.getHobby());
@@ -120,6 +121,14 @@ public class ChildrenInfo2AppController {
             ChildrenInfo info = null;
             try
             {
+                if(DictInfoUtil.isMale(info.getGender()))
+                {
+                    info.setIcon(Const.DEFAULT_MALE_ICON);
+                }
+                else
+                {
+                    info.setIcon(Const.DEFAULT_FEMALE_ICON);
+                }
                 info = saveChildrenInfo(childrenInfo,login.getUserId());
             }
             catch (Exception ex)
