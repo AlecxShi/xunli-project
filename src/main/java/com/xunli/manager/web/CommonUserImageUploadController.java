@@ -70,15 +70,15 @@ public class CommonUserImageUploadController {
                 ChildrenInfo childrenInfo = childrenInfoRepository.findOneByParentId(login.getUserId());
                 if(childrenInfo != null)
                 {
-                    String photo = null;
+                    String photo;
                     if(childrenInfo.getPhoto() != null)
                     {
                         photo = childrenInfo.getPhoto();
-                        photo = photo + "," + String.format("/image/%s",createImageName(login.getUserId(),filename.substring(filename.lastIndexOf("."))));
+                        photo = photo + "," + String.format("/image/%s/%s",login.getUserId(),filename);
                     }
                     else
                     {
-                        photo = String.format("/image/%s",createImageName(login.getUserId(),filename.substring(filename.lastIndexOf("."))));
+                        photo = String.format("/image/%s/%s",login.getUserId(),filename);
                     }
                     childrenInfo.setPhoto(photo);
                     childrenInfoRepository.saveAndFlush(childrenInfo);
