@@ -1,5 +1,6 @@
 package com.xunli.manager.util;
 
+import com.xunli.manager.common.Const;
 import com.xunli.manager.config.Constants;
 
 import java.io.File;
@@ -59,5 +60,13 @@ public class ImageUtil {
             }
         }
         return sb.toString();
+    }
+
+    public static String getDefaultIcon(Long gender)
+    {
+        if(DictInfoUtil.isMale(gender))
+            return Const.DEFAULT_MALE_ICON;
+        else
+            return Const.DEFAULT_FEMALE_ICON;
     }
 }
