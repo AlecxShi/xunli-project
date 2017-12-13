@@ -57,6 +57,15 @@ public class GenerateRecommendInfoJob {
         }
     }
 
+    /**
+     * 每日上新功能
+     */
+    //@Scheduled(cron = "* * * * * ?")
+    public void update()
+    {
+
+    }
+
     @Transactional
     public void createRecommendInfo(ChildrenInfo childrenInfo)
     {

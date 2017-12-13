@@ -9,6 +9,8 @@ import com.xunli.manager.repository.ChildrenInfoRepository;
 import com.xunli.manager.repository.CommonUserRepository;
 import com.xunli.manager.service.TaobaoIMService;
 import com.xunli.manager.util.CommonUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.domain.PageRequest;
@@ -44,6 +46,8 @@ public class UpdateUserInfoForIMJob {
     @Autowired
     private ChildrenInfoRepository childrenInfoRepository;
 
+    private final static Logger logger = LoggerFactory.getLogger(UpdateUserInfoForIMJob.class);
+
     //@Scheduled(cron = "0/10 * * * * ?")
     public void batchUpdate()
     {
@@ -65,7 +69,7 @@ public class UpdateUserInfoForIMJob {
                 }
             }
         }
-        System.out.println(String.format("[page = %s,users size = %s]",start_page,users.size()));
+        logger.info(String.format("[page = %s,users size = %s]",start_page,users.size()));
         taobaoIMService.batchUpdateUserInfo2TaobaoIM(users);
         start_page++;
     }

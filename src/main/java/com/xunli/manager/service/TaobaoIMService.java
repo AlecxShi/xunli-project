@@ -87,23 +87,12 @@ public class TaobaoIMService {
                 TaobaoClient client = getClient();
                 OpenimUsersAddRequest req = new OpenimUsersAddRequest();
                 Userinfos info = new Userinfos();
-                //用户编号加密
-                info.setUserid(MD5Util.Encode(String.valueOf(user.getId())));
-                //用户密码默认已被加密
-                info.setPassword(user.getPassword());
-                //放入一些信息
                 ChildrenInfo childrenInfo = user.getChildren() == null ? childrenInfoRepository.findOneByParentId(user.getId()) : user.getChildren();
-                if(childrenInfo != null)
-                {
-                    info.setName(childrenInfo.getName());
-                    info.setNick(childrenInfo.getName());
-                }
-                info.setExtra(user.getId().toString());
-                req.setUserinfos(Arrays.asList(info));
+                req.setUserinfos(Arrays.asList(assembleData(user,childrenInfo,info)));
                 OpenimUsersAddResponse rsp = client.execute(req);
                 if(rsp != null)
                 {
-                    System.out.println(rsp.getBody());
+                    logger.info(String.format("注册信息到IM,信息体为[%s],返回结果为[%s]",info.toString(),rsp.getBody()));
                     JSONObject jsonObject = new JSONObject(rsp.getBody());
                     JSONObject successResult;
                     if(jsonObject != null && jsonObject.has("openim_users_add_response") && (successResult = jsonObject.getJSONObject("openim_users_add_response")) != null)
@@ -165,7 +154,7 @@ public class TaobaoIMService {
         Boolean flag = false;
         if(users != null && !users.isEmpty())
         {
-            logger.info("Start to batch register Account to Taobao IM");
+            logger.info("开始更新用户信息到IM");
             try
             {
                 TaobaoClient client = getClient();
@@ -174,18 +163,8 @@ public class TaobaoIMService {
                 for(int i = 0; i < users.size();i++)
                 {
                     CommonUser user = users.get(i);
-                    Userinfos info = new Userinfos();
-                    info.setUserid(MD5Util.Encode(String.valueOf(user.getId())));
-                    info.setPassword(user.getPassword());
-                    //放入一些信息
                     ChildrenInfo childrenInfo = user.getChildren() == null ? childrenInfoRepository.findOneByParentId(user.getId()) : user.getChildren();
-                    if(childrenInfo != null)
-                    {
-                        info.setName(childrenInfo.getName());
-                        info.setNick(childrenInfo.getName());
-                    }
-                    info.setExtra(user.getId().toString());
-                    infos.add(info);
+                    infos.add(assembleData(user,childrenInfo,new Userinfos()));
                 }
                 req.setUserinfos(infos);
                 OpenimUsersAddResponse rsp = client.execute(req);
@@ -251,11 +230,16 @@ public class TaobaoIMService {
             {
                 ex.printStackTrace();
             }
-            logger.info("End to batch register Account to Taobao IM");
+            logger.info("用户信息更新完毕");
         }
         return flag;
     }
 
+    /**
+     * 更新用户信息到IM
+     * @param user
+     * @return
+     */
     public Boolean updateUserInfo2TaobaoIM(CommonUser user)
     {
         boolean flag = false;
@@ -264,45 +248,14 @@ public class TaobaoIMService {
             TaobaoClient client = getClient();
             OpenimUsersUpdateRequest req = new OpenimUsersUpdateRequest();
             Userinfos info = new Userinfos();
-            info.setUserid(MD5Util.Encode(user.getId()));
-            info.setPassword(user.getPassword());
-            //放入一些信息
             ChildrenInfo childrenInfo = user.getChildren() == null ? childrenInfoRepository.findOneByParentId(user.getId()) : user.getChildren();
-            if(childrenInfo != null)
-            {
-                info.setName(childrenInfo.getName());
-                info.setNick(childrenInfo.getName());
-            }
-            info.setExtra(user.getId().toString());
-            if(user.getIcon() != null)
-            {
-                info.setIconUrl(String.format("%s/%s",imageServer,user.getIcon()));
-            }
-            else if(user.getChildren() != null)
-            {
-                if(childrenInfo.getIcon() != null)
-                {
-                    info.setIconUrl(String.format("%s/%s",imageServer,childrenInfo.getIcon()));
-                }
-                else
-                {
-                    if(DictInfoUtil.isMale(childrenInfo.getGender()))
-                    {
-                        info.setIconUrl(String.format("%s/%s",imageServer, Const.DEFAULT_MALE_ICON));
-                    }
-                    else
-                    {
-                        info.setIconUrl(String.format("%s/%s",imageServer, Const.DEFAULT_FEMALE_ICON));
-                    }
-                }
-            }
-            req.setUserinfos(Arrays.asList(info));
+            req.setUserinfos(Arrays.asList(assembleData(user,childrenInfo,info)));
             try
             {
                 OpenimUsersUpdateResponse rsp = client.execute(req);
                 if(rsp != null)
                 {
-                    logger.info(rsp.getBody());
+                    logger.info(String.format("更新用户[%s]信息到IM,请求信息为[%s],收到的返回信息为[%s]",String.valueOf(user.getId()),info.toString(),rsp.getBody()));
                     JSONObject jsonObject = new JSONObject(rsp.getBody());
                     JSONObject successResult;
                     if(jsonObject != null && jsonObject.has("openim_users_update_response") && (successResult = jsonObject.getJSONObject("openim_users_update_response")) != null)
@@ -328,7 +281,11 @@ public class TaobaoIMService {
         return flag;
     }
 
-    //批量注册
+    /**
+     * 批量更新信息到IM
+     * @param users
+     * @return
+     */
     public Boolean batchUpdateUserInfo2TaobaoIM(List<CommonUser> users)
     {
         boolean flag = false;
@@ -340,24 +297,14 @@ public class TaobaoIMService {
             for(int i = 0; i < users.size();i++)
             {
                 CommonUser user = users.get(i);
-                Userinfos info = new Userinfos();
-                info.setUserid(MD5Util.Encode(user.getId()));
-                //放入一些信息
                 ChildrenInfo childrenInfo = user.getChildren() == null ? childrenInfoRepository.findOneByParentId(user.getId()) : user.getChildren();
-                if(childrenInfo != null)
-                {
-                    info.setName(childrenInfo.getName());
-                    info.setNick(childrenInfo.getName());
-                }
-                info.setExtra(user.getId().toString());
-                infos.add(info);
-
+                infos.add(assembleData(user,childrenInfo,new Userinfos()));
             }
-            logger.info("update user list:" + infos.toString());
             req.setUserinfos(infos);
             try
             {
                 OpenimUsersUpdateResponse rsp = client.execute(req);
+                logger.info(String.format("更新用户信息到IM,请求信息为[%s],收到的返回信息为[%s]",infos.toString(),rsp.getBody()));
                 if(rsp != null)
                 {
                     logger.info(rsp.getBody());
@@ -400,5 +347,43 @@ public class TaobaoIMService {
         return flag;
     }
 
-
+    /**
+     * 共用组装注册或更新到IM的信息
+     * @param user
+     * @param childrenInfo
+     * @param info
+     * @return
+     */
+    private Userinfos assembleData(CommonUser user,ChildrenInfo childrenInfo,Userinfos info)
+    {
+        info.setUserid(MD5Util.Encode(user.getId()));
+        //放入一些信息
+        childrenInfo = user.getChildren() == null ? childrenInfoRepository.findOneByParentId(user.getId()) : user.getChildren();
+        if(childrenInfo != null)
+        {
+            info.setName(childrenInfo.getName());
+            info.setNick(childrenInfo.getName());
+            //无icon信息的话使用默认头像
+            if(childrenInfo.getIcon() == null)
+            {
+                if(DictInfoUtil.isMale(childrenInfo.getGender()))
+                {
+                    info.setIconUrl(String.format("%s%s",imageServer, Const.DEFAULT_MALE_ICON));
+                    childrenInfo.setIcon(Const.DEFAULT_MALE_ICON);
+                }
+                else
+                {
+                    info.setIconUrl(String.format("%s%s",imageServer, Const.DEFAULT_FEMALE_ICON));
+                    childrenInfo.setIcon(Const.DEFAULT_FEMALE_ICON);
+                }
+                childrenInfoRepository.saveAndFlush(childrenInfo);
+            }
+            else
+            {
+                info.setIconUrl(String.format("%s%s",imageServer,childrenInfo.getIcon()));
+            }
+        }
+        info.setExtra(user.getId().toString());
+        return info;
+    }
 }

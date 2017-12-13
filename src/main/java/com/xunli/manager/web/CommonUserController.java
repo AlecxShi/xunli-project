@@ -207,10 +207,22 @@ public class CommonUserController {
 
         ret.setCar(childrenInfo.getCar());
         ret.setHouse(childrenInfo.getHouse());
-
-        ret.setUserImage(ImageUtil.getUserIconByUserId(childrenInfo.getParentId()));
+        if(childrenInfo.getIcon() == null)
+        {
+            if(ImageUtil.getUserIconByUserId(childrenInfo.getParentId()) != null)
+            {
+                ret.setUserImage(String.format("%s%s",imageServer,ImageUtil.getUserIconByUserId(childrenInfo.getParentId())));
+            }
+            else
+            {
+                ret.setUserImage(String.format("%s%s",imageServer,ImageUtil.getDefaultIcon(childrenInfo.getGender())));
+            }
+        }
+        else
+        {
+            ret.setUserImage(String.format("%s%s",imageServer,childrenInfo.getIcon()));
+        }
         ret.setPhoto(childrenInfo.getPhoto() == null ? null : Arrays.asList(childrenInfo.getPhoto()));
-
         ret.setHobby(childrenInfo.getHobby());
         ret.setScore(childrenInfo.getScore());
         ret.setLabel(DictInfoUtil.autoAssembleLabelColor(childrenInfo.getLabel() == null ? new String[]{""} : childrenInfo.getLabel().split(",")));

@@ -94,11 +94,10 @@ public class UpdateRobotUserIconJob
         logger.info(String.format("[page = %s,users size = %s]",0,users.size()));
     }
 
-    @Scheduled(cron = "0/20 * * * * ?")
+    //@Scheduled(cron = "0/20 * * * * ?")
     public void batchUpdateUserInfo()
     {
         //分页查找所有的用户信息
-
         Pageable page = new PageRequest(start_page,1000);
         List<CommonUser> users = commonUserRepository.findAll(page).getContent();
         if(users != null && !users.isEmpty())
@@ -258,12 +257,12 @@ public class UpdateRobotUserIconJob
         boolean flag = false;
         if(childrenInfo.getSchool() == null || childrenInfo.getSchool().equals(""))
         {
-            if(childrenInfo.getEducation().equals(73))
+            if(childrenInfo.getEducation().longValue() == 73)
             {
                 childrenInfo.setSchool(ColleageCache.commonCollege.get(random.nextInt(ColleageCache.commonCollege.size())));
                 flag = true;
             }
-            else if(childrenInfo.getEducation().equals(74) || childrenInfo.getEducation().equals(75))
+            else if(childrenInfo.getEducation().longValue() == 74 || childrenInfo.getEducation().longValue() == 75)
             {
                 childrenInfo.setSchool(ColleageCache.goodCollege.get(random.nextInt(ColleageCache.goodCollege.size())));
                 flag = true;
@@ -328,7 +327,7 @@ public class UpdateRobotUserIconJob
             switch(childrenInfo.getIncome().intValue())
             {
                 case 85:
-                    if(childrenInfo.getCompany().equals(90))
+                    if(childrenInfo.getCompany().longValue() == 90)
                     {
                         childrenInfo.setProfession(Const.PROFESSION_1[random.nextInt(2)]);
                         flag = true;

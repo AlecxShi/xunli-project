@@ -121,14 +121,6 @@ public class ChildrenInfo2AppController {
             ChildrenInfo info = null;
             try
             {
-                if(DictInfoUtil.isMale(info.getGender()))
-                {
-                    info.setIcon(Const.DEFAULT_MALE_ICON);
-                }
-                else
-                {
-                    info.setIcon(Const.DEFAULT_FEMALE_ICON);
-                }
                 info = saveChildrenInfo(childrenInfo,login.getUserId());
             }
             catch (Exception ex)
@@ -173,6 +165,16 @@ public class ChildrenInfo2AppController {
         info.setSchool(childrenInfo.getSchool());
         info.setHobby(childrenInfo.getHobby());
         info.setMoreIntroduce(childrenInfo.getMoreIntroduce());
+
+        if(DictInfoUtil.isMale(info.getGender()))
+        {
+            info.setIcon(Const.DEFAULT_MALE_ICON);
+        }
+        else
+        {
+            info.setIcon(Const.DEFAULT_FEMALE_ICON);
+        }
+
         info.setPhoto(ImageUtil.getAllPathByUserId(userId));
 
         info.setLabel(childrenInfo.getLabel());
