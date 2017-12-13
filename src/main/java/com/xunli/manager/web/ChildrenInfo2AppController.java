@@ -118,7 +118,7 @@ public class ChildrenInfo2AppController {
             }
             return new RequestResult(ReturnCode.PUBLIC_SUCCESS);
         }).orElseGet(() -> {
-            ChildrenInfo info = null;
+            ChildrenInfo info;
             try
             {
                 info = saveChildrenInfo(childrenInfo,login.getUserId());
