@@ -13,9 +13,17 @@ public class CommonUtil {
         try
         {
             EncrypAES encrypAES = new EncrypAES();
-            user.setPassword(user.getPassword() == null || "".equals(user.getPassword()) ?
-                    encrypAES.Encrytor(RandomUtil.generatePassword()) :
-                    encrypAES.Encrytor(user.getPassword()));
+            if(user.getPassword() == null || "".equals(user.getPassword()) || user.getPassword().length() > 32)
+            {
+                if(user.getPhone() != null)
+                {
+                    user.setPassword(encrypAES.Encrytor(user.getPhone()));
+                }
+                else
+                {
+                    user.setPassword(encrypAES.Encrytor(String.valueOf(user.getId())));
+                }
+            }
         }
         catch (Exception ex)
         {

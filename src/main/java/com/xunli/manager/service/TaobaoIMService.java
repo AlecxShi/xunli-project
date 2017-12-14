@@ -401,6 +401,8 @@ public class TaobaoIMService {
     private Userinfos assembleData(CommonUser user,ChildrenInfo childrenInfo,Userinfos info)
     {
         info.setUserid(MD5Util.Encode(user.getId()));
+        //设置密码
+        info.setPassword(user.getPassword());
         //放入一些信息
         childrenInfo = user.getChildren() == null ? childrenInfoRepository.findOneByParentId(user.getId()) : user.getChildren();
         if(childrenInfo != null)

@@ -57,6 +57,9 @@ public class CommonUserController {
     private RecommendInfoTwoRepository recommendInfoTwoRepository;
 
     @Autowired
+    private UserCollectInfoRepository userCollectInfoRepository;
+
+    @Autowired
     private Register2TaobaoIMJob register2TaobaoIMJob;
 
     @Value("${api.manager.imageServer.url}")
@@ -119,7 +122,7 @@ public class CommonUserController {
                     return new RequestResult(ReturnCode.PUBLIC_SUCCESS,transferToReturn(token,son));
                 }
                 return Optional.ofNullable(childrenInfoRepository.findOneByParentId(targetUserId)).map(tar -> {
-                    return Optional.ofNullable(recommendInfoTwoRepository.findOneByChildrenIdAndTargetChildrenId(son.getId(),tar.getId())).map(ret -> {
+                    return Optional.ofNullable(userCollectInfoRepository.findOneByUserIdAndTargetUserId(son.getParentId(),targetUserId)).map(ret -> {
                         tar.setCollected(true);
                         return new RequestResult(ReturnCode.PUBLIC_SUCCESS,transferToReturn(token,tar));
                     }).orElseGet(() -> {
@@ -232,8 +235,9 @@ public class CommonUserController {
         ret.setPhoto(photos);
         ret.setHobby(childrenInfo.getHobby());
         ret.setScore(childrenInfo.getScore());
+        ret.setMoreIntroduce(childrenInfo.getMoreIntroduce());
         ret.setLabel(DictInfoUtil.autoAssembleLabelColor(childrenInfo.getLabel() == null ? new String[]{""} : childrenInfo.getLabel().split(",")));
-        ret.setIsCollected(childrenInfo.getCollected());
+        ret.setIsCollected(childrenInfo.getCollected() == null ? false : childrenInfo.getCollected());
         return ret;
     }
 }
