@@ -4,6 +4,7 @@ package com.xunli.manager.common;
  * Created by shihj on 2017/12/6.
  */
 public class Const {
+    public final static String SPLIT = ",";
     public final static String DEFAULT_MALE_ICON = "/icon/20000.jpg";
 
     public final static String DEFAULT_FEMALE_ICON = "/icon/10000.jpg";

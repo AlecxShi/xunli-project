@@ -1,6 +1,7 @@
 package com.xunli.manager.web;
 
 import com.xunli.manager.codec.EncrypAES;
+import com.xunli.manager.common.Const;
 import com.xunli.manager.domain.criteria.CommonUserModel;
 import com.xunli.manager.enumeration.ReturnCode;
 import com.xunli.manager.job.Register2TaobaoIMJob;
@@ -22,9 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Optional;
+import java.util.*;
 
 import static com.xunli.manager.config.Constants.ROLE_ADMIN;
 
@@ -222,7 +221,15 @@ public class CommonUserController {
         {
             ret.setUserImage(String.format("%s%s",imageServer,childrenInfo.getIcon()));
         }
-        ret.setPhoto(childrenInfo.getPhoto() == null ? null : Arrays.asList(childrenInfo.getPhoto()));
+        List<String> photos = new ArrayList();
+        if(childrenInfo.getPhoto() != null)
+        {
+            for(String photo : childrenInfo.getPhoto().split(Const.SPLIT))
+            {
+                photos.add(String.format("%s%s",imageServer,photo));
+            }
+        }
+        ret.setPhoto(photos);
         ret.setHobby(childrenInfo.getHobby());
         ret.setScore(childrenInfo.getScore());
         ret.setLabel(DictInfoUtil.autoAssembleLabelColor(childrenInfo.getLabel() == null ? new String[]{""} : childrenInfo.getLabel().split(",")));

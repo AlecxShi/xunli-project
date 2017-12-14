@@ -127,7 +127,6 @@ public class CommonUserImageUploadController {
                 {
                     user.setIcon(String.format("/icon/%s",filename));
                     commonUserRepository.saveAndFlush(user);
-                    updateUserInfoForIMJob.push(user);
                 }
                 ChildrenInfo childrenInfo = childrenInfoRepository.findOneByParentId(login.getUserId());
                 if(childrenInfo != null)
@@ -135,6 +134,7 @@ public class CommonUserImageUploadController {
                     childrenInfo.setIcon(String.format("/icon/%s",filename));
                     childrenInfoRepository.saveAndFlush(childrenInfo);
                 }
+                updateUserInfoForIMJob.push(user);
             }
             catch (Exception ex)
             {
