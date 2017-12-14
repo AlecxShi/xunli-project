@@ -430,6 +430,7 @@ public class TaobaoIMService {
             }
         }
         info.setExtra(user.getId().toString());
+        logger.info("发送到IM的信息为:账号={},密码={},注册手机号码={},昵称={},头像地址={}",info.getUserid(),info.getPassword(),user.getPhone(),info.getNick(),info.getIconUrl());
         return info;
     }
 }
