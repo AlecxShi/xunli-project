@@ -66,19 +66,20 @@ public class CommonUserImageUploadController {
                 {
                     throw new ImageUploadException(3,"Cannot store file with relative path outside current directory or not a image file "+ filename);
                 }
-                Files.copy(image.getInputStream(), createImageName(login.getUserId(),filename.substring(filename.lastIndexOf("."))),StandardCopyOption.REPLACE_EXISTING);
+                Path newFile = createImageName(login.getUserId(),filename.substring(filename.lastIndexOf(".")));
+                Files.copy(image.getInputStream(),newFile ,StandardCopyOption.REPLACE_EXISTING);
                 ChildrenInfo childrenInfo = childrenInfoRepository.findOneByParentId(login.getUserId());
                 if(childrenInfo != null)
                 {
                     String photo;
-                    if(childrenInfo.getPhoto() != null)
+                    if(childrenInfo.getPhoto() != null && !"".equals(childrenInfo.getPhoto()))
                     {
                         photo = childrenInfo.getPhoto();
-                        photo = photo + "," + String.format("/image/%s/%s",login.getUserId(),filename);
+                        photo = photo + "," + String.format("/image/%s/%s",login.getUserId(),newFile.getFileName());
                     }
                     else
                     {
-                        photo = String.format("/image/%s/%s",login.getUserId(),filename);
+                        photo = String.format("/image/%s/%s",login.getUserId(),newFile.getFileName());
                     }
                     childrenInfo.setPhoto(photo);
                     childrenInfoRepository.saveAndFlush(childrenInfo);
