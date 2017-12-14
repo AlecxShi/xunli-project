@@ -163,20 +163,6 @@ public class CommonUserController {
             {
                 u.setLocation(model.getLocation());
             }
-            //密码加密
-            try
-            {
-                EncrypAES encrypAES = new EncrypAES();
-                if(model.getPassword() != null && !encrypAES.Encrytor(model.getPassword()).equals(u.getPassword()))
-                {
-                    u.setPassword(encrypAES.Encrytor(model.getPassword()));
-                }
-            }
-            catch (Exception ex)
-            {
-                ex.printStackTrace();
-            }
-
             u.setLastmodified(new Date());
             commonUserRepository.save(u);
             return new RequestResult(ReturnCode.PUBLIC_SUCCESS);
