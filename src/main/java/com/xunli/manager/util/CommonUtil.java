@@ -15,13 +15,21 @@ public class CommonUtil {
             EncrypAES encrypAES = new EncrypAES();
             if(user.getPassword() == null || "".equals(user.getPassword()) || user.getPassword().length() > 32)
             {
-                if(user.getPhone() != null)
+                String pass = encrypAES.Encrytor(RandomUtil.generatePassword());
+                if(pass.length() > 32)
                 {
-                    user.setPassword(encrypAES.Encrytor(user.getPhone()));
+                    if(user.getPhone() != null)
+                    {
+                        user.setPassword(encrypAES.Encrytor(user.getPhone()));
+                    }
+                    else
+                    {
+                        user.setPassword(encrypAES.Encrytor(String.valueOf(user.getId())));
+                    }
                 }
                 else
                 {
-                    user.setPassword(encrypAES.Encrytor(String.valueOf(user.getId())));
+                    user.setPassword(pass);
                 }
             }
         }
