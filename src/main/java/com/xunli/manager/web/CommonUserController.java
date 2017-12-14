@@ -192,6 +192,7 @@ public class CommonUserController {
         ret.setProfession(childrenInfo.getProfession());
         ret.setCompany(childrenInfo.getCompany());
         ret.setPosition(childrenInfo.getPosition());
+        ret.setIncome(childrenInfo.getIncome());
 
         ret.setCar(childrenInfo.getCar());
         ret.setHouse(childrenInfo.getHouse());
@@ -215,7 +216,10 @@ public class CommonUserController {
         {
             for(String photo : childrenInfo.getPhoto().split(Const.SPLIT))
             {
-                photos.add(String.format("%s%s",imageServer,photo));
+                if(photo != null && !"".equals(photo))
+                {
+                    photos.add(String.format("%s%s",imageServer,photo));
+                }
             }
         }
         ret.setPhoto(photos);
