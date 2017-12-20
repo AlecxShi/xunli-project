@@ -27,6 +27,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
 
@@ -45,6 +47,8 @@ public class CommonUserImageUploadController {
 
     @Autowired
     private UpdateUserInfoForIMJob updateUserInfoForIMJob;
+
+    private final static DateFormat FORMAT = new SimpleDateFormat("yyyyMMddHHmmssSSS");
 
     @RequestMapping(value = "/upload/image",method = RequestMethod.POST)
     public RequestResult uploadImage(@RequestParam("image")MultipartFile image, @RequestParam("token") String token)
@@ -111,6 +115,14 @@ public class CommonUserImageUploadController {
         if(!icon.isEmpty())
         {
             String filename = StringUtils.cleanPath(icon.getOriginalFilename());
+            String filetype = filename.substring(filename.lastIndexOf("."));
+            if(!filetype.toLowerCase().endsWith(".jpg") ||
+                    !filetype.toLowerCase().endsWith(".png") ||
+                    !filetype.toLowerCase().endsWith(".jpeg"))
+            {
+                //默认采用jpg格式
+                filetype = ".jpg";
+            }
             try
             {
                 if (filename.contains("..") ||
@@ -121,7 +133,7 @@ public class CommonUserImageUploadController {
                     throw new Exception("Cannot store file with relative path outside current directory or not a image file "+ filename);
                 }
                 //icon名称固定为用户编号 + _icon.icon
-                filename = login.getUserId()+"_icon.png";
+                filename = login.getUserId()+"_"+FORMAT.format(new Date())+"_icon" + filetype;
                 Files.copy(icon.getInputStream(), Paths.get(Constants.ICON_ROOT_DIR,filename),StandardCopyOption.REPLACE_EXISTING);
                 CommonUser user = commonUserRepository.findOne(login.getUserId());
                 if(user != null)
