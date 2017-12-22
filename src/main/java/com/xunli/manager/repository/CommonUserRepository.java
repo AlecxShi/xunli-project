@@ -25,4 +25,6 @@ public interface CommonUserRepository extends JpaRepository<CommonUser, Long>, J
     @Modifying
     @Transactional
     void updatePassword(String password);
+
+    List<CommonUser> findAllByUsertype(Long i);
 }

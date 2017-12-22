@@ -12,4 +12,6 @@ public interface CommonUserLoginsRepository extends JpaRepository<CommonUserLogi
     CommonUserLogins getByToken(String token);
 
     CommonUserLogins findOneByUserId(Long id);
+
+    void deleteByUserId(Long id);
 }
