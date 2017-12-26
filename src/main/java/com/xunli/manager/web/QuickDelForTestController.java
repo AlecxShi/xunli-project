@@ -1,11 +1,7 @@
 package com.xunli.manager.web;
 
 import com.xunli.manager.model.ChildrenInfo;
-import com.xunli.manager.model.CommonUser;
-import com.xunli.manager.repository.ChildrenInfoRepository;
-import com.xunli.manager.repository.CommonUserLoginsRepository;
-import com.xunli.manager.repository.CommonUserRepository;
-import com.xunli.manager.repository.RecommendInfoRepository;
+import com.xunli.manager.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -33,7 +29,7 @@ public class QuickDelForTestController {
     private CommonUserLoginsRepository commonUserLoginsRepository;
 
     @Autowired
-    private RecommendInfoRepository recommendInfoRepository;
+    private RecommendInfoTwoRepository recommendInfoTwoRepository;
 
     @RequestMapping(value = "/deleteByPhone",method = RequestMethod.DELETE,produces = MediaType.APPLICATION_JSON_VALUE)
     @Transactional
@@ -45,7 +41,7 @@ public class QuickDelForTestController {
             //删除子女信息和推荐信息
             if(childrenInfo != null)
             {
-                recommendInfoRepository.deleteByChildrenIdOrTargetChildrenId(childrenInfo.getId());
+                recommendInfoTwoRepository.deleteByChildrenIdOrTargetChildrenId(childrenInfo.getId(),childrenInfo.getId());
                 childrenInfoRepository.delete(childrenInfo.getId());
             }
             //删除登录信息

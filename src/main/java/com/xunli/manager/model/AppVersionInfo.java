@@ -1,5 +1,7 @@
 package com.xunli.manager.model;
 
+
+
 import com.xunli.manager.annotation.ColumnComment;
 
 import javax.persistence.*;
@@ -21,13 +23,21 @@ public class AppVersionInfo implements Serializable {
     @ColumnComment("id")
     private Long id;
 
-    @Column(name = "version")
+    @Column(name = "c_version")
     @ColumnComment("版本号")
-    private String version;
+    private String currentVersion;
 
-    @Column(name = "desc")
+    @Column(name = "p_version")
+    @ColumnComment("上一版本号")
+    private String prevVersion;
+
+    @Column(name = "v_desc")
     @ColumnComment("版本描述信息")
     private String versionDesc;
+
+    @Column(name = "file_name")
+    @ColumnComment("对应文件名")
+    private String fileName;
 
     @Column(name = "url")
     @ColumnComment("下载地址")
@@ -61,12 +71,20 @@ public class AppVersionInfo implements Serializable {
         this.id = id;
     }
 
-    public String getVersion() {
-        return version;
+    public String getCurrentVersion() {
+        return currentVersion;
     }
 
-    public void setVersion(String version) {
-        this.version = version;
+    public void setCurrentVersion(String currentVersion) {
+        this.currentVersion = currentVersion;
+    }
+
+    public String getPrevVersion() {
+        return prevVersion;
+    }
+
+    public void setPrevVersion(String prevVersion) {
+        this.prevVersion = prevVersion;
     }
 
     public String getVersionDesc() {
@@ -75,6 +93,14 @@ public class AppVersionInfo implements Serializable {
 
     public void setVersionDesc(String versionDesc) {
         this.versionDesc = versionDesc;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 
     public String getUrl() {

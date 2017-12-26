@@ -33,6 +33,11 @@ angular.module('app')
       icon: 'assignment_ind',
       authorities: 'ROLE_ADMIN'
     },{
+      state: 'version',
+      title: '版本控制',
+      icon: 'assignment_ind',
+      authorities: 'ROLE_ADMIN'
+    },{
       title: '系统用户设置',
       authorities: 'ROLE_USER'
     }, {

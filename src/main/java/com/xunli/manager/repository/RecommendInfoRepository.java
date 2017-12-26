@@ -12,5 +12,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface RecommendInfoRepository extends JpaRepository<RecommendInfo,Long>,JpaSpecificationExecutor<RecommendInfo> {
 
-    void deleteByChildrenIdOrTargetChildrenId(Long id);
 }

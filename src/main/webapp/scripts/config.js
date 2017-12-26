@@ -317,6 +317,14 @@ angular.module('app').config(function($stateProvider, $urlRouterProvider) {
                  }
              }
         }
+    }).state('version', {
+        url : '/version',
+        data : {
+          authorities : ['ROLE_ADMIN'],
+          title : '版本控制',
+        },
+        templateUrl : 'views/version.list.html',
+        controller : 'AppVersionCtrl'
     })
 }).config(function($mdThemingProvider) {
 			$mdThemingProvider.theme('default').primaryPalette('blue')

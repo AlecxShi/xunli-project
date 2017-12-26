@@ -14,4 +14,6 @@ public interface RecommendInfoTwoRepository extends JpaRepository<RecommendInfoT
     void deleteAllByChildrenId(Long id);
 
     RecommendInfoTwo findOneByChildrenIdAndTargetChildrenId(Long childrenId,Long targetChildrenId);
+
+    void deleteByChildrenIdOrTargetChildrenId(Long childrenId,Long targetChildrenId);
 }
