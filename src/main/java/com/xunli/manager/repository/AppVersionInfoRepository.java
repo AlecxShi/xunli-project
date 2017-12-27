@@ -8,5 +8,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
  * Created by shihj on 2017/12/22.
  */
 public interface AppVersionInfoRepository extends JpaSpecificationExecutor<AppVersionInfo>,JpaRepository<AppVersionInfo,Long> {
-    AppVersionInfo findTopByOrderByIdDesc();
+    AppVersionInfo findTopByOrderByCurrentVersionDesc();
 }

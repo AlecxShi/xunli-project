@@ -27,10 +27,6 @@ public class AppVersionInfo implements Serializable {
     @ColumnComment("版本号")
     private String currentVersion;
 
-    @Column(name = "p_version")
-    @ColumnComment("上一版本号")
-    private String prevVersion;
-
     @Column(name = "v_desc")
     @ColumnComment("版本描述信息")
     private String versionDesc;
@@ -46,6 +42,10 @@ public class AppVersionInfo implements Serializable {
     @Column(name = "if_use")
     @ColumnComment("是否启用")
     private String ifUse;
+
+    @Column(name = "update_level")
+    @ColumnComment("更新级别")
+    private Integer updateLevel;
 
     @Column(name = "create_date")
     @ColumnComment("创建日期")
@@ -79,14 +79,6 @@ public class AppVersionInfo implements Serializable {
         this.currentVersion = currentVersion;
     }
 
-    public String getPrevVersion() {
-        return prevVersion;
-    }
-
-    public void setPrevVersion(String prevVersion) {
-        this.prevVersion = prevVersion;
-    }
-
     public String getVersionDesc() {
         return versionDesc;
     }
@@ -101,6 +93,14 @@ public class AppVersionInfo implements Serializable {
 
     public void setFileName(String fileName) {
         this.fileName = fileName;
+    }
+
+    public Integer getUpdateLevel() {
+        return updateLevel;
+    }
+
+    public void setUpdateLevel(Integer updateLevel) {
+        this.updateLevel = updateLevel;
     }
 
     public String getUrl() {

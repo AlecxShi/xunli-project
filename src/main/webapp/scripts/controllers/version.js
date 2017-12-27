@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('app')
-  .controller('AppVersionCtrl', function($scope, $rootScope,$state, $stateParams, $mdToast,$mdDialog,AppVersion) {
+  .controller('AppVersionCtrl', function($scope, $rootScope,$state, $stateParams, $mdToast,$mdDialog,AppVersion,DictInfo) {
 
     var bookmark;
 
@@ -20,6 +20,22 @@ angular.module('app')
       size: 10
     };
 
+    DictInfo.getByDictType({dictType:'UpdateLevel'}).$promise.then(function (data) {
+        $scope.allUpdateLevels = data;
+    });
+
+    $scope.getUpdateLevel = function(level)
+    {
+        var desc = '';
+        angular.forEach($scope.allUpdateLevels,function(item){
+            if(item.dictValue == level)
+            {
+                desc =  item.dictDesc;
+            }
+        });
+
+        return desc;
+    }
 
     $scope.onChange = function() {
       $rootScope.showLoading();
@@ -123,6 +139,7 @@ angular.module('app')
     	    	  version : function($stateParams) {
     	    	            var v = angular.copy(item);
     	    	            v.upload = v.fileName == undefined || v.fileName == '' ? false : true;
+    	    	            v.ifUse = v.ifUse == 'Y' ? true : false;
     	    	            console.log(v);
     					    return angular.copy(item);
     				     },
@@ -156,7 +173,7 @@ angular.module('app')
 
   });
 
-function AppVersionAddOrEditController($http,$q,$scope, $mdToast,$mdDialog, version,AppVersion,isNew) {
+function AppVersionAddOrEditController($http,$q,$scope, $mdToast,$mdDialog, version,AppVersion,DictInfo,isNew) {
 	  $scope.version = version;
 	  $scope.error = "";
 	  $scope.title = isNew ? "添加新版本信息" : "修改版本信息";
@@ -164,6 +181,10 @@ function AppVersionAddOrEditController($http,$q,$scope, $mdToast,$mdDialog, vers
 	  $scope.hide = function() {
 	     $mdDialog.hide();
 	  };
+
+      DictInfo.getByDictType({dictType:'UpdateLevel'}).$promise.then(function (data) {
+         $scope.allUpdateLevels = data;
+      });
 
 	  $scope.cancel = function() {
 	     $mdDialog.cancel();
@@ -223,6 +244,8 @@ function AppVersionAddOrEditController($http,$q,$scope, $mdToast,$mdDialog, vers
                          if(value.fileName != null)
                          {
                              $scope.version.fileName = value.fileName;
+                             $scope.version.ifUse = $scope.version.ifUse == true ? 'Y' : 'N';
+                             console.log($scope.version);
                              AppVersion.save($scope.version).$promise.then(
                                  function(result, responseHeaders) {
                                      $scope.error = null;
@@ -254,7 +277,8 @@ function AppVersionAddOrEditController($http,$q,$scope, $mdToast,$mdDialog, vers
                }
                else
                {
-                    version.fileName = "";
+                    $scope.version.fileName = $scope.version.fileName ? $scope.version.fileName : "";
+                    $scope.version.ifUse = $scope.version.ifUse == true ? 'Y' : 'N';
                     AppVersion.save($scope.version).$promise.then(
                          function(result, responseHeaders) {
                              $scope.error = null;

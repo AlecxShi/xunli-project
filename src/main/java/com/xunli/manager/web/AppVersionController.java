@@ -83,14 +83,14 @@ public class AppVersionController {
     @RequestMapping(value = "/version/get",method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_VALUE)
     public RequestResult getNew(@RequestParam String currentVersion)
     {
-        AppVersionInfo info = appVersionInfoRepository.findTopByOrderByIdDesc();
+        AppVersionInfo info = appVersionInfoRepository.findTopByOrderByCurrentVersionDesc();
         Map<String,Object> result = new HashMap<>();
-        result.put("update",false);
+        result.put("update",0);
         result.put("version",currentVersion);
         result.put("url","");
         if(info.getCurrentVersion().compareTo(currentVersion) > 0)
         {
-            result.put("update",true);
+            result.put("update",info.getUpdateLevel());
             result.put("version",info.getCurrentVersion());
             result.put("url",info.getUrl());
         }

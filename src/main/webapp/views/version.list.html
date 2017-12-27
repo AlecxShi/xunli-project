@@ -43,8 +43,10 @@
       <thead md-head md-order="query.order" md-on-reorder="refresh">
         <tr md-row>
           <th md-column >编号</th>
-          <th md-column >当前版本</th>
-          <th md-column >上一版本</th>
+          <th md-column >版本号</th>
+          <th md-column >更新级别</th>
+          <th md-column >包名称</th>
+          <th md-column >是否启用</th>
           <th md-column >版本描述</th>
           <th md-column >下载链接</th>
           <th md-column >操作</th>
@@ -54,7 +56,9 @@
         <tr md-row md-select="item" md-select-id="{{item.id}}" ng-repeat="item in data.content">
           <td md-cell>{{item.id}}</td>
           <td md-cell>{{item.currentVersion}}</td>
-          <td md-cell>{{item.prevVersion}}</td>
+          <td md-cell>{{getUpdateLevel(item.updateLevel)}}</td>
+          <td md-cell>{{item.fileName}}</td>
+          <td md-cell>{{item.ifUse == 'Y' ? '是' : '否'}}</td>
           <td md-cell>{{item.versionDesc}}</td>
           <td md-cell>{{item.url}}</td>
           <td md-cell>
@@ -88,15 +92,15 @@
               <label style="color:#F00" class="control-label">{{error}}</label>
             </div>
             <md-input-container class="md-block">
-              <label>当前版本</label>
-              <input type="text" id="currentVersion" name="currentVersion" placeholder="当前版本号"  ng-model="version.currentVersion" required>
-              <div class="hint" ng-if="form.currentVersion.$untouched">必输项，当前版本号</div>
+              <label>版本号</label>
+              <input type="text" id="currentVersion" name="currentVersion" placeholder="版本号"  ng-model="version.currentVersion" required>
+              <div class="hint" ng-if="form.currentVersion.$untouched">必输项，版本号</div>
               <div ng-messages="form.currentVersion.$error">
-                <div ng-message="required">必输项,当前版本信息</div>
-                <div ng-message="pattern">字典类型只能包含英文字母数字或下划线</div>
+                <div ng-message="required">必输项,版本号</div>
+                <div ng-message="pattern">只能包含英文字母数字或下划线</div>
               </div>
             </md-input-container>
-            <md-input-container class="md-block">
+            <!--<md-input-container class="md-block">
               <label>上一版本号</label>
               <input  type="text" id="prevVersion" name="prevVersion" placeholder="上一版本号"  ng-model="version.prevVersion" required>
               <div class="hint" ng-if="form.prevVersion.$untouched">必输项，上一版本号</div>
@@ -104,20 +108,30 @@
                 <div ng-message="required">必输项,上一版本号</div>
                 <div ng-message="pattern">字典值只能包含英文字母数字或下划线</div>
               </div>
+            </md-input-container>-->
+            <md-input-container class="md-block">
+              <label>更新级别选择</label>
+              <md-select name="updateLevel" ng-model="version.updateLevel">
+                <md-option ng-repeat="type in allUpdateLevels" value="{{type.dictValue}}">
+                  {{type.dictDesc}}
+                </md-option>
+              </md-select>
             </md-input-container>
             <md-input-container class="md-block">
               <md-checkbox ng-model="version.upload" flex>
                 是否上传文件
               </md-checkbox>
             </md-input-container>
-            <div ng-show="version.upload == true">
-              <div layout="column"  style="padding-left: 10.667px;padding-top: 10.667px;"  layout-gt-xs="row">
-                <md-input-container class="md-block" style="padding-right:550px;" flex>
-                  <label>选择要上传的安装包</label>
-                  <input type="file" file-model="version.file" md-select-on-focus/>
-                </md-input-container>
+            <md-input-container class="md-block" ng-show="version.upload == true">
+              <div>
+                <div layout="column"    layout-gt-xs="row">
+                  <md-input-container class="md-block" flex>
+                    <label>选择要上传的安装包</label>
+                    <input type="file" file-model="version.file" md-select-on-focus/>
+                  </md-input-container>
+                </div>
               </div>
-            </div>
+            </md-input-container>
             <md-input-container class="md-block">
               <label>版本描述</label>
               <textarea  type="text" id="versionDesc" name="versionDesc" placeholder="版本描述"  ng-model="version.versionDesc"/>
@@ -127,6 +141,11 @@
               <label>链接地址</label>
               <input  type="text" id="url" name="url" placeholder="链接地址"  ng-model="version.url" required>
               <div class="hint" ng-if="form.dictDesc.$untouched">必输项，链接地址</div>
+            </md-input-container>
+            <md-input-container class="md-block">
+              <md-checkbox ng-model="version.ifUse" flex>
+                是否立即启用
+              </md-checkbox>
             </md-input-container>
           </fieldset>
         </div>
