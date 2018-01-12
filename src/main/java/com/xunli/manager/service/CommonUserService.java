@@ -1,6 +1,5 @@
 package com.xunli.manager.service;
 
-import com.xunli.manager.codec.EncrypAES;
 import com.xunli.manager.enumeration.ReturnCode;
 import com.xunli.manager.model.*;
 import com.xunli.manager.repository.*;
