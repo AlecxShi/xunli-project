@@ -5,11 +5,15 @@ package com.xunli.manager.domain.criteria;
  */
 public class RobotUserCheckConditionCriteria {
 
+    private String opType;
+
     private String currentLocation;
 
     private String bornLocation;
 
     private Long gender;
+
+    private String birthday;
 
     public String getCurrentLocation() {
         return currentLocation;
@@ -33,5 +37,21 @@ public class RobotUserCheckConditionCriteria {
 
     public void setGender(Long gender) {
         this.gender = gender;
+    }
+
+    public String getOpType() {
+        return opType;
+    }
+
+    public void setOpType(String opType) {
+        this.opType = opType;
+    }
+
+    public String getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(String birthday) {
+        this.birthday = birthday;
     }
 }

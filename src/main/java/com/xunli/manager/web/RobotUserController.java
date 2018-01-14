@@ -1,7 +1,9 @@
 package com.xunli.manager.web;
 
 import com.xunli.manager.domain.criteria.RobotUserCheckConditionCriteria;
+import com.xunli.manager.domain.specification.RobotUserCreateSpecification;
 import com.xunli.manager.enumeration.ReturnCode;
+import com.xunli.manager.model.ChildrenInfo;
 import com.xunli.manager.model.RequestResult;
 import com.xunli.manager.repository.ChildrenInfoRepository;
 import com.xunli.manager.repository.CommonUserRepository;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -55,9 +58,18 @@ public class RobotUserController {
      * @param condition
      * @return
      */
+    @RequestMapping(value = "/fakeuser/generate",method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> checkAndCreateRobotUser(@ModelAttribute RobotUserCheckConditionCriteria condition)
     {
+        List<ChildrenInfo> list = childrenInfoRepository.findAll(new RobotUserCreateSpecification(condition));
+        if(list.size() < 60)
+        {
 
+        }
+        for(ChildrenInfo childrenInfo : list)
+        {
+            System.out.println(String.format("[id = %s,name = %s]",childrenInfo.getId(),childrenInfo.getName()));
+        }
         return ResponseEntity.ok().build();
     }
 }
