@@ -3,10 +3,14 @@ package com.xunli.manager.util;
 import com.xunli.manager.codec.EncrypAES;
 import com.xunli.manager.model.CommonUser;
 
+import java.util.Random;
+
 /**
  * Created by shihj on 2017/9/26.
  */
 public class CommonUtil {
+
+    private final static Random rand = new Random();
 
     public static CommonUser encrypPassword(CommonUser user)
     {
@@ -38,5 +42,20 @@ public class CommonUtil {
             ex.printStackTrace();
         }
         return user;
+    }
+
+
+    public static int randGetBetween(int start,int end)
+    {
+        int result = end;
+        if(start < end)
+        {
+            result = rand.nextInt(end);
+            while(start > result)
+            {
+                result = rand.nextInt(end);
+            }
+        }
+        return result;
     }
 }

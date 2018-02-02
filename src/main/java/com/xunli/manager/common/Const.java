@@ -37,4 +37,9 @@ public class Const {
 
     public final  static String IM_KEY_STRING = "string";
 
+    public final static String DEFAULT_BIRTHDAY = "1990-10-10";
+
+    public final static String MALE = "Male";
+
+
 }

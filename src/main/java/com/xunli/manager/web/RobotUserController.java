@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.thymeleaf.util.StringUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -61,15 +62,31 @@ public class RobotUserController {
     @RequestMapping(value = "/fakeuser/generate",method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> checkAndCreateRobotUser(@ModelAttribute RobotUserCheckConditionCriteria condition)
     {
-        List<ChildrenInfo> list = childrenInfoRepository.findAll(new RobotUserCreateSpecification(condition));
-        if(list.size() < 60)
+        if(condition != null)
         {
+            List<ChildrenInfo> list = childrenInfoRepository.findAll(new RobotUserCreateSpecification(condition));
+            if(list.isEmpty())
+            {
 
+            }
+            for(ChildrenInfo childrenInfo : list)
+            {
+                System.out.println(String.format("[id = %s,name = %s]",childrenInfo.getId(),childrenInfo.getName()));
+            }
+            switch (condition.getOpType())
+            {
+                case "1":
+                    if(!StringUtils.isEmpty(condition.getBornLocation()) && !StringUtils.isEmpty(condition.getCurrentLocation()) && condition.getGender() != null)
+                    {
+                        commonUserService.generateTenRobotUsers(condition.getBornLocation(),condition.getCurrentLocation(),condition.getGender());
+                    }
+                    break;
+                case "2":
+
+                    break;
+            }
         }
-        for(ChildrenInfo childrenInfo : list)
-        {
-            System.out.println(String.format("[id = %s,name = %s]",childrenInfo.getId(),childrenInfo.getName()));
-        }
+
         return ResponseEntity.ok().build();
     }
 }
