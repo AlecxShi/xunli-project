@@ -4,6 +4,7 @@ import com.xunli.manager.domain.criteria.RobotUserCheckConditionCriteria;
 import com.xunli.manager.domain.specification.RobotUserCreateSpecification;
 import com.xunli.manager.enumeration.ReturnCode;
 import com.xunli.manager.model.ChildrenInfo;
+import com.xunli.manager.model.CommonUser;
 import com.xunli.manager.model.RequestResult;
 import com.xunli.manager.repository.ChildrenInfoRepository;
 import com.xunli.manager.repository.CommonUserRepository;
@@ -65,28 +66,28 @@ public class RobotUserController {
         if(condition != null)
         {
             List<ChildrenInfo> list = childrenInfoRepository.findAll(new RobotUserCreateSpecification(condition));
-            if(list.isEmpty())
-            {
-
-            }
-            for(ChildrenInfo childrenInfo : list)
-            {
-                System.out.println(String.format("[id = %s,name = %s]",childrenInfo.getId(),childrenInfo.getName()));
-            }
             switch (condition.getOpType())
             {
+                //只传两个地址和性别
                 case "1":
-                    if(!StringUtils.isEmpty(condition.getBornLocation()) && !StringUtils.isEmpty(condition.getCurrentLocation()) && condition.getGender() != null)
+                    if(list.isEmpty())
                     {
-                        commonUserService.generateTenRobotUsers(condition.getBornLocation(),condition.getCurrentLocation(),condition.getGender());
+                        if(!StringUtils.isEmpty(condition.getBornLocation()) && !StringUtils.isEmpty(condition.getCurrentLocation()) && condition.getGender() != null)
+                        {
+                            List<CommonUser> users = commonUserService.generateTenRobotUsers(condition.getBornLocation(),condition.getCurrentLocation(),condition.getGender());
+                        }
                     }
                     break;
+                //传了两个地址和性别,还有生日和学历信息
                 case "2":
-
+                    if(!StringUtils.isEmpty(condition.getBornLocation()) && !StringUtils.isEmpty(condition.getCurrentLocation()) && condition.getGender() != null &&
+                            !StringUtils.isEmpty(condition.getBirthday()) && condition.getEducation() != null)
+                    {
+                        List<CommonUser> users = commonUserService.generateTwentyRobotUsers(condition.getBornLocation(),condition.getCurrentLocation(),condition.getGender(),condition.getBirthday(),condition.getEducation());
+                    }
                     break;
             }
         }
-
         return ResponseEntity.ok().build();
     }
 }

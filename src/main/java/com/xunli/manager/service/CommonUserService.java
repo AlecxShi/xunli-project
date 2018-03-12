@@ -93,10 +93,101 @@ public class CommonUserService {
     }
 
 
+    /**
+     * 生成10条假数据
+     * @param bornLocation
+     * @param currentLocation
+     * @param gender
+     * @return
+     */
     public List<CommonUser> generateTenRobotUsers(String bornLocation, String currentLocation, Long gender)
     {
         List<CommonUser> users = new ArrayList<>();
         int num = 10;
+        if(!StringUtils.isEmpty(bornLocation) && !StringUtils.isEmpty(currentLocation) && gender != null)
+        {
+            //当前用户是女的
+            if(Const.MALE.equals(DictInfoUtil.getOppositeSex(DictInfoUtil.getItemById(gender)).getDictValue()))
+            {
+                for(int i = 0; i < num;i++)
+                {
+                    CommonUser u = new CommonUser();
+                    u.setIfRegister("N");
+                    u.setUsertype(80L);
+                    u.setLocation(bornLocation);
+                    String username = ConstantValueUtil.FIRST_NAME_LIST[rand.nextInt(ConstantValueUtil.FIRST_NAME_LIST.length)] + "先生";
+                    u.setUsername(username);
+                    ChildrenInfo childrenInfo = new ChildrenInfo();
+                    childrenInfo.setBornLocation(bornLocation);
+                    childrenInfo.setCurrentLocation(currentLocation);
+                    childrenInfo.setName(username);
+                    childrenInfo.setGender(68L);
+                    childrenInfo.setIcon(UpdateRobotUserIconJob.getIconPath(childrenInfo));
+                    if(i % 2 == 0)
+                    {
+                        childrenInfo.setCar(162L);
+                    }
+                    else
+                    {
+                        childrenInfo.setCar(163L);
+                    }
+                    u.setChildren(childrenInfo);
+                    users.add(u);
+                }
+                createHeight(users);
+                createEducation(users);
+                createIncome(users);
+
+            }
+            else
+            {
+                for(int i = 0; i < num;i++)
+                {
+                    CommonUser u = new CommonUser();
+                    u.setIfRegister("N");
+                    u.setUsertype(80L);
+                    u.setLocation(bornLocation);
+                    String username = ConstantValueUtil.FIRST_NAME_LIST[rand.nextInt(ConstantValueUtil.FIRST_NAME_LIST.length)] + "女士";
+                    u.setUsername(username);
+                    ChildrenInfo childrenInfo = new ChildrenInfo();
+                    childrenInfo.setBornLocation(bornLocation);
+                    childrenInfo.setCurrentLocation(currentLocation);
+                    childrenInfo.setName(username);
+                    childrenInfo.setGender(69L);
+                    String icon = UpdateRobotUserIconJob.getIconPath(childrenInfo);
+                    childrenInfo.setIcon(icon);
+                    if(i % 2 == 0)
+                    {
+                        childrenInfo.setCar(162L);
+                    }
+                    else
+                    {
+                        childrenInfo.setCar(163L);
+                    }
+                    u.setChildren(childrenInfo);
+                    users.add(u);
+                }
+                createHeight(users);
+                createEducation(users);
+                createIncome(users);
+            }
+        }
+        return users;
+    }
+
+    /**
+     * 生成20条假数据
+     * @param bornLocation
+     * @param currentLocation
+     * @param gender
+     * @param birthday
+     * @param education
+     * @return
+     */
+    public List<CommonUser> generateTwentyRobotUsers(String bornLocation, String currentLocation, Long gender,String birthday,Long education)
+    {
+        List<CommonUser> users = new ArrayList<>();
+        int num = 20;
         if(!StringUtils.isEmpty(bornLocation) && !StringUtils.isEmpty(currentLocation) && gender != null)
         {
             //当前用户是女的

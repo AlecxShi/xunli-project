@@ -57,6 +57,10 @@ public class RobotUserCreateSpecification extends AbstractSpecification<Children
                 }
 
             }
+            if(criteria.getEducation() != null)
+            {
+                expressions.add(root.get(ChildrenInfo_.education).in(DictInfoUtil.getBiggerEducation(criteria.getEducation())));
+            }
         }
         return predicate;
     }
