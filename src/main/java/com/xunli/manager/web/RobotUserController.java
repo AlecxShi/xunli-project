@@ -3,12 +3,20 @@ package com.xunli.manager.web;
 import com.xunli.manager.domain.criteria.RobotUserCheckConditionCriteria;
 import com.xunli.manager.domain.specification.RobotUserCreateSpecification;
 import com.xunli.manager.enumeration.ReturnCode;
+import com.xunli.manager.job.Register2TaobaoIMJob;
+import com.xunli.manager.job.UpdateRobotUserIconJob;
 import com.xunli.manager.model.ChildrenInfo;
 import com.xunli.manager.model.CommonUser;
 import com.xunli.manager.model.RequestResult;
 import com.xunli.manager.repository.ChildrenInfoRepository;
 import com.xunli.manager.repository.CommonUserRepository;
 import com.xunli.manager.service.CommonUserService;
+import com.xunli.manager.service.GenerateService;
+import com.xunli.manager.service.TaobaoIMService;
+import com.xunli.manager.util.CommonUtil;
+import com.xunli.manager.util.DictInfoUtil;
+import java.util.ArrayList;
+import java.util.HashSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -39,6 +47,9 @@ public class RobotUserController {
     @Autowired
     private ChildrenInfoRepository childrenInfoRepository;
 
+    @Autowired
+    private TaobaoIMService taobaoIMService;
+
     /**
      * 假用户登录
      * @param userId
@@ -66,28 +77,92 @@ public class RobotUserController {
         if(condition != null)
         {
             List<ChildrenInfo> list = childrenInfoRepository.findAll(new RobotUserCreateSpecification(condition));
-            switch (condition.getOpType())
-            {
-                //只传两个地址和性别
-                case "1":
-                    if(list.isEmpty())
+            //只处理数据小于60条的情况
+            if(list.size() < 60){
+                if(list.isEmpty()){
+                    switch (condition.getOpType())
                     {
-                        if(!StringUtils.isEmpty(condition.getBornLocation()) && !StringUtils.isEmpty(condition.getCurrentLocation()) && condition.getGender() != null)
-                        {
-                            List<CommonUser> users = commonUserService.generateTenRobotUsers(condition.getBornLocation(),condition.getCurrentLocation(),condition.getGender());
-                        }
+                        //只传两个地址和性别
+                        case "1":
+                            if(!StringUtils.isEmpty(condition.getBornLocation()) && !StringUtils.isEmpty(condition.getCurrentLocation()) && condition.getGender() != null)
+                            {
+                                condition.setBirthday(null);
+                                List<CommonUser> users = commonUserService.generateTenRobotUsers(condition);
+                                for(CommonUser user : users){
+                                    ChildrenInfo childrenInfo = user.getChildren();
+                                    childrenInfo.setScore(GenerateService.createScore(childrenInfo));
+                                }
+                                saveAndRegister(users);
+                            }
+                            break;
+                        //传了两个地址和性别,还有生日和学历信息
+                        case "2":
+                            if(!StringUtils.isEmpty(condition.getBornLocation()) && !StringUtils.isEmpty(condition.getCurrentLocation()) && condition.getGender() != null &&
+                                !StringUtils.isEmpty(condition.getBirthday()) && condition.getEducation() != null)
+                            {
+
+                                List<CommonUser> users = commonUserService.generateTenRobotUsers(condition);
+                                users.addAll(commonUserService.generateTenRobotUsers(condition));
+                                for(CommonUser user : users){
+                                    ChildrenInfo childrenInfo = user.getChildren();
+                                    childrenInfo.setScore(GenerateService.createScore(childrenInfo));
+                                }
+                                saveAndRegister(users);
+                            }
+                            break;
                     }
-                    break;
-                //传了两个地址和性别,还有生日和学历信息
-                case "2":
-                    if(!StringUtils.isEmpty(condition.getBornLocation()) && !StringUtils.isEmpty(condition.getCurrentLocation()) && condition.getGender() != null &&
-                            !StringUtils.isEmpty(condition.getBirthday()) && condition.getEducation() != null)
-                    {
-                        List<CommonUser> users = commonUserService.generateTwentyRobotUsers(condition.getBornLocation(),condition.getCurrentLocation(),condition.getGender(),condition.getBirthday(),condition.getEducation());
-                    }
-                    break;
+                }
             }
         }
         return ResponseEntity.ok().build();
+    }
+
+  /**
+   * 保存数据并注册到淘宝IM
+   * @param users
+   */
+  private void saveAndRegister(List<CommonUser> users){
+        checkData(users,true);
+        if(!users.isEmpty()){
+            commonUserRepository.save(users);
+            List<ChildrenInfo> childrenInfos = new ArrayList<>();
+            for(CommonUser user : users){
+                ChildrenInfo childrenInfo = user.getChildren();
+                if(user.getId() != null){
+                    childrenInfo.setParentId(user.getId());
+                    childrenInfos.add(childrenInfo);
+                }
+            }
+            if(!childrenInfos.isEmpty()){
+                childrenInfoRepository.save(childrenInfos);
+                taobaoIMService.batchRegisterUser2TaobaoIM(users);
+            }
+        }
+    }
+
+    /**
+     * 数据校验,若指定只校验icon是否重复,则只校验icon
+     * 否则,按照60条数据的校验标准进行数据校验
+     * @param users
+     * @param ifOnlyIcon
+     */
+    private void checkData(List<CommonUser> users,boolean ifOnlyIcon){
+        HashSet<String> icons = new HashSet<>();
+        if(ifOnlyIcon){
+            for(CommonUser user : users){
+                ChildrenInfo childrenInfo = user.getChildren();
+                if(!icons.contains(childrenInfo.getIcon())){
+                    icons.add(childrenInfo.getIcon());
+                }else{
+                    childrenInfo.setIcon(UpdateRobotUserIconJob.getIconPath(childrenInfo));
+                    while(icons.contains(childrenInfo.getIcon())){
+                        childrenInfo.setIcon(UpdateRobotUserIconJob.getIconPath(childrenInfo));
+                    }
+                    user.setIcon(childrenInfo.getIcon());
+                }
+            }
+        }else{
+
+        }
     }
 }

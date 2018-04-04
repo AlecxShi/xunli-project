@@ -6,6 +6,7 @@ import com.xunli.manager.model.app.TagString;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by shihj on 2017/7/31.
@@ -121,12 +122,14 @@ public class DictInfoUtil {
     {
         List<Long> list = new ArrayList();
         List<DictInfo> educations = getByDictType("Education");
+        DictInfo currentEducation = getItemById(current);
+        Long currentValue = Long.parseLong(currentEducation.getDictValue());
         for(DictInfo education : educations)
         {
             Long value = Long.parseLong(education.getDictValue());
-            if(value.longValue() > current.longValue())
+            if(value.longValue() >= currentValue.longValue())
             {
-                list.add(value);
+                list.add(education.getId());
             }
         }
         return list;
@@ -217,5 +220,11 @@ public class DictInfoUtil {
             }
         }
         return m;
+    }
+
+    public static Long getRandomSchoolType() {
+        List<DictInfo> schoolType = getByDictType("School");
+        Random random = new Random();
+        return schoolType.get(random.nextInt(schoolType.size())).getId();
     }
 }

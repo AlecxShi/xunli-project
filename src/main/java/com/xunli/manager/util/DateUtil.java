@@ -9,7 +9,7 @@ import java.util.Date;
  * Created by shihj on 2017/9/11.
  */
 public class DateUtil {
-    private final static DateFormat FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    public final static DateFormat FORMAT = new SimpleDateFormat("yyyy-MM-dd");
     private final static DateFormat ALL_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private final static Calendar CALENDAR = Calendar.getInstance();
 
@@ -22,6 +22,23 @@ public class DateUtil {
             CALENDAR.setTime(date);
             CALENDAR.add(Calendar.YEAR,minus);
             ret = FORMAT.format(CALENDAR.getTime());
+        }
+        catch(Exception ex)
+        {
+            ex.printStackTrace();
+        }
+        return ret;
+    }
+
+    public static Date getDateMinus(String dateStr,Integer minus)
+    {
+        Date ret = null;
+        try
+        {
+            Date date = FORMAT.parse(dateStr);
+            CALENDAR.setTime(date);
+            CALENDAR.add(Calendar.YEAR,minus);
+            ret = CALENDAR.getTime();
         }
         catch(Exception ex)
         {

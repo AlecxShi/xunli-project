@@ -14,6 +14,7 @@ import com.xunli.manager.util.DictInfoUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -88,6 +89,7 @@ public class GenerateRecommendInfoJob {
             recommendInfo.setTargetChildrenId(target.getId());
             data.add(recommendInfo);
         }
+        logger.info("正在生成推荐表信息，推荐数量为：{}",data.size());
         recommendInfoTwoRepository.save(data);
         recommendInfoTwoRepository.flush();
     }
@@ -113,7 +115,8 @@ public class GenerateRecommendInfoJob {
             criteria.setEndBirthday(DateUtil.getDate(currentChild.getBirthday(),  15));
         }
         Pageable page = new PageRequest(0,3);
-        List<ChildrenInfoTwo> list = childrenInfoTwoRepository.findAll(new ChildrenInfoTwoSpecification(criteria),page).getContent();
+        Page<ChildrenInfoTwo> result = childrenInfoTwoRepository.findAll(new ChildrenInfoTwoSpecification(criteria),page);
+        List<ChildrenInfoTwo> list = result.getContent();
         return list;
     }
 

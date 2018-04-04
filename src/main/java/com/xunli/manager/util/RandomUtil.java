@@ -1,5 +1,6 @@
 package com.xunli.manager.util;
 
+import java.util.UUID;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.security.crypto.codec.Base64;
 
@@ -27,8 +28,9 @@ public final class RandomUtil {
 
   public static String generateToken()
   {
-    byte[] newToken = new byte[DEFAULT_TOKEN_LENGTH];
+    /*byte[] newToken = new byte[DEFAULT_TOKEN_LENGTH];
     random.nextBytes(newToken);
-    return new String(Base64.encode(newToken));
+    return new String(Base64.encode(newToken));*/
+    return UUID.randomUUID().toString().replace("-", "");
   }
 }

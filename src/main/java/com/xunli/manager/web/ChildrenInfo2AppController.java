@@ -3,6 +3,7 @@ package com.xunli.manager.web;
 import com.xunli.manager.common.Const;
 import com.xunli.manager.domain.criteria.ChildrenInfoModel;
 import com.xunli.manager.enumeration.ReturnCode;
+import com.xunli.manager.job.AutoGenerateOtherRobotUserJob;
 import com.xunli.manager.job.GenerateRecommendInfoJob;
 import com.xunli.manager.model.ChildrenInfo;
 import com.xunli.manager.model.CommonUserLogins;
@@ -46,6 +47,12 @@ public class ChildrenInfo2AppController {
 
     @Autowired
     private GenerateRecommendInfoJob generateRecommendInfoJob;
+
+    @Autowired
+    private AutoGenerateOtherRobotUserJob autoGenerateOtherRobotUserJob;
+
+    public ChildrenInfo2AppController() {
+    }
 
     @RequestMapping(value = "/children/save",method = RequestMethod.POST,produces = MediaType.APPLICATION_JSON_VALUE)
     public RequestResult saveOrEdit(@ModelAttribute ChildrenInfoModel childrenInfo)
@@ -122,6 +129,7 @@ public class ChildrenInfo2AppController {
             try
             {
                 info = saveChildrenInfo(childrenInfo,login.getUserId());
+                autoGenerateOtherRobotUserJob.push(info);
             }
             catch (Exception ex)
             {
